@@ -42,53 +42,68 @@ const AllSettingsSchema = CollectionSchema(
       name: r'customVpn',
       type: IsarType.stringList,
     ),
-    r'downloadAccelerate': PropertySchema(
+    r'displayMode': PropertySchema(
       id: 5,
+      name: r'displayMode',
+      type: IsarType.long,
+    ),
+    r'downloadAccelerate': PropertySchema(
+      id: 6,
       name: r'downloadAccelerate',
       type: IsarType.string,
     ),
     r'listenList': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'listenList',
       type: IsarType.stringList,
     ),
     r'playerName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'playerName',
       type: IsarType.string,
     ),
     r'room': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'room',
       type: IsarType.long,
     ),
     r'serverSortField': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'serverSortField',
       type: IsarType.string,
     ),
+    r'sortOption': PropertySchema(
+      id: 11,
+      name: r'sortOption',
+      type: IsarType.long,
+    ),
+    r'sortOrder': PropertySchema(
+      id: 12,
+      name: r'sortOrder',
+      type: IsarType.long,
+    ),
     r'startup': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'startup',
       type: IsarType.bool,
     ),
     r'startupAutoConnect': PropertySchema(
-      id: 11,
+      id: 14,
       name: r'startupAutoConnect',
       type: IsarType.bool,
     ),
     r'startupMinimize': PropertySchema(
-      id: 12,
+      id: 15,
       name: r'startupMinimize',
       type: IsarType.bool,
     ),
     r'userId': PropertySchema(
-      id: 13,
+      id: 16,
       name: r'userId',
       type: IsarType.string,
     ),
     r'userListSimple': PropertySchema(
-      id: 14,
+      id: 17,
       name: r'userListSimple',
       type: IsarType.bool,
     )
@@ -160,16 +175,19 @@ void _allSettingsSerialize(
   writer.writeBool(offsets[2], object.beta);
   writer.writeBool(offsets[3], object.closeMinimize);
   writer.writeStringList(offsets[4], object.customVpn);
-  writer.writeString(offsets[5], object.downloadAccelerate);
-  writer.writeStringList(offsets[6], object.listenList);
-  writer.writeString(offsets[7], object.playerName);
-  writer.writeLong(offsets[8], object.room);
-  writer.writeString(offsets[9], object.serverSortField);
-  writer.writeBool(offsets[10], object.startup);
-  writer.writeBool(offsets[11], object.startupAutoConnect);
-  writer.writeBool(offsets[12], object.startupMinimize);
-  writer.writeString(offsets[13], object.userId);
-  writer.writeBool(offsets[14], object.userListSimple);
+  writer.writeLong(offsets[5], object.displayMode);
+  writer.writeString(offsets[6], object.downloadAccelerate);
+  writer.writeStringList(offsets[7], object.listenList);
+  writer.writeString(offsets[8], object.playerName);
+  writer.writeLong(offsets[9], object.room);
+  writer.writeString(offsets[10], object.serverSortField);
+  writer.writeLong(offsets[11], object.sortOption);
+  writer.writeLong(offsets[12], object.sortOrder);
+  writer.writeBool(offsets[13], object.startup);
+  writer.writeBool(offsets[14], object.startupAutoConnect);
+  writer.writeBool(offsets[15], object.startupMinimize);
+  writer.writeString(offsets[16], object.userId);
+  writer.writeBool(offsets[17], object.userListSimple);
 }
 
 AllSettings _allSettingsDeserialize(
@@ -184,17 +202,20 @@ AllSettings _allSettingsDeserialize(
   object.beta = reader.readBool(offsets[2]);
   object.closeMinimize = reader.readBool(offsets[3]);
   object.customVpn = reader.readStringList(offsets[4]) ?? [];
-  object.downloadAccelerate = reader.readString(offsets[5]);
+  object.displayMode = reader.readLong(offsets[5]);
+  object.downloadAccelerate = reader.readString(offsets[6]);
   object.id = id;
-  object.listenList = reader.readStringList(offsets[6]);
-  object.playerName = reader.readStringOrNull(offsets[7]);
-  object.room = reader.readLongOrNull(offsets[8]);
-  object.serverSortField = reader.readString(offsets[9]);
-  object.startup = reader.readBool(offsets[10]);
-  object.startupAutoConnect = reader.readBool(offsets[11]);
-  object.startupMinimize = reader.readBool(offsets[12]);
-  object.userId = reader.readStringOrNull(offsets[13]);
-  object.userListSimple = reader.readBool(offsets[14]);
+  object.listenList = reader.readStringList(offsets[7]);
+  object.playerName = reader.readStringOrNull(offsets[8]);
+  object.room = reader.readLongOrNull(offsets[9]);
+  object.serverSortField = reader.readString(offsets[10]);
+  object.sortOption = reader.readLong(offsets[11]);
+  object.sortOrder = reader.readLong(offsets[12]);
+  object.startup = reader.readBool(offsets[13]);
+  object.startupAutoConnect = reader.readBool(offsets[14]);
+  object.startupMinimize = reader.readBool(offsets[15]);
+  object.userId = reader.readStringOrNull(offsets[16]);
+  object.userListSimple = reader.readBool(offsets[17]);
   return object;
 }
 
@@ -216,24 +237,30 @@ P _allSettingsDeserializeProp<P>(
     case 4:
       return (reader.readStringList(offset) ?? []) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 6:
-      return (reader.readStringList(offset)) as P;
-    case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
-      return (reader.readLongOrNull(offset)) as P;
-    case 9:
       return (reader.readString(offset)) as P;
-    case 10:
-      return (reader.readBool(offset)) as P;
-    case 11:
-      return (reader.readBool(offset)) as P;
-    case 12:
-      return (reader.readBool(offset)) as P;
-    case 13:
+    case 7:
+      return (reader.readStringList(offset)) as P;
+    case 8:
       return (reader.readStringOrNull(offset)) as P;
+    case 9:
+      return (reader.readLongOrNull(offset)) as P;
+    case 10:
+      return (reader.readString(offset)) as P;
+    case 11:
+      return (reader.readLong(offset)) as P;
+    case 12:
+      return (reader.readLong(offset)) as P;
+    case 13:
+      return (reader.readBool(offset)) as P;
     case 14:
+      return (reader.readBool(offset)) as P;
+    case 15:
+      return (reader.readBool(offset)) as P;
+    case 16:
+      return (reader.readStringOrNull(offset)) as P;
+    case 17:
       return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -595,6 +622,62 @@ extension AllSettingsQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      displayModeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'displayMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      displayModeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'displayMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      displayModeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'displayMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      displayModeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'displayMode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1390,6 +1473,118 @@ extension AllSettingsQueryFilter
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOptionEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'sortOption',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOptionGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'sortOption',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOptionLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'sortOption',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOptionBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'sortOption',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOrderEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'sortOrder',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOrderGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'sortOrder',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOrderLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'sortOrder',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      sortOrderBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'sortOrder',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition> startupEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
@@ -1640,6 +1835,18 @@ extension AllSettingsQuerySortBy
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortByDisplayMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'displayMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortByDisplayModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'displayMode', Sort.desc);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
       sortByDownloadAccelerate() {
     return QueryBuilder.apply(this, (query) {
@@ -1688,6 +1895,30 @@ extension AllSettingsQuerySortBy
       sortByServerSortFieldDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'serverSortField', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortBySortOption() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOption', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortBySortOptionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOption', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortBySortOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOrder', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortBySortOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOrder', Sort.desc);
     });
   }
 
@@ -1808,6 +2039,18 @@ extension AllSettingsQuerySortThenBy
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenByDisplayMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'displayMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenByDisplayModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'displayMode', Sort.desc);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
       thenByDownloadAccelerate() {
     return QueryBuilder.apply(this, (query) {
@@ -1868,6 +2111,30 @@ extension AllSettingsQuerySortThenBy
       thenByServerSortFieldDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'serverSortField', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenBySortOption() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOption', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenBySortOptionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOption', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenBySortOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOrder', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenBySortOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sortOrder', Sort.desc);
     });
   }
 
@@ -1969,6 +2236,12 @@ extension AllSettingsQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QDistinct> distinctByDisplayMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'displayMode');
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QDistinct>
       distinctByDownloadAccelerate({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2001,6 +2274,18 @@ extension AllSettingsQueryWhereDistinct
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'serverSortField',
           caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QDistinct> distinctBySortOption() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'sortOption');
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QDistinct> distinctBySortOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'sortOrder');
     });
   }
 
@@ -2077,6 +2362,12 @@ extension AllSettingsQueryProperty
     });
   }
 
+  QueryBuilder<AllSettings, int, QQueryOperations> displayModeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'displayMode');
+    });
+  }
+
   QueryBuilder<AllSettings, String, QQueryOperations>
       downloadAccelerateProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -2107,6 +2398,18 @@ extension AllSettingsQueryProperty
       serverSortFieldProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'serverSortField');
+    });
+  }
+
+  QueryBuilder<AllSettings, int, QQueryOperations> sortOptionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'sortOption');
+    });
+  }
+
+  QueryBuilder<AllSettings, int, QQueryOperations> sortOrderProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'sortOrder');
     });
   }
 

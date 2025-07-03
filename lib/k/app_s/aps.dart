@@ -108,6 +108,9 @@ class Aps {
     }
 
     userListSimple.value = await AppDatabase().AllSettings.getUserMinimal();
+    sortOption.value = await AppDatabase().AllSettings.getSortOption();
+    sortOrder.value = await AppDatabase().AllSettings.getSortOrder();
+    displayMode.value = await AppDatabase().AllSettings.getDisplayMode();
     closeMinimize.value = await AppDatabase().AllSettings.getCloseMinimize();
     customVpn.value = await AppDatabase().AllSettings.getCustomVpn();
     beta.value = await AppDatabase().AllSettings.getBeta();
@@ -187,6 +190,7 @@ class Aps {
   /// 设置sortOption
   Future<void> setSortOption(int option) async {
     sortOption.value = option;
+    await AppDatabase().AllSettings.setSortOption(option);
   }
 
   /// 添加排序顺序状态
@@ -198,11 +202,13 @@ class Aps {
   /// 设置sortOrder
   Future<void> setSortOrder(int order) async {
     sortOrder.value = order;
+    await AppDatabase().AllSettings.setSortOrder(order);
   }
 
   /// 设置displayMode
   Future<void> setDisplayMode(int mode) async {
     displayMode.value = mode;
+    await AppDatabase().AllSettings.setDisplayMode(mode);
   }
 
   /// beta - 参与测试版
@@ -914,7 +920,6 @@ class Aps {
 
   Timer? _pingTimer;
 
-  @override
   void dispose() {
     _pingTimer?.cancel();
     _pingTimer = null;

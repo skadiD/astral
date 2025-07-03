@@ -11,16 +11,20 @@ class AllSettingsCz {
   AllSettingsCz(this._isar) {
     init();
   }
-
   Future<void> init() async {
     AllSettings? settings = await _isar.allSettings.get(1);
-    
+
     if (settings == null) {
       // 如果是首次运行，创建新实例并使用默认值
       settings = AllSettings();
       // 只需要设置特殊的默认值（需要异步获取的）
       settings.playerName = await _getDeviceName();
-      
+
+      // 设置排序相关的默认值
+      settings.sortOption = 0; // 默认排序选项
+      settings.sortOrder = 0; // 默认升序
+      settings.displayMode = 0; // 默认显示模式
+
       await _isar.writeTxn(() async {
         await _isar.allSettings.put(settings!);
       });
@@ -393,31 +397,90 @@ class AllSettingsCz {
     }
   }
 
-// 在同一个文件中添加这个方法
-Future<String> _getDeviceName() async {
-  try {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      return androidInfo.model;
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      return iosInfo.name;
-    } else if (Platform.isWindows) {
-      WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo;
-      return windowsInfo.computerName;
-    } else if (Platform.isMacOS) {
-      MacOsDeviceInfo macOSInfo = await deviceInfo.macOsInfo;
-      return macOSInfo.computerName;
-    } else if (Platform.isLinux) {
-      LinuxDeviceInfo linuxInfo = await deviceInfo.linuxInfo;
-      return linuxInfo.name;
+  /// 设置排序选项
+  Future<void> setSortOption(int option) async {
+    AllSettings? config = await _isar.allSettings.get(1);
+    if (config != null) {
+      config.sortOption = option;
+      await _isar.writeTxn(() async {
+        await _isar.allSettings.put(config);
+      });
     }
-
-    return "Default Player"; // 如果无法获取设备名称，则使用默认名称
-  } catch (e) {
-    return "Default Player"; // 错误处理，返回默认名称
   }
-}
+
+  /// 获取排序选项
+  Future<int> getSortOption() async {
+    AllSettings? config = await _isar.allSettings.get(1);
+    if (config != null) {
+      return config.sortOption;
+    }
+    return 0;
+  }
+
+  /// 设置排序方式
+  Future<void> setSortOrder(int order) async {
+    AllSettings? config = await _isar.allSettings.get(1);
+    if (config != null) {
+      config.sortOrder = order;
+      await _isar.writeTxn(() async {
+        await _isar.allSettings.put(config);
+      });
+    }
+  }
+
+  /// 获取排序方式
+  Future<int> getSortOrder() async {
+    AllSettings? config = await _isar.allSettings.get(1);
+    if (config != null) {
+      return config.sortOrder;
+    }
+    return 0;
+  }
+
+  /// 设置显示模式
+  Future<void> setDisplayMode(int mode) async {
+    AllSettings? config = await _isar.allSettings.get(1);
+    if (config != null) {
+      config.displayMode = mode;
+      await _isar.writeTxn(() async {
+        await _isar.allSettings.put(config);
+      });
+    }
+  }
+
+  /// 获取显示模式
+  Future<int> getDisplayMode() async {
+    AllSettings? config = await _isar.allSettings.get(1);
+    if (config != null) {
+      return config.displayMode;
+    }
+    return 0;
+  }
+
+  Future<String> _getDeviceName() async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        return androidInfo.model;
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        return iosInfo.name;
+      } else if (Platform.isWindows) {
+        WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo;
+        return windowsInfo.computerName;
+      } else if (Platform.isMacOS) {
+        MacOsDeviceInfo macOSInfo = await deviceInfo.macOsInfo;
+        return macOSInfo.computerName;
+      } else if (Platform.isLinux) {
+        LinuxDeviceInfo linuxInfo = await deviceInfo.linuxInfo;
+        return linuxInfo.name;
+      }
+
+      return "Default Player"; // 如果无法获取设备名称，则使用默认名称
+    } catch (e) {
+      return "Default Player"; // 错误处理，返回默认名称
+    }
+  }
 }

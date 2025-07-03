@@ -48,6 +48,15 @@ class AllSettings {
   /// 服务器排序字段
   String serverSortField = 'id';
 
+  /// 排序选项 (0: 默认, 1: 延迟, 2: 用户名)
+  int sortOption = 0;
+
+  /// 排序方式 (0: 升序, 1: 降序)
+  int sortOrder = 0;
+
+  /// 显示模式 (0: 默认, 1: 用户, 2: 服务器)
+  int displayMode = 0;
+
   /// 用户ID
   String? userId;
 }
