@@ -17,7 +17,7 @@ class BottomNav extends StatelessWidget {
   BottomNavigationBar build(BuildContext context) {
     // 检查是否为小窗口模式
     final bool isSmallWindow = SmallWindowAdapter.shouldApplyAdapter(context);
-    
+
     return BottomNavigationBar(
       backgroundColor: colorScheme.surfaceContainerLow,
       elevation: 8,
@@ -31,8 +31,14 @@ class BottomNav extends StatelessWidget {
           navigationItems
               .map(
                 (item) => BottomNavigationBarItem(
-                  icon: Icon(item.icon, size: isSmallWindow ? 20 : 24), // 在小窗口模式下使用更小的图标
-                  activeIcon: Icon(item.activeIcon, size: isSmallWindow ? 20 : 24),
+                  icon: Icon(
+                    item.icon,
+                    size: isSmallWindow ? 20 : 24,
+                  ), // 在小窗口模式下使用更小的图标
+                  activeIcon: Icon(
+                    item.activeIcon,
+                    size: isSmallWindow ? 20 : 24,
+                  ),
                   label: item.label,
                 ),
               )
@@ -44,5 +50,3 @@ class BottomNav extends StatelessWidget {
     );
   }
 }
-
-

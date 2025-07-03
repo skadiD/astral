@@ -68,19 +68,21 @@ class _MainScreenState extends State<MainScreen>
     super.didChangeMetrics();
     // 确保context可用
     if (!mounted) return;
-    
+
     // 屏幕尺寸变化时更新
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
-    
+
     // 记录小窗口状态变化
     bool isSmallWindow = screenWidth < 300 || screenHeight < 400;
-    print('Screen size changed: $screenWidth x $screenHeight, isSmallWindow: $isSmallWindow');
-    
+    print(
+      'Screen size changed: $screenWidth x $screenHeight, isSmallWindow: $isSmallWindow',
+    );
+
     // 更新分割宽度
     Aps().updateScreenSplitWidth(screenWidth);
-    
+
     // 强制刷新UI以适应新的尺寸
     if (mounted) {
       setState(() {});

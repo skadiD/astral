@@ -25,6 +25,7 @@ class _KevinAppState extends State<KevinApp> {
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,13 +40,15 @@ class _KevinAppState extends State<KevinApp> {
       builder: (BuildContext context, Widget? child) {
         // 处理 MediaQuery 异常问题，特别是小米澎湃系统和安卓小窗口
         MediaQueryData mediaQuery = MediaQuery.of(context);
-        
+
         // 使用小窗口适配器处理媒体查询
         mediaQuery = SmallWindowAdapter.adaptMediaQuery(mediaQuery);
-        
+
         return MediaQuery(
           data: mediaQuery,
-          child: SmallWindowAdapter.createSafeAreaAdapter(child ?? const SizedBox.shrink()),
+          child: SmallWindowAdapter.createSafeAreaAdapter(
+            child ?? const SizedBox.shrink(),
+          ),
         );
       },
       theme: ThemeData(
