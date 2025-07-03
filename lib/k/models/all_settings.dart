@@ -59,4 +59,7 @@ class AllSettings {
 
   /// 用户ID
   String? userId;
+
+  /// 最新版本号
+  String? latestVersion;
 }

@@ -1,4 +1,5 @@
 import 'package:astral/fun/up.dart';
+import 'package:astral/fun/version_util.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
 import 'package:astral/wid/home_box.dart';
@@ -60,9 +61,37 @@ class _AboutHomeState extends State<AboutHome> {
                 '软件版本: ',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
-              Text(
-                AppInfoUtil.getVersion(),
-                style: TextStyle(color: colorScheme.secondary),
+              Builder(
+                builder: (context) {
+                  final currentVersion = AppInfoUtil.getVersion();
+                  final latestVersion = Aps().latestVersion.watch(context);
+                  final versionText = VersionUtil.getVersionDisplayText(
+                    currentVersion,
+                    latestVersion,
+                  );
+                  final hasNewVersion = VersionUtil.hasNewVersion(
+                    currentVersion,
+                    latestVersion,
+                  );
+
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        versionText,
+                        style: TextStyle(color: colorScheme.secondary),
+                      ),
+                      if (hasNewVersion) ...[
+                        const SizedBox(width: 4),
+                        Icon(
+                          Icons.arrow_upward,
+                          size: 16,
+                          color: colorScheme.primary,
+                        ),
+                      ],
+                    ],
+                  );
+                },
               ),
             ],
           ),

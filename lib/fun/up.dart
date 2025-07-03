@@ -49,6 +49,9 @@ class UpdateChecker {
       debugPrint('当前版本: $currentVersion');
       debugPrint('服务器版本: ${releaseInfo['tag_name']}');
 
+      // 保存最新版本号到数据库
+      await Aps().updateLatestVersion(releaseInfo['tag_name']);
+
       // 比较版本号，如果有新版本则显示更新弹窗
       // 在 checkForUpdates 方法中修改 _showUpdateDialog 调用
       if (_shouldUpdate(currentVersion, releaseInfo['tag_name'])) {

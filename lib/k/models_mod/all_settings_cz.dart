@@ -397,6 +397,23 @@ class AllSettingsCz {
     }
   }
 
+  /// 设置最新版本号
+  Future<void> setLatestVersion(String version) async {
+    AllSettings? settings = await _isar.allSettings.get(1);
+    if (settings != null) {
+      settings.latestVersion = version;
+      await _isar.writeTxn(() async {
+        await _isar.allSettings.put(settings);
+      });
+    }
+  }
+
+  /// 获取最新版本号
+  Future<String?> getLatestVersion() async {
+    AllSettings? settings = await _isar.allSettings.get(1);
+    return settings?.latestVersion;
+  }
+
   /// 设置排序选项
   Future<void> setSortOption(int option) async {
     AllSettings? config = await _isar.allSettings.get(1);

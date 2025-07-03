@@ -52,58 +52,63 @@ const AllSettingsSchema = CollectionSchema(
       name: r'downloadAccelerate',
       type: IsarType.string,
     ),
-    r'listenList': PropertySchema(
+    r'latestVersion': PropertySchema(
       id: 7,
+      name: r'latestVersion',
+      type: IsarType.string,
+    ),
+    r'listenList': PropertySchema(
+      id: 8,
       name: r'listenList',
       type: IsarType.stringList,
     ),
     r'playerName': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'playerName',
       type: IsarType.string,
     ),
     r'room': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'room',
       type: IsarType.long,
     ),
     r'serverSortField': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'serverSortField',
       type: IsarType.string,
     ),
     r'sortOption': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'sortOption',
       type: IsarType.long,
     ),
     r'sortOrder': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'sortOrder',
       type: IsarType.long,
     ),
     r'startup': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'startup',
       type: IsarType.bool,
     ),
     r'startupAutoConnect': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'startupAutoConnect',
       type: IsarType.bool,
     ),
     r'startupMinimize': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'startupMinimize',
       type: IsarType.bool,
     ),
     r'userId': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'userId',
       type: IsarType.string,
     ),
     r'userListSimple': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'userListSimple',
       type: IsarType.bool,
     )
@@ -136,6 +141,12 @@ int _allSettingsEstimateSize(
     }
   }
   bytesCount += 3 + object.downloadAccelerate.length * 3;
+  {
+    final value = object.latestVersion;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final list = object.listenList;
     if (list != null) {
@@ -177,17 +188,18 @@ void _allSettingsSerialize(
   writer.writeStringList(offsets[4], object.customVpn);
   writer.writeLong(offsets[5], object.displayMode);
   writer.writeString(offsets[6], object.downloadAccelerate);
-  writer.writeStringList(offsets[7], object.listenList);
-  writer.writeString(offsets[8], object.playerName);
-  writer.writeLong(offsets[9], object.room);
-  writer.writeString(offsets[10], object.serverSortField);
-  writer.writeLong(offsets[11], object.sortOption);
-  writer.writeLong(offsets[12], object.sortOrder);
-  writer.writeBool(offsets[13], object.startup);
-  writer.writeBool(offsets[14], object.startupAutoConnect);
-  writer.writeBool(offsets[15], object.startupMinimize);
-  writer.writeString(offsets[16], object.userId);
-  writer.writeBool(offsets[17], object.userListSimple);
+  writer.writeString(offsets[7], object.latestVersion);
+  writer.writeStringList(offsets[8], object.listenList);
+  writer.writeString(offsets[9], object.playerName);
+  writer.writeLong(offsets[10], object.room);
+  writer.writeString(offsets[11], object.serverSortField);
+  writer.writeLong(offsets[12], object.sortOption);
+  writer.writeLong(offsets[13], object.sortOrder);
+  writer.writeBool(offsets[14], object.startup);
+  writer.writeBool(offsets[15], object.startupAutoConnect);
+  writer.writeBool(offsets[16], object.startupMinimize);
+  writer.writeString(offsets[17], object.userId);
+  writer.writeBool(offsets[18], object.userListSimple);
 }
 
 AllSettings _allSettingsDeserialize(
@@ -205,17 +217,18 @@ AllSettings _allSettingsDeserialize(
   object.displayMode = reader.readLong(offsets[5]);
   object.downloadAccelerate = reader.readString(offsets[6]);
   object.id = id;
-  object.listenList = reader.readStringList(offsets[7]);
-  object.playerName = reader.readStringOrNull(offsets[8]);
-  object.room = reader.readLongOrNull(offsets[9]);
-  object.serverSortField = reader.readString(offsets[10]);
-  object.sortOption = reader.readLong(offsets[11]);
-  object.sortOrder = reader.readLong(offsets[12]);
-  object.startup = reader.readBool(offsets[13]);
-  object.startupAutoConnect = reader.readBool(offsets[14]);
-  object.startupMinimize = reader.readBool(offsets[15]);
-  object.userId = reader.readStringOrNull(offsets[16]);
-  object.userListSimple = reader.readBool(offsets[17]);
+  object.latestVersion = reader.readStringOrNull(offsets[7]);
+  object.listenList = reader.readStringList(offsets[8]);
+  object.playerName = reader.readStringOrNull(offsets[9]);
+  object.room = reader.readLongOrNull(offsets[10]);
+  object.serverSortField = reader.readString(offsets[11]);
+  object.sortOption = reader.readLong(offsets[12]);
+  object.sortOrder = reader.readLong(offsets[13]);
+  object.startup = reader.readBool(offsets[14]);
+  object.startupAutoConnect = reader.readBool(offsets[15]);
+  object.startupMinimize = reader.readBool(offsets[16]);
+  object.userId = reader.readStringOrNull(offsets[17]);
+  object.userListSimple = reader.readBool(offsets[18]);
   return object;
 }
 
@@ -241,26 +254,28 @@ P _allSettingsDeserializeProp<P>(
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readStringList(offset)) as P;
-    case 8:
       return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readStringList(offset)) as P;
     case 9:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 11:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 12:
       return (reader.readLong(offset)) as P;
     case 13:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 14:
       return (reader.readBool(offset)) as P;
     case 15:
       return (reader.readBool(offset)) as P;
     case 16:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 17:
+      return (reader.readStringOrNull(offset)) as P;
+    case 18:
       return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -866,6 +881,160 @@ extension AllSettingsQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'latestVersion',
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'latestVersion',
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'latestVersion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'latestVersion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'latestVersion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'latestVersion',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'latestVersion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'latestVersion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'latestVersion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'latestVersion',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'latestVersion',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+      latestVersionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'latestVersion',
+        value: '',
       ));
     });
   }
@@ -1861,6 +2030,19 @@ extension AllSettingsQuerySortBy
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortByLatestVersion() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestVersion', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+      sortByLatestVersionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestVersion', Sort.desc);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortByPlayerName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playerName', Sort.asc);
@@ -2077,6 +2259,19 @@ extension AllSettingsQuerySortThenBy
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenByLatestVersion() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestVersion', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+      thenByLatestVersionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestVersion', Sort.desc);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenByPlayerName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playerName', Sort.asc);
@@ -2250,6 +2445,14 @@ extension AllSettingsQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QDistinct> distinctByLatestVersion(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'latestVersion',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QDistinct> distinctByListenList() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'listenList');
@@ -2372,6 +2575,12 @@ extension AllSettingsQueryProperty
       downloadAccelerateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'downloadAccelerate');
+    });
+  }
+
+  QueryBuilder<AllSettings, String?, QQueryOperations> latestVersionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'latestVersion');
     });
   }
 

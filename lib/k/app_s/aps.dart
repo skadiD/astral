@@ -124,6 +124,9 @@ class Aps {
       autoSetMTU.value = await AppDatabase().AllSettings.getAutoSetMTU();
       Aps().updateConnections();
     }
+
+    // 初始化最新版本号
+    latestVersion.value = await AppDatabase().AllSettings.getLatestVersion();
   }
 
   // ConnectionManager
@@ -703,11 +706,19 @@ class Aps {
   /// 房间列表
   final Signal<List<Room>> rooms = signal([]);
 
+  /// 最新版本号
+  final Signal<String?> latestVersion = signal(null);
+
   /// 添加房间
   Future<void> addRoom(Room room) async {
     await AppDatabase().RoomSetting.addRoom(room);
-    debugPrint("添加房间" + room.name);
-    rooms.value = await AppDatabase().RoomSetting.getAllRooms();
+    rooms.value = await AppDatabase().RoomSetting.getAllRooms(); // 重新加载房间列表
+  }
+
+  /// 更新最新版本号
+  Future<void> updateLatestVersion(String version) async {
+    latestVersion.value = version;
+    await AppDatabase().AllSettings.setLatestVersion(version);
   }
 
   /// 删除房间
