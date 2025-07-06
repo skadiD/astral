@@ -7,30 +7,11 @@ import '../frb_generated.dart';
 import '../lib.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `validate_ip`
-// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `FilterRuleConfig`, `RuleConfig`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from_str`
-// These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `action`, `app_path`, `direction`, `local_ip`, `local_port_range`, `local_port`, `priority`, `protocol`, `remote_ip`, `remote_port_range`, `remote_port`
+// These functions are ignored because they are not marked as `pub`: `action`, `add_ip_condition`, `app_path`, `description`, `direction`, `local_ip`, `local_port_range`, `local_port`, `priority`, `protocol`, `remote_ip`, `remote_port_range`, `remote_port`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from_str`
 
 Future<Uint16List> toWideString({required String s}) =>
     RustLib.instance.api.crateApiAstralWfpToWideString(s: s);
-
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterCache>>
-abstract class FilterCache implements RustOpaqueInterface {
-  Map<String, String> get appPathCache;
-
-  Map<String, List<Guid>> get layerCache;
-
-  set appPathCache(Map<String, String> appPathCache);
-
-  set layerCache(Map<String, List<Guid>> layerCache);
-
-  Future<String?> getNtPath({required String originalPath});
-
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<FilterCache> newInstance() =>
-      RustLib.instance.api.crateApiAstralWfpFilterCacheNew();
-}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>>
 abstract class FilterRule implements RustOpaqueInterface {
@@ -38,7 +19,13 @@ abstract class FilterRule implements RustOpaqueInterface {
 
   String? get appPath;
 
+  String? get description;
+
   Direction get direction;
+
+  bool get enabled;
+
+  Uint64List get filterIds;
 
   String? get local;
 
@@ -62,7 +49,13 @@ abstract class FilterRule implements RustOpaqueInterface {
 
   set appPath(String? appPath);
 
+  set description(String? description);
+
   set direction(Direction direction);
+
+  set enabled(bool enabled);
+
+  set filterIds(Uint64List filterIds);
 
   set local(String? local);
 
@@ -86,7 +79,59 @@ abstract class FilterRule implements RustOpaqueInterface {
   static Future<FilterRule> newInstance({required String name}) =>
       RustLib.instance.api.crateApiAstralWfpFilterRuleNew(name: name);
 
-  Future<String> signature();
+  static Future<FilterRule> newWithParams({
+    required String name,
+    String? appPath,
+    String? local,
+    String? remote,
+    int? localPort,
+    int? remotePort,
+    (int, int)? localPortRange,
+    (int, int)? remotePortRange,
+    Protocol? protocol,
+    required Direction direction,
+    required FilterAction action,
+    int? priority,
+    String? description,
+  }) => RustLib.instance.api.crateApiAstralWfpFilterRuleNewWithParams(
+    name: name,
+    appPath: appPath,
+    local: local,
+    remote: remote,
+    localPort: localPort,
+    remotePort: remotePort,
+    localPortRange: localPortRange,
+    remotePortRange: remotePortRange,
+    protocol: protocol,
+    direction: direction,
+    action: action,
+    priority: priority,
+    description: description,
+  );
+
+  Future<void> setAction({required FilterAction action});
+
+  Future<void> setAppPath({String? path});
+
+  Future<void> setDescription({String? description});
+
+  Future<void> setDirection({required Direction direction});
+
+  Future<void> setLocalIp({String? ip});
+
+  Future<void> setLocalPort({int? port});
+
+  Future<void> setLocalPortRange({(int, int)? range});
+
+  Future<void> setPriority({required int priority});
+
+  Future<void> setProtocol({Protocol? protocol});
+
+  Future<void> setRemoteIp({String? ip});
+
+  Future<void> setRemotePort({int? port});
+
+  Future<void> setRemotePortRange({(int, int)? range});
 
   Future<void> validate();
 }
@@ -104,29 +149,16 @@ abstract class IpNetwork implements RustOpaqueInterface {
 
   set prefixLen(int prefixLen);
 
-  Future<bool> contains({required IpAddr ip});
-
+  /// 从CIDR格式字符串创建IP网段
   static Future<IpNetwork> fromCidr({required String cidr}) =>
       RustLib.instance.api.crateApiAstralWfpIpNetworkFromCidr(cidr: cidr);
-
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<IpNetwork> newInstance({
-    required IpAddr ip,
-    required int prefixLen,
-  }) => RustLib.instance.api.crateApiAstralWfpIpNetworkNew(
-    ip: ip,
-    prefixLen: prefixLen,
-  );
 }
-
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Path>>
-abstract class Path implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WfpController>>
 abstract class WfpController implements RustOpaqueInterface {
-  Future<Uint64List> addAdvancedFilters({required List<FilterRule> rules});
+  Future<Uint64List> addFilters({required List<FilterRule> rules});
 
-  Future<BigInt> addAdvancedNetworkFilter({
+  Future<BigInt> addNetworkFilter({
     required FilterRule rule,
     required Guid layerKey,
   });
@@ -139,29 +171,22 @@ abstract class WfpController implements RustOpaqueInterface {
 
   Future<int> deleteFilters({required Uint64List filterIds});
 
-  Future<void> exportRules({required Path filePath});
-
-  Future<Uint64List> getFilterIds({required FilterRule rule});
-
   Future<void> getLayerName({required Guid layerKey});
 
   Future<List<Guid>> getLayersForRule({required FilterRule rule});
-
-  Future<List<FilterRule>> getRules();
-
-  Future<void> importRules({required Path filePath});
 
   Future<void> initialize();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<WfpController> newInstance() =>
       RustLib.instance.api.crateApiAstralWfpWfpControllerNew();
-
-  Future<void> removeFilter({required BigInt filterId});
 }
 
+/// 网络流量方向
 enum Direction { inbound, outbound, both }
 
+/// 过滤动作类型
 enum FilterAction { allow, block }
 
+/// 网络协议类型
 enum Protocol { tcp, udp }
