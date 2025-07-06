@@ -183,7 +183,15 @@ abstract class WfpController implements RustOpaqueInterface {
 }
 
 /// 网络流量方向
-enum Direction { inbound, outbound, both }
+/// 网络流量方向
+enum Direction {
+  /// 入站流量
+  inbound,
+  /// 出站流量 
+  outbound,
+  /// 双向流量
+  both
+}
 
 /// 过滤动作类型
 enum FilterAction { allow, block }

@@ -12,16 +12,29 @@ class WfpPage extends StatefulWidget {
 class _WfpPageState extends State<WfpPage> {
   // init
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    final wfpController = await WfpController.newInstance();
+    _initializeWfp();
+  }
 
-    final rules = FilterRule.newWithParams(
-      name: "测试",
-      direction: Direction.outbound,
-      action: FilterAction.block,
-    );
-    await wfpController.addFilters(rules: [await rules]);
+  Future<void> _initializeWfp() async {
+    try {
+      final wfpController = await WfpController.newInstance();
+
+      await wfpController.initialize();
+
+      final rules = await FilterRule.newWithParams(
+        name: "测试",
+        direction: Direction.outbound,
+        action: FilterAction.block,
+      );
+
+      final result = await wfpController.addFilters(rules: [rules]);
+      print('添加过滤器成功，ID: $result');
+    } catch (e) {
+      // 处理错误
+      print('WFP 初始化错误: $e');
+    }
   }
 
   @override
