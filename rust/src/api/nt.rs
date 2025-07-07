@@ -1,15 +1,20 @@
+#[cfg(target_os = "windows")]
 use std::ffi::OsStr;
+#[cfg(target_os = "windows")]
 use std::os::windows::ffi::OsStrExt;
+#[cfg(target_os = "windows")]
 use std::ptr::null_mut;
+#[cfg(target_os = "windows")]
 use windows::Win32::Storage::FileSystem::QueryDosDeviceW;
+#[cfg(target_os = "windows")]
 use windows::core::{PCWSTR, PWSTR};
 
-#[cfg(not(windows))]
+#[cfg(not(target_os = "windows"))]
 pub fn get_nt_path(_dos_path: &str) -> Option<String> {
     None
 }
 
-#[cfg(windows)]
+#[cfg(target_os = "windows")]
 pub fn get_nt_path(dos_path: &str) -> Option<String> {
     // 提取盘符（如 C:）
     let prefix = &dos_path[..2]; // e.g., "C:"

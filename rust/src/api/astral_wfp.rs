@@ -391,6 +391,7 @@ pub fn to_wide_string(s: &str) -> Vec<u16> {
 
 /// 跨平台网络流量过滤控制器
 #[derive(Clone)]
+#[frb(opaque)]
 pub struct WfpController {
     engine_handle: PlatformHandle,
     pub filter_ids: Vec<u64>,
@@ -680,7 +681,7 @@ impl WfpController {
 
     // 添加网络过滤器的内部方法 - 仅Windows
     #[cfg(target_os = "windows")]
-    pub fn add_network_filter(
+    fn add_network_filter(
         &self,
         rule: &FilterRule,
         layer_key: GUID,
