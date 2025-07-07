@@ -352,7 +352,7 @@ impl FilterRule {
             }
         }
         
-        // 验证本地 IP
+        // 骮证本地 IP
         if let Some(local) = &self.local {
             if local.parse::<IpAddr>().is_err() && IpNetwork::from_cidr(local).is_err() {
                 return Err(format!("无法解析的本地 IP 地址格式: {}", local));
@@ -552,62 +552,95 @@ impl WfpController {
         // 如果有应用程序路径，使用ALE层进行应用程序级别的过滤
         if rule.app_path.is_some() {
             println!("🎯 检测到应用程序路径，使用ALE层进行应用程序过滤");
-            match rule.direction {
-                Direction::Outbound => {
-                    if is_ipv6 {
-                        layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V6);
-                    } else {
+            
+            // 对于应用程序级别的过滤，使用更全面的层组合
+            if !is_ipv6 {
+                // IPv4 应用程序过滤
+                match rule.direction {
+                    Direction::Outbound => {
+                        // 出站连接：拦截应用程序发起的连接
                         layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V4);
-                    }
-                },
-                Direction::Inbound => {
-                    if is_ipv6 {
-                        layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6);
-                    } else {
+                        // 额外的流量控制层
+                        layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);
+                        // 端点关闭层（确保连接完全被控制）
+                        layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);
+                    },
+                    Direction::Inbound => {
+                        // 入站连接：拦截应用程序接收的连接
                         layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4);
+                        // 监听层（控制应用程序的监听端口）
+                        layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V4);
+                        // 流量控制层
+                        layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);
+                        // 端点关闭层
+                        layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);
+                    },
+                    Direction::Both => {
+                        // 双向控制：完全控制应用程序的所有网络活动
+                        layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V4);        // 出站连接
+                        layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4);    // 入站连接
+                        layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V4);         // 监听端口
+                        layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);    // 已建立的流量
+                        layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);    // 端点关闭
+                        // 可选：资源分配层（更细粒度的控制）
+                        layers.push(FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4);
                     }
-                },
-                Direction::Both => {
-                    if is_ipv6 {
+                }
+            } else {
+                // IPv6 应用程序过滤
+                match rule.direction {
+                    Direction::Outbound => {
+                        layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V6);
+                        layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
+                        layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
+                    },
+                    Direction::Inbound => {
+                        layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6);
+                        layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V6);
+                        layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
+                        layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
+                    },
+                    Direction::Both => {
                         layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V6);
                         layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6);
-                    } else {
-                        layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V4);
-                        layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4);
+                        layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V6);
+                        layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
+                        layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
+                        layers.push(FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6);
                     }
                 }
             }
         } else {
             println!("🌐 未指定应用程序路径，使用网络层进行IP过滤");
-            // 如果没有应用程序路径，可以使用更底层的网络过滤
+            // 如果没有应用程序路径，使用传输层进行更精确的控制
             match rule.direction {
                 Direction::Outbound => {
                     if is_ipv6 {
-                        layers.push(FWPM_LAYER_OUTBOUND_IPPACKET_V6);
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V6);
                     } else {
-                        layers.push(FWPM_LAYER_OUTBOUND_IPPACKET_V4);
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V4);
                     }
                 },
                 Direction::Inbound => {
                     if is_ipv6 {
-                        layers.push(FWPM_LAYER_INBOUND_IPPACKET_V6);
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V6);
                     } else {
-                        layers.push(FWPM_LAYER_INBOUND_IPPACKET_V4);
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V4);
                     }
                 },
                 Direction::Both => {
                     if is_ipv6 {
-                        layers.push(FWPM_LAYER_OUTBOUND_IPPACKET_V6);
-                        layers.push(FWPM_LAYER_INBOUND_IPPACKET_V6);
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V6);
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V6);
                     } else {
-                        layers.push(FWPM_LAYER_OUTBOUND_IPPACKET_V4);
-                        layers.push(FWPM_LAYER_INBOUND_IPPACKET_V4);
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V4);
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V4);
                     }
                 }
             }
         }
         
-        println!("📋 选择的WFP层: {:?}", layers.iter().map(|l| self.get_layer_name(l)).collect::<Vec<_>>());
+        println!("📋 选择的WFP层 ({} 个): {:?}", layers.len(), layers.iter().map(|l| self.get_layer_name(l)).collect::<Vec<_>>());
         layers
     }
 
@@ -676,50 +709,75 @@ impl WfpController {
         let mut appid_utf16: Option<Vec<u16>> = None;
         let mut app_id_blob: Option<FWP_BYTE_BLOB> = None;
         
+        // 根据层类型决定是否添加某些条件
+        let layer_name = self.get_layer_name(&layer_key);
+        let supports_app_id = matches!(layer_key, 
+            FWPM_LAYER_ALE_AUTH_CONNECT_V4 | FWPM_LAYER_ALE_AUTH_CONNECT_V6 |
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4 | FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6 |
+            FWPM_LAYER_ALE_AUTH_LISTEN_V4 | FWPM_LAYER_ALE_AUTH_LISTEN_V6 |
+            FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4 | FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6 |
+            FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4 | FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6 |
+            FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 | FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6
+        );
+        
+        println!("🔧 处理层: {} (支持APP_ID: {})", layer_name, supports_app_id);
+        
         // 添加应用程序路径条件
         if let Some(app_path) = &rule.app_path {
-            println!("🔍 处理应用程序路径: {}", app_path);
-            
-            // 使用to_wide_string函数，它会添加null终止符
-            let utf16_path = to_wide_string(app_path);
-            
-            // 创建FWP_BYTE_BLOB结构，size包含null终止符
-            let blob = FWP_BYTE_BLOB {
-                size: (utf16_path.len() * 2) as u32,
-                data: utf16_path.as_ptr() as *mut u8,
-            };
-            
-            println!("📦 应用程序ID blob大小: {} 字节", blob.size);
-            println!("📦 应用程序路径UTF-16长度: {} 字符", utf16_path.len());
-            
-            // 打印十六进制数据用于调试
-            println!("📦 应用程序路径十六进制数据:");
-            let bytes = unsafe { std::slice::from_raw_parts(blob.data, blob.size as usize) };
-            for (i, chunk) in bytes.chunks(16).enumerate() {
-                print!("  {:04x}: ", i * 16);
-                for byte in chunk {
-                    print!("{:02x} ", byte);
+            if supports_app_id {
+                println!("🔍 处理应用程序路径: {}", app_path);
+                
+                // 使用to_wide_string函数，它会添加null终止符
+                let utf16_path = to_wide_string(app_path);
+                
+                // 创建FWP_BYTE_BLOB结构，size包含null终止符
+                let blob = FWP_BYTE_BLOB {
+                    size: (utf16_path.len() * 2) as u32,
+                    data: utf16_path.as_ptr() as *mut u8,
+                };
+                
+                println!("📦 应用程序ID blob大小: {} 字节", blob.size);
+                println!("📦 应用程序路径UTF-16长度: {} 字符", utf16_path.len());
+                
+                // 打印十六进制数据用于调试
+                println!("📦 应用程序路径十六进制数据:");
+                let bytes = unsafe { std::slice::from_raw_parts(blob.data, blob.size as usize) };
+                for (i, chunk) in bytes.chunks(16).enumerate() {
+                    print!("  {:04x}: ", i * 16);
+                    for byte in chunk {
+                        print!("{:02x} ", byte);
+                    }
+                    println!();
                 }
-                println!();
-            }
-            
-            // 添加应用程序ID过滤条件
-            conditions.push(FWPM_FILTER_CONDITION0 {
-                fieldKey: FWPM_CONDITION_ALE_APP_ID,
-                matchType: FWP_MATCH_EQUAL,
-                conditionValue: FWP_CONDITION_VALUE0 {
-                    r#type: FWP_BYTE_BLOB_TYPE,
-                    Anonymous: FWP_CONDITION_VALUE0_0 {
-                        byteBlob: &blob as *const _ as *mut _,
+                
+                // 添加应用程序ID过滤条件
+                conditions.push(FWPM_FILTER_CONDITION0 {
+                    fieldKey: FWPM_CONDITION_ALE_APP_ID,
+                    matchType: FWP_MATCH_EQUAL,
+                    conditionValue: FWP_CONDITION_VALUE0 {
+                        r#type: FWP_BYTE_BLOB_TYPE,
+                        Anonymous: FWP_CONDITION_VALUE0_0 {
+                            byteBlob: &blob as *const _ as *mut _,
+                        },
                     },
-                },
-            });
-            
-            // 保存数据确保生命周期
-            appid_utf16 = Some(utf16_path);
-            app_id_blob = Some(blob);
-            
-            println!("✅ 应用程序条件已添加");
+                });
+                
+                // 保存数据确保生命周期
+                appid_utf16 = Some(utf16_path);
+                app_id_blob = Some(blob);
+                
+                println!("✅ 应用程序条件已添加");
+            } else {
+                println!("⚠️ 层 {} 不支持应用程序ID条件，跳过应用程序路径处理", layer_name);
+                // 对于不支持APP_ID的层，如果只有应用程序路径条件，则跳过此层
+                if rule.local.is_none() && rule.remote.is_none() && 
+                   rule.local_port.is_none() && rule.remote_port.is_none() &&
+                   rule.local_port_range.is_none() && rule.remote_port_range.is_none() &&
+                   rule.protocol.is_none() {
+                    println!("⚠️ 层 {} 上没有其他可用条件，跳过此过滤器", layer_name);
+                    return Err(anyhow::anyhow!("层不支持所需条件"));
+                }
+            }
         } else {
             println!("📝 未指定应用程序路径，规则将应用于所有程序");
         }
@@ -1105,6 +1163,18 @@ impl WfpController {
                 FWPM_LAYER_ALE_AUTH_CONNECT_V6 => "ALE_AUTH_CONNECT_V6",
                 FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4 => "ALE_AUTH_RECV_ACCEPT_V4",
                 FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6 => "ALE_AUTH_RECV_ACCEPT_V6",
+                FWPM_LAYER_ALE_AUTH_LISTEN_V4 => "ALE_AUTH_LISTEN_V4",
+                FWPM_LAYER_ALE_AUTH_LISTEN_V6 => "ALE_AUTH_LISTEN_V6",
+                FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4 => "ALE_FLOW_ESTABLISHED_V4",
+                FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6 => "ALE_FLOW_ESTABLISHED_V6",
+                FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4 => "ALE_ENDPOINT_CLOSURE_V4",
+                FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6 => "ALE_ENDPOINT_CLOSURE_V6",
+                FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 => "ALE_RESOURCE_ASSIGNMENT_V4",
+                FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6 => "ALE_RESOURCE_ASSIGNMENT_V6",
+                FWPM_LAYER_OUTBOUND_TRANSPORT_V4 => "OUTBOUND_TRANSPORT_V4",
+                FWPM_LAYER_OUTBOUND_TRANSPORT_V6 => "OUTBOUND_TRANSPORT_V6",
+                FWPM_LAYER_INBOUND_TRANSPORT_V4 => "INBOUND_TRANSPORT_V4",
+                FWPM_LAYER_INBOUND_TRANSPORT_V6 => "INBOUND_TRANSPORT_V6",
                 FWPM_LAYER_OUTBOUND_IPPACKET_V4 => "OUTBOUND_IPPACKET_V4",
                 FWPM_LAYER_OUTBOUND_IPPACKET_V6 => "OUTBOUND_IPPACKET_V6",
                 FWPM_LAYER_INBOUND_IPPACKET_V4 => "INBOUND_IPPACKET_V4",
@@ -1174,4 +1244,5 @@ impl WfpController {
         
         Ok(deleted_count)
     }
+
 }
