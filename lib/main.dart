@@ -16,7 +16,9 @@ void main() async {
   // Linux 下检测是否为 root 权限
   if (!kIsWeb && Platform.isLinux) {
     final env = Platform.environment;
-    if (env['USER'] != 'root' && env['SUDO_USER'] == null && env['UID'] != '0') {
+    if (env['USER'] != 'root' &&
+        env['SUDO_USER'] == null &&
+        env['UID'] != '0') {
       print('请使用 sudo 运行本程序！');
       exit(1);
     }

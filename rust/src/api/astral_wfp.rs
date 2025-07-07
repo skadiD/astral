@@ -3,7 +3,7 @@
 //! 本模块提供了基于 Windows Filtering Platform (WFP) 的网络流量过滤功能，
 //! 支持应用程序级别的网络访问控制、IP地址过滤、端口过滤等多种功能。
 
-use std::ffi::OsStr;
+use std::{ffi::OsStr, os::windows::ffi::OsStringExt};
 use std::os::windows::ffi::OsStrExt;
 use std::ptr;
 pub use std::net::IpAddr;
@@ -413,44 +413,39 @@ impl WfpController {
 
     // 添加过滤器规则
     pub fn add_filters(&mut self, rules: &[FilterRule]) -> Result<Vec<u64>> {
-        unsafe {
-            let mut added_ids = Vec::new();
-            let mut added_count = 0;
+        let mut added_ids = Vec::new();
+        let mut added_count = 0;
+        
+        for rule in rules {
+            println!("🔍 处理规则: {}", rule.name);
             
-            for rule in rules {
-                if !rule.enabled {
-                    println!("⏸️ 跳过禁用的规则: {}", rule.name);
-                    continue;
-                }
-                
-                if let Err(e) = rule.validate() {
-                    println!("❌ 规则验证失败: {}", e);
-                    continue;
-                }
-                
-                let layers = self.get_layers_for_rule(rule);
-                for layer in layers {
-                    match self.add_network_filter(rule, layer) {
-                        Ok(filter_id) => {
-                            self.filter_ids.push(filter_id);
-                            added_ids.push(filter_id);
-                            added_count += 1;
-                            println!("✅ 过滤器在层 {} 上添加成功 (ID: {})", self.get_layer_name(&layer), filter_id);
-                        },
-                        Err(e) => {
-                            println!("❌ 过滤器在层 {} 上添加失败: {:?}", self.get_layer_name(&layer), e);
-                        }
+            if let Err(e) = rule.validate() {
+                println!("❌ 规则验证失败: {}", e);
+                continue;
+            }
+            
+            let layers = self.get_layers_for_rule(rule);
+            for layer in layers {
+                match self.add_network_filter(rule, layer) {
+                    Ok(filter_id) => {
+                        self.filter_ids.push(filter_id);
+                        added_ids.push(filter_id);
+                        added_count += 1;
+                        println!("✅ 过滤器在层 {} 上添加成功 (ID: {})", self.get_layer_name(&layer), filter_id);
+                    },
+                    Err(e) => {
+                        println!("❌ 过滤器在层 {} 上添加失败: {:?}", self.get_layer_name(&layer), e);
                     }
                 }
             }
+        }
 
-            if added_count > 0 {
-                println!("🔍 网络流量控制已启动，共添加了 {} 个过滤器", added_count);
-                Ok(added_ids)
-            } else {
-                println!("❌ 没有成功添加任何过滤器");
-                Err(Error::from_win32())
-            }
+        if added_count > 0 {
+            println!("🔍 网络流量控制已启动，共添加了 {} 个过滤器", added_count);
+            Ok(added_ids)
+        } else {
+            println!("❌ 没有成功添加任何过滤器");
+            Err(Error::from_win32())
         }
     }
 
@@ -557,32 +552,52 @@ impl WfpController {
 
         let mut conditions = Vec::new();
         
+        // 在函数开始处声明这些变量，确保它们在整个函数生命周期内有效
+        let mut appid_utf16: Option<Vec<u16>> = None;
+        let mut app_id_blob: Option<FWP_BYTE_BLOB> = None;
+        
         // 添加应用程序路径条件
         if let Some(app_path) = &rule.app_path {
             println!("🔍 处理应用程序路径: {}", app_path);
             
-            let appid_utf16: Vec<u16> = app_path
-                .encode_utf16()
-                .chain(std::iter::once(0))
-                .collect();
+            // 使用to_wide_string函数，它会添加null终止符
+            let utf16_path = to_wide_string(app_path);
             
-            let app_id = FWP_BYTE_BLOB {
-                size: (appid_utf16.len() * 2) as u32,
-                data: appid_utf16.as_ptr() as *mut u8,
+            // 创建FWP_BYTE_BLOB结构，size包含null终止符
+            let blob = FWP_BYTE_BLOB {
+                size: (utf16_path.len() * 2) as u32,
+                data: utf16_path.as_ptr() as *mut u8,
             };
             
-            println!("📦 应用程序ID blob大小: {} 字节", app_id.size);
+            println!("📦 应用程序ID blob大小: {} 字节", blob.size);
+            println!("📦 应用程序路径UTF-16长度: {} 字符", utf16_path.len());
             
+            // 打印十六进制数据用于调试
+            println!("📦 应用程序路径十六进制数据:");
+            let bytes = unsafe { std::slice::from_raw_parts(blob.data, blob.size as usize) };
+            for (i, chunk) in bytes.chunks(16).enumerate() {
+                print!("  {:04x}: ", i * 16);
+                for byte in chunk {
+                    print!("{:02x} ", byte);
+                }
+                println!();
+            }
+            
+            // 添加应用程序ID过滤条件
             conditions.push(FWPM_FILTER_CONDITION0 {
                 fieldKey: FWPM_CONDITION_ALE_APP_ID,
                 matchType: FWP_MATCH_EQUAL,
                 conditionValue: FWP_CONDITION_VALUE0 {
                     r#type: FWP_BYTE_BLOB_TYPE,
                     Anonymous: FWP_CONDITION_VALUE0_0 {
-                        byteBlob: &app_id as *const _ as *mut _,
+                        byteBlob: &blob as *const _ as *mut _,
                     },
                 },
             });
+            
+            // 保存数据确保生命周期
+            appid_utf16 = Some(utf16_path);
+            app_id_blob = Some(blob);
             
             println!("✅ 应用程序条件已添加");
         } else {
@@ -766,8 +781,99 @@ impl WfpController {
         };
 
         let mut filter_id = 0u64;
+        
+        // 确保应用程序ID数据在整个过滤器添加过程中有效
         let add_result = unsafe {
-            FwpmFilterAdd0(self.engine_handle, &filter, None, Some(&mut filter_id))
+            if let (Some(utf16_data), Some(_blob_data)) = (&appid_utf16, &app_id_blob) {
+                // 创建新的blob，确保指针有效
+                let fresh_blob = FWP_BYTE_BLOB {
+                    size: (utf16_data.len() * 2) as u32,
+                    data: utf16_data.as_ptr() as *mut u8,
+                };
+                
+                // 重新创建所有条件
+                let mut updated_conditions = Vec::new();
+                
+                for condition in &conditions {
+                    if condition.fieldKey == FWPM_CONDITION_ALE_APP_ID {
+                        // 重新创建应用程序ID条件
+                        updated_conditions.push(FWPM_FILTER_CONDITION0 {
+                            fieldKey: FWPM_CONDITION_ALE_APP_ID,
+                            matchType: FWP_MATCH_EQUAL,
+                            conditionValue: FWP_CONDITION_VALUE0 {
+                                r#type: FWP_BYTE_BLOB_TYPE,
+                                Anonymous: FWP_CONDITION_VALUE0_0 {
+                                    byteBlob: &fresh_blob as *const _ as *mut _,
+                                },
+                            },
+                        });
+                    } else {
+                        updated_conditions.push(*condition);
+                    }
+                }
+                
+                // 创建新的过滤器结构
+                let updated_filter = FWPM_FILTER0 {
+                    filterKey: GUID::zeroed(),
+                    displayData: FWPM_DISPLAY_DATA0 {
+                        name: PWSTR(filter_name.as_ptr() as *mut u16),
+                        description: PWSTR(filter_desc.as_ptr() as *mut u16),
+                    },
+                    flags: FWPM_FILTER_FLAGS(0),
+                    providerKey: ptr::null_mut(),
+                    providerData: FWP_BYTE_BLOB {
+                        size: 0,
+                        data: ptr::null_mut(),
+                    },
+                    layerKey: layer_key,
+                    subLayerKey: FWPM_SUBLAYER_UNIVERSAL,
+                    weight: FWP_VALUE0 {
+                        r#type: FWP_UINT64,
+                        Anonymous: FWP_VALUE0_0 {
+                            uint64: &(rule.priority as u64) as *const u64 as *mut u64,
+                        },
+                    },
+                    numFilterConditions: updated_conditions.len() as u32,
+                    filterCondition: if !updated_conditions.is_empty() {
+                        updated_conditions.as_ptr() as *mut _
+                    } else {
+                        ptr::null_mut()
+                    },
+                    action: FWPM_ACTION0 {
+                        r#type: FWP_ACTION_TYPE(action_type),
+                        Anonymous: FWPM_ACTION0_0 {
+                            calloutKey: GUID::zeroed(),
+                        },
+                    },
+                    Anonymous: FWPM_FILTER0_0 {
+                        rawContext: 0,
+                    },
+                    reserved: ptr::null_mut(),
+                    filterId: 0,
+                    effectiveWeight: FWP_VALUE0 {
+                        r#type: FWP_UINT64,
+                        Anonymous: FWP_VALUE0_0 {
+                            uint64: &(rule.priority as u64) as *const u64 as *mut u64,
+                        },
+                    },
+                };
+                
+                // 添加调试信息
+                println!("🔍 应用程序ID调试信息:");
+                println!("  - 路径: {}", rule.app_path.as_ref().unwrap());
+                println!("  - UTF-16字符数: {}", utf16_data.len());
+                println!("  - 字节大小: {}", fresh_blob.size);
+                println!("  - 数据指针: {:p}", fresh_blob.data);
+                
+                // 打印实际的字符串内容
+                let wide_str = std::ffi::OsString::from_wide(&utf16_data[..utf16_data.len()-1]); // 去掉null终止符
+                println!("  - 重建的字符串: {:?}", wide_str);
+                
+                FwpmFilterAdd0(self.engine_handle, &updated_filter, None, Some(&mut filter_id))
+            } else {
+                // 没有应用程序路径，使用原始过滤器
+                FwpmFilterAdd0(self.engine_handle, &filter, None, Some(&mut filter_id))
+            }
         };
 
         if WIN32_ERROR(add_result) == ERROR_SUCCESS {
@@ -909,4 +1015,15 @@ impl WfpController {
             }
         }
     }
+}
+
+// 用于Dart端调用的暴露API
+#[frb(sync)]
+pub fn create_filter_rule(name: &str) -> FilterRule {
+    FilterRule::new(name)
+}
+
+#[frb(sync)]
+pub fn create_wfp_controller() -> Result<WfpController> {
+    WfpController::new()
 }
