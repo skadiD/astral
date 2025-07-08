@@ -40,7 +40,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.10.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 709008119;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1811977965;
 
 // Section: executor
 
@@ -140,52 +140,6 @@ fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_app_path_impl(
         },
     )
 }
-fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_description_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_auto_accessor_get_description",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let mut api_that_guard = None;
-                let decode_indices_ =
-                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                            &api_that, 0, false,
-                        ),
-                    ]);
-                for i in decode_indices_ {
-                    match i {
-                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
-                        _ => unreachable!(),
-                    }
-                }
-                let api_that_guard = api_that_guard.unwrap();
-                let output_ok = Result::<_, ()>::Ok(api_that_guard.description.clone())?;
-                Ok(output_ok)
-            })())
-        },
-    )
-}
 fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_direction_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -227,52 +181,6 @@ fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_direction_impl(
                 }
                 let api_that_guard = api_that_guard.unwrap();
                 let output_ok = Result::<_, ()>::Ok(api_that_guard.direction.clone())?;
-                Ok(output_ok)
-            })())
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_enabled_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_auto_accessor_get_enabled",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let mut api_that_guard = None;
-                let decode_indices_ =
-                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                            &api_that, 0, false,
-                        ),
-                    ]);
-                for i in decode_indices_ {
-                    match i {
-                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
-                        _ => unreachable!(),
-                    }
-                }
-                let api_that_guard = api_that_guard.unwrap();
-                let output_ok = Result::<_, ()>::Ok(api_that_guard.enabled.clone())?;
                 Ok(output_ok)
             })())
         },
@@ -840,57 +748,6 @@ fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_app_path_impl(
         },
     )
 }
-fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_description_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_auto_accessor_set_description",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_description = <Option<String>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let mut api_that_guard = None;
-                let decode_indices_ =
-                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                            &api_that, 0, true,
-                        ),
-                    ]);
-                for i in decode_indices_ {
-                    match i {
-                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                        _ => unreachable!(),
-                    }
-                }
-                let mut api_that_guard = api_that_guard.unwrap();
-                let output_ok = Result::<_, ()>::Ok({
-                    {
-                        api_that_guard.description = api_description;
-                    };
-                })?;
-                Ok(output_ok)
-            })())
-        },
-    )
-}
 fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_direction_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -935,57 +792,6 @@ fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_direction_impl(
                 let output_ok = Result::<_, ()>::Ok({
                     {
                         api_that_guard.direction = api_direction;
-                    };
-                })?;
-                Ok(output_ok)
-            })())
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_enabled_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_auto_accessor_set_enabled",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_enabled = <bool>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let mut api_that_guard = None;
-                let decode_indices_ =
-                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                            &api_that, 0, true,
-                        ),
-                    ]);
-                for i in decode_indices_ {
-                    match i {
-                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                        _ => unreachable!(),
-                    }
-                }
-                let mut api_that_guard = api_that_guard.unwrap();
-                let output_ok = Result::<_, ()>::Ok({
-                    {
-                        api_that_guard.enabled = api_enabled;
                     };
                 })?;
                 Ok(output_ok)
@@ -1504,40 +1310,6 @@ fn wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_port_range_
         },
     )
 }
-fn wire__crate__api__astral_wfp__FilterRule_new_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_new",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_name = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::astral_wfp::FilterRule::new(&api_name))?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
 fn wire__crate__api__astral_wfp__FilterRule_new_with_params_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1593,667 +1365,6 @@ fn wire__crate__api__astral_wfp__FilterRule_new_with_params_impl(
                             api_priority,
                             api_description,
                         ))?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_action_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_action",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_action = <crate::api::astral_wfp::FilterAction>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_action(
-                            &mut *api_that_guard,
-                            api_action,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_app_path_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_app_path",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_path = <Option<String>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_app_path(
-                            &mut *api_that_guard,
-                            api_path,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_description_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_description",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_description = <Option<String>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_description(
-                            &mut *api_that_guard,
-                            api_description,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_direction_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_direction",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_direction = <crate::api::astral_wfp::Direction>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_direction(
-                            &mut *api_that_guard,
-                            api_direction,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_local_ip_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_local_ip",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_ip = <Option<String>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_local_ip(
-                            &mut *api_that_guard,
-                            api_ip,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_local_port_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_local_port",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_port = <Option<u16>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_local_port(
-                            &mut *api_that_guard,
-                            api_port,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_local_port_range_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_local_port_range",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_range = <Option<(u16, u16)>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_local_port_range(
-                            &mut *api_that_guard,
-                            api_range,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_priority_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_priority",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_priority = <u32>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_priority(
-                            &mut *api_that_guard,
-                            api_priority,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_protocol_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_protocol",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_protocol =
-                <Option<crate::api::astral_wfp::Protocol>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_protocol(
-                            &mut *api_that_guard,
-                            api_protocol,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_remote_ip_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_remote_ip",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_ip = <Option<String>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_remote_ip(
-                            &mut *api_that_guard,
-                            api_ip,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_remote_port_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_remote_port",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_port = <Option<u16>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_remote_port(
-                            &mut *api_that_guard,
-                            api_port,
-                        );
-                    })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__astral_wfp__FilterRule_set_remote_port_range_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "FilterRule_set_remote_port_range",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FilterRule>,
-            >>::sse_decode(&mut deserializer);
-            let api_range = <Option<(u16, u16)>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let mut api_that_guard = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
-                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                &api_that, 0, true,
-                            ),
-                        ]);
-                    for i in decode_indices_ {
-                        match i {
-                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
-                            _ => unreachable!(),
-                        }
-                    }
-                    let mut api_that_guard = api_that_guard.unwrap();
-                    let output_ok = Result::<_, ()>::Ok({
-                        crate::api::astral_wfp::FilterRule::set_remote_port_range(
-                            &mut *api_that_guard,
-                            api_range,
-                        );
-                    })?;
                     Ok(output_ok)
                 })())
             }
@@ -4267,161 +3378,88 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        31 => wire__crate__api__astral_wfp__FilterRule_new_impl(port, ptr, rust_vec_len, data_len),
-        32 => wire__crate__api__astral_wfp__FilterRule_new_with_params_impl(
+        27 => wire__crate__api__astral_wfp__FilterRule_new_with_params_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        33 => wire__crate__api__astral_wfp__FilterRule_set_action_impl(
+        28 => wire__crate__api__astral_wfp__FilterRule_validate_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        34 => wire__crate__api__astral_wfp__FilterRule_set_app_path_impl(
+        33 => wire__crate__api__astral_wfp__IpNetwork_from_cidr_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        35 => wire__crate__api__astral_wfp__FilterRule_set_description_impl(
+        34 => wire__crate__api__astral_wfp__WfpController_add_filters_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        36 => wire__crate__api__astral_wfp__FilterRule_set_direction_impl(
+        37 => wire__crate__api__astral_wfp__WfpController_cleanup_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        37 => wire__crate__api__astral_wfp__FilterRule_set_local_ip_impl(
+        38 => wire__crate__api__astral_wfp__WfpController_delete_filters_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        38 => wire__crate__api__astral_wfp__FilterRule_set_local_port_impl(
+        39 => wire__crate__api__astral_wfp__WfpController_get_layer_name_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        39 => wire__crate__api__astral_wfp__FilterRule_set_local_port_range_impl(
+        40 => wire__crate__api__astral_wfp__WfpController_initialize_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        40 => wire__crate__api__astral_wfp__FilterRule_set_priority_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        41 => wire__crate__api__astral_wfp__FilterRule_set_protocol_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        42 => wire__crate__api__astral_wfp__FilterRule_set_remote_ip_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        43 => wire__crate__api__astral_wfp__FilterRule_set_remote_port_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        44 => wire__crate__api__astral_wfp__FilterRule_set_remote_port_range_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        45 => wire__crate__api__astral_wfp__FilterRule_validate_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        50 => wire__crate__api__astral_wfp__IpNetwork_from_cidr_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        51 => wire__crate__api__astral_wfp__WfpController_add_filters_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        54 => wire__crate__api__astral_wfp__WfpController_cleanup_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        55 => wire__crate__api__astral_wfp__WfpController_delete_filters_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        56 => wire__crate__api__astral_wfp__WfpController_get_layer_name_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        57 => wire__crate__api__astral_wfp__WfpController_initialize_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        58 => {
+        41 => {
             wire__crate__api__astral_wfp__WfpController_new_impl(port, ptr, rust_vec_len, data_len)
         }
-        59 => wire__crate__api__simple__close_server_impl(port, ptr, rust_vec_len, data_len),
-        60 => wire__crate__api__simple__create_server_impl(port, ptr, rust_vec_len, data_len),
-        61 => wire__crate__api__simple__easytier_version_impl(port, ptr, rust_vec_len, data_len),
-        62 => wire__crate__api__hops__get_all_interfaces_metrics_impl(
+        42 => wire__crate__api__simple__close_server_impl(port, ptr, rust_vec_len, data_len),
+        43 => wire__crate__api__simple__create_server_impl(port, ptr, rust_vec_len, data_len),
+        44 => wire__crate__api__simple__easytier_version_impl(port, ptr, rust_vec_len, data_len),
+        45 => wire__crate__api__hops__get_all_interfaces_metrics_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => {
+        46 => {
             wire__crate__api__firewall__get_firewall_status_impl(port, ptr, rust_vec_len, data_len)
         }
-        64 => wire__crate__api__simple__get_ips_impl(port, ptr, rust_vec_len, data_len),
-        65 => wire__crate__api__simple__get_network_status_impl(port, ptr, rust_vec_len, data_len),
-        66 => wire__crate__api__nt__get_nt_path_impl(port, ptr, rust_vec_len, data_len),
-        67 => {
+        47 => wire__crate__api__simple__get_ips_impl(port, ptr, rust_vec_len, data_len),
+        48 => wire__crate__api__simple__get_network_status_impl(port, ptr, rust_vec_len, data_len),
+        49 => wire__crate__api__nt__get_nt_path_impl(port, ptr, rust_vec_len, data_len),
+        50 => {
             wire__crate__api__simple__get_peer_route_pairs_impl(port, ptr, rust_vec_len, data_len)
         }
-        68 => wire__crate__api__simple__get_running_info_impl(port, ptr, rust_vec_len, data_len),
-        69 => wire__crate__api__simple__handle_event_impl(port, ptr, rust_vec_len, data_len),
-        70 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        71 => wire__crate__api__simple__is_easytier_running_impl(port, ptr, rust_vec_len, data_len),
-        72 => {
+        51 => wire__crate__api__simple__get_running_info_impl(port, ptr, rust_vec_len, data_len),
+        52 => wire__crate__api__simple__handle_event_impl(port, ptr, rust_vec_len, data_len),
+        53 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        54 => wire__crate__api__simple__is_easytier_running_impl(port, ptr, rust_vec_len, data_len),
+        55 => {
             wire__crate__api__simple__send_udp_to_localhost_impl(port, ptr, rust_vec_len, data_len)
         }
-        73 => {
+        56 => {
             wire__crate__api__firewall__set_firewall_status_impl(port, ptr, rust_vec_len, data_len)
         }
-        74 => wire__crate__api__hops__set_interface_metric_impl(port, ptr, rust_vec_len, data_len),
-        75 => wire__crate__api__simple__set_tun_fd_impl(port, ptr, rust_vec_len, data_len),
-        76 => wire__crate__api__astral_wfp__to_wide_string_impl(port, ptr, rust_vec_len, data_len),
+        57 => wire__crate__api__hops__set_interface_metric_impl(port, ptr, rust_vec_len, data_len),
+        58 => wire__crate__api__simple__set_tun_fd_impl(port, ptr, rust_vec_len, data_len),
+        59 => wire__crate__api__astral_wfp__to_wide_string_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4444,172 +3482,152 @@ fn pde_ffi_dispatcher_sync_impl(
             rust_vec_len,
             data_len,
         ),
-        3 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_description_impl(
+        3 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_direction_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        4 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_direction_impl(
+        4 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_filter_ids_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        5 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_enabled_impl(
+        5 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_local_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        6 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_filter_ids_impl(
+        6 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_local_port_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        7 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_local_impl(
+        7 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_local_port_range_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        8 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_local_port_impl(
+        8 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_name_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        9 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_local_port_range_impl(
+        9 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_priority_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        10 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_name_impl(
+        10 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_protocol_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        11 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_priority_impl(
+        11 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_remote_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        12 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_protocol_impl(
+        12 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_remote_port_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        13 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_remote_impl(
+        13 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_remote_port_range_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        14 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_remote_port_impl(
+        14 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_action_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        15 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_get_remote_port_range_impl(
+        15 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_app_path_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        16 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_action_impl(
+        16 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_direction_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_app_path_impl(
+        17 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_filter_ids_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_description_impl(
+        18 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_local_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_direction_impl(
+        19 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_local_port_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        20 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_enabled_impl(
+        20 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_local_port_range_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_filter_ids_impl(
+        21 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_name_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_local_impl(
+        22 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_priority_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_local_port_impl(
+        23 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_protocol_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        24 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_local_port_range_impl(
+        24 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_name_impl(
+        25 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_port_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_priority_impl(
+        26 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_port_range_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        27 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_protocol_impl(
+        29 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_get_ip_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        28 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_impl(
+        30 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_get_prefix_len_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_port_impl(
+        31 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_set_ip_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__api__astral_wfp__FilterRule_auto_accessor_set_remote_port_range_impl(
+        32 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_set_prefix_len_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        46 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_get_ip_impl(
+        35 => wire__crate__api__astral_wfp__WfpController_auto_accessor_get_filter_ids_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        47 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_get_prefix_len_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        48 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_set_ip_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        49 => wire__crate__api__astral_wfp__IpNetwork_auto_accessor_set_prefix_len_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        52 => wire__crate__api__astral_wfp__WfpController_auto_accessor_get_filter_ids_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        53 => wire__crate__api__astral_wfp__WfpController_auto_accessor_set_filter_ids_impl(
+        36 => wire__crate__api__astral_wfp__WfpController_auto_accessor_set_filter_ids_impl(
             ptr,
             rust_vec_len,
             data_len,

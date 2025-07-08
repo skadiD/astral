@@ -8,43 +8,31 @@ class WfpModel {
   /// 主键自增
   Id id = Isar.autoIncrement;
 
-  /// 规则名称
+  /// 名称
   @Index()
   String name = '';
 
-  /// 应用程序路径
-  String? appPath;
-
-  /// 本地地址
-  String? local;
-
-  /// 远程地址
-  String? remote;
-
-  /// 本地端口
-  int? localPort;
-
-  /// 远程端口
-  int? remotePort;
-
-  /// 本地端口范围
-  List<int>? localPortRange;
-
-  /// 远程端口范围
-  List<int>? remotePortRange;
+  /// 启用
+  bool enabled = true;
 
   /// 协议类型
-  String? protocol;
+  String protocol = 'TCP'; // TCP, UDP, ICMP, ALL
 
   /// 方向
-  String direction = "both"; //   inbound, outbound, both
+  String direction = 'both'; // inbound, outbound, both
 
   /// 过滤动作
-  String action = "block"; // allow, block
+  String action = 'block'; // allow, block
 
   /// 优先级
-  int? priority;
+  int priority = 0;
 
-  /// 描述
-  String? description;
+  /// 可选：应用路径
+  String? appPath;
+
+  /// 可选：本地规则
+  String? localRule;
+
+  /// 可选：远程规则
+  String? remoteRule;
 }

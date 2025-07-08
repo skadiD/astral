@@ -249,6 +249,7 @@ class Aps {
 
   ///防火墙状态 只要有一个没有关闭就是false
   final Signal<bool> firewallStatus = signal(false);
+  final Signal<bool> wfpStatus = signal(false);
 
   /// autoSetMTU
   final Signal<bool> autoSetMTU = signal(true); // 自动设置MTU

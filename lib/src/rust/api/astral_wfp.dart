@@ -7,7 +7,7 @@ import '../frb_generated.dart';
 import '../lib.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `action`, `add_filters_windows`, `add_ip_condition`, `add_network_filter`, `app_path`, `cleanup_windows`, `delete_filters_windows`, `description`, `direction`, `get_layers_for_rule`, `initialize_windows`, `local_ip`, `local_port_range`, `local_port`, `priority`, `protocol`, `remote_ip`, `remote_port_range`, `remote_port`
+// These functions are ignored because they are not marked as `pub`: `add_filters_windows`, `add_ip_condition`, `add_network_filter`, `cleanup_windows`, `delete_filters_windows`, `get_layers_for_rule`, `initialize_windows`, `validate_rule_layer_compatibility`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from_str`
 
 Future<Uint16List> toWideString({required String s}) =>
@@ -19,11 +19,7 @@ abstract class FilterRule implements RustOpaqueInterface {
 
   String? get appPath;
 
-  String? get description;
-
   Direction get direction;
-
-  bool get enabled;
 
   Uint64List get filterIds;
 
@@ -49,11 +45,7 @@ abstract class FilterRule implements RustOpaqueInterface {
 
   set appPath(String? appPath);
 
-  set description(String? description);
-
   set direction(Direction direction);
-
-  set enabled(bool enabled);
 
   set filterIds(Uint64List filterIds);
 
@@ -74,10 +66,6 @@ abstract class FilterRule implements RustOpaqueInterface {
   set remotePort(int? remotePort);
 
   set remotePortRange((int, int)? remotePortRange);
-
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<FilterRule> newInstance({required String name}) =>
-      RustLib.instance.api.crateApiAstralWfpFilterRuleNew(name: name);
 
   static Future<FilterRule> newWithParams({
     required String name,
@@ -108,30 +96,6 @@ abstract class FilterRule implements RustOpaqueInterface {
     priority: priority,
     description: description,
   );
-
-  Future<void> setAction({required FilterAction action});
-
-  Future<void> setAppPath({String? path});
-
-  Future<void> setDescription({String? description});
-
-  Future<void> setDirection({required Direction direction});
-
-  Future<void> setLocalIp({String? ip});
-
-  Future<void> setLocalPort({int? port});
-
-  Future<void> setLocalPortRange({(int, int)? range});
-
-  Future<void> setPriority({required int priority});
-
-  Future<void> setProtocol({Protocol? protocol});
-
-  Future<void> setRemoteIp({String? ip});
-
-  Future<void> setRemotePort({int? port});
-
-  Future<void> setRemotePortRange({(int, int)? range});
 
   Future<void> validate();
 }

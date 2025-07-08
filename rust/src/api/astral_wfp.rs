@@ -113,8 +113,6 @@ pub struct FilterRule {
     pub direction: Direction,
     pub action: FilterAction,
     pub priority: u32,
-    pub description: Option<String>,
-    pub enabled: bool,
     pub filter_ids: Vec<u64>,
 }
 
@@ -162,26 +160,6 @@ pub enum FilterAction {
 }
 
 impl FilterRule {
-    pub fn new(name: &str) -> Self {
-        Self {
-            name: name.to_string(),
-            app_path: None,
-            local: None,
-            remote: None,
-            local_port: None,
-            remote_port: None,
-            local_port_range: None,
-            remote_port_range: None,
-            protocol: None,
-            direction: Direction::Both,
-            action: FilterAction::Block,
-            priority: 0,
-            description: None,
-            enabled: true,
-            filter_ids: Vec::new(),
-        }
-    }
-
     // 带完整参数的构造函数，方便Dart端使用
     pub fn new_with_params(
         name: &str,
@@ -211,138 +189,9 @@ impl FilterRule {
             direction,
             action,
             priority: priority.unwrap_or(200),
-            description,
-            enabled: true, // 始终启用
             filter_ids: Vec::new(),
         }
     }
-
-    // Setter方法，方便Dart端修改属性
-    pub fn set_app_path(&mut self, path: Option<String>) {
-        self.app_path = path;
-    }
-
-    pub fn set_local_ip(&mut self, ip: Option<String>) {
-        self.local = ip;
-    }
-
-    pub fn set_remote_ip(&mut self, ip: Option<String>) {
-        self.remote = ip;
-    }
-
-    pub fn set_local_port(&mut self, port: Option<u16>) {
-        self.local_port = port;
-    }
-
-    pub fn set_remote_port(&mut self, port: Option<u16>) {
-        self.remote_port = port;
-    }
-
-    pub fn set_local_port_range(&mut self, range: Option<(u16, u16)>) {
-        self.local_port_range = range;
-    }
-
-    pub fn set_remote_port_range(&mut self, range: Option<(u16, u16)>) {
-        self.remote_port_range = range;
-    }
-
-    pub fn set_protocol(&mut self, protocol: Option<Protocol>) {
-        self.protocol = protocol;
-    }
-
-    pub fn set_direction(&mut self, direction: Direction) {
-        self.direction = direction;
-    }
-
-    pub fn set_action(&mut self, action: FilterAction) {
-        self.action = action;
-    }
-
-    pub fn set_priority(&mut self, priority: u32) {
-        self.priority = priority;
-    }
-
-    pub fn set_description(&mut self, description: Option<String>) {
-        self.description = description;
-    }
-
-    // enabled字段已移除，规则始终启用
-
-    // 构建器模式方法（仅用于Rust端，不暴露给Dart）
-    #[allow(dead_code)]
-    pub(crate) fn app_path(mut self, path: &str) -> Self {
-        self.app_path = Some(path.to_string());
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn local_ip(mut self, ip: impl ToString) -> Self {
-        self.local = Some(ip.to_string());
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn remote_ip(mut self, ip: impl ToString) -> Self {
-        self.remote = Some(ip.to_string());
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn local_port(mut self, port: u16) -> Self {
-        self.local_port = Some(port);
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn remote_port(mut self, port: u16) -> Self {
-        self.remote_port = Some(port);
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn local_port_range(mut self, start: u16, end: u16) -> Self {
-        self.local_port_range = Some((start, end));
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn remote_port_range(mut self, start: u16, end: u16) -> Self {
-        self.remote_port_range = Some((start, end));
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn protocol(mut self, protocol: Protocol) -> Self {
-        self.protocol = Some(protocol);
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn direction(mut self, direction: Direction) -> Self {
-        self.direction = direction;
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn action(mut self, action: FilterAction) -> Self {
-        self.action = action;
-        self
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn priority(mut self, priority: u32) -> Self {
-        self.priority = priority;
-        self
-    }
-    
-    #[allow(dead_code)]
-    pub(crate) fn description(mut self, description: &str) -> Self {
-        self.description = Some(description.to_string());
-        self
-    }
-    
-    // enabled方法已移除，规则始终启用
-
     // 验证规则
     pub fn validate(&self) -> std::result::Result<(), String> {
         // 验证远程 IP
@@ -543,7 +392,14 @@ impl WfpController {
         println!("✓ 模拟模式：已添加 {} 个过滤器", added_ids.len());
         Ok(added_ids)
     }
-#[cfg(target_os = "windows")]
+    /// 获取适用于规则的WFP层
+    /// 
+    /// 根据过滤规则的特性选择合适的WFP层：
+    /// - 如果有应用程序路径，使用ALE层进行应用程序级别的过滤
+    /// - 如果没有应用程序路径，使用传输层进行网络级别的过滤
+    /// - 对于包含远程端口条件的规则，避免使用ALE_RESOURCE_ASSIGNMENT层
+    ///   因为该层不支持远程端口条件（会导致FWP_E_CONDITION_NOT_FOUND错误）
+    #[cfg(target_os = "windows")]
     fn get_layers_for_rule(&self, rule: &FilterRule) -> Vec<GUID> {
         let mut layers = Vec::new();
         let is_ipv6 = rule.local.as_ref().map_or(false, |ip| ip.contains(":")) || 
@@ -582,8 +438,12 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V4);         // 监听端口
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);    // 已建立的流量
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);    // 端点关闭
-                        // 可选：资源分配层（更细粒度的控制）
-                        layers.push(FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4);
+                        
+                        // 只有在没有远程端口条件时才添加资源分配层
+                        // ALE_RESOURCE_ASSIGNMENT 层不支持远程端口条件
+                        if rule.remote_port.is_none() && rule.remote_port_range.is_none() {
+                            layers.push(FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4);
+                        }
                     }
                 }
             } else {
@@ -606,7 +466,12 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V6);
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
-                        layers.push(FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6);
+                        
+                        // 只有在没有远程端口条件时才添加资源分配层
+                        // ALE_RESOURCE_ASSIGNMENT 层不支持远程端口条件
+                        if rule.remote_port.is_none() && rule.remote_port_range.is_none() {
+                            layers.push(FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6);
+                        }
                     }
                 }
             }
@@ -832,43 +697,56 @@ impl WfpController {
             });
         }
         
+        // 检查层是否支持远程端口条件
+        let supports_remote_port = !matches!(layer_key, 
+            FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 | FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6
+        );
+        
         if let Some(remote_port) = rule.remote_port {
-            conditions.push(FWPM_FILTER_CONDITION0 {
-                fieldKey: FWPM_CONDITION_IP_REMOTE_PORT,
-                matchType: FWP_MATCH_EQUAL,
-                conditionValue: FWP_CONDITION_VALUE0 {
-                    r#type: FWP_UINT16,
-                    Anonymous: FWP_CONDITION_VALUE0_0 {
-                        uint16: remote_port,
+            if supports_remote_port {
+                conditions.push(FWPM_FILTER_CONDITION0 {
+                    fieldKey: FWPM_CONDITION_IP_REMOTE_PORT,
+                    matchType: FWP_MATCH_EQUAL,
+                    conditionValue: FWP_CONDITION_VALUE0 {
+                        r#type: FWP_UINT16,
+                        Anonymous: FWP_CONDITION_VALUE0_0 {
+                            uint16: remote_port,
+                        },
                     },
-                },
-            });
+                });
+            } else {
+                println!("⚠️ 层 {} 不支持远程端口条件，跳过远程端口 {}", layer_name, remote_port);
+            }
         } else if let Some((start_port, end_port)) = rule.remote_port_range {
-            let range = FWP_RANGE0 {
-                valueLow: FWP_VALUE0 {
-                    r#type: FWP_UINT16,
-                    Anonymous: FWP_VALUE0_0 {
-                        uint16: start_port,
+            if supports_remote_port {
+                let range = FWP_RANGE0 {
+                    valueLow: FWP_VALUE0 {
+                        r#type: FWP_UINT16,
+                        Anonymous: FWP_VALUE0_0 {
+                            uint16: start_port,
+                        },
                     },
-                },
-                valueHigh: FWP_VALUE0 {
-                    r#type: FWP_UINT16,
-                    Anonymous: FWP_VALUE0_0 {
-                        uint16: end_port,
+                    valueHigh: FWP_VALUE0 {
+                        r#type: FWP_UINT16,
+                        Anonymous: FWP_VALUE0_0 {
+                            uint16: end_port,
+                        },
                     },
-                },
-            };
-            
-            conditions.push(FWPM_FILTER_CONDITION0 {
-                fieldKey: FWPM_CONDITION_IP_REMOTE_PORT,
-                matchType: FWP_MATCH_RANGE,
-                conditionValue: FWP_CONDITION_VALUE0 {
-                    r#type: FWP_RANGE_TYPE,
-                    Anonymous: FWP_CONDITION_VALUE0_0 {
-                        rangeValue: &range as *const _ as *mut _,
+                };
+                
+                conditions.push(FWPM_FILTER_CONDITION0 {
+                    fieldKey: FWPM_CONDITION_IP_REMOTE_PORT,
+                    matchType: FWP_MATCH_RANGE,
+                    conditionValue: FWP_CONDITION_VALUE0 {
+                        r#type: FWP_RANGE_TYPE,
+                        Anonymous: FWP_CONDITION_VALUE0_0 {
+                            rangeValue: &range as *const _ as *mut _,
+                        },
                     },
-                },
-            });
+                });
+            } else {
+                println!("⚠️ 层 {} 不支持远程端口条件，跳过远程端口范围 {}-{}", layer_name, start_port, end_port);
+            }
         }
         
         // 添加协议条件
@@ -909,7 +787,6 @@ impl WfpController {
         println!("  ➡️ 方向: {:?}", rule.direction);
         println!("  🎯 动作: {:?}", rule.action);
         println!("  ⚡ 优先级: {}", rule.priority);
-        println!("  📄 描述: {:?}", rule.description);
         println!("  🔢 条件数量: {}", num_conditions);
         println!("  🎯 动作类型: {}", if action_type == FWP_ACTION_PERMIT { "允许" } else { "阻止" });
 
@@ -1057,15 +934,37 @@ impl WfpController {
         if WIN32_ERROR(add_result) == ERROR_SUCCESS {
             Ok(filter_id)
         } else {
-            let error_msg = match WIN32_ERROR(add_result) {
-                ERROR_ACCESS_DENIED => "访问被拒绝 - 需要管理员权限",
-                ERROR_INVALID_PARAMETER => "无效参数 - 检查过滤条件组合",
-                ERROR_NOT_SUPPORTED => "不支持的操作 - 检查WFP层和条件兼容性",
-                ERROR_ALREADY_EXISTS => "过滤器已存在",
-                ERROR_NOT_FOUND => "找不到指定的层或条件",
-                _ => "未知错误",
+            let error_msg = match add_result {
+                0x80320002 => {
+                    // FWP_E_CONDITION_NOT_FOUND - 过滤器条件不存在
+                    let layer_name = self.get_layer_name(&layer_key);
+                    let mut unsupported_conditions = Vec::new();
+                    
+                    // 检查哪些条件可能不被支持
+                    if rule.remote_port.is_some() || rule.remote_port_range.is_some() {
+                        if layer_name.contains("RESOURCE_ASSIGNMENT") {
+                            unsupported_conditions.push("远程端口条件在ALE_RESOURCE_ASSIGNMENT层不被支持");
+                        }
+                    }
+                    
+                    if unsupported_conditions.is_empty() {
+                        format!("过滤器条件不存在 - 层 '{}' 不支持指定的条件组合", layer_name)
+                    } else {
+                        format!("过滤器条件不兼容 - {}", unsupported_conditions.join(", "))
+                    }
+                },
+                _ => {
+                    match WIN32_ERROR(add_result) {
+                        ERROR_ACCESS_DENIED => "访问被拒绝 - 需要管理员权限",
+                        ERROR_INVALID_PARAMETER => "无效参数 - 检查过滤条件组合",
+                        ERROR_NOT_SUPPORTED => "不支持的操作 - 检查WFP层和条件兼容性",
+                        ERROR_ALREADY_EXISTS => "过滤器已存在",
+                        ERROR_NOT_FOUND => "找不到指定的层或条件",
+                        _ => "未知错误",
+                    }.to_string()
+                }
             };
-            println!("❌ 添加过滤器 '{}' 失败: {} (错误代码: {})", rule.name, error_msg, add_result);
+            println!("❌ 添加过滤器 '{}' 失败: {} (错误代码: 0x{:08X})", rule.name, error_msg, add_result);
             Err(anyhow::anyhow!("添加过滤器失败: {}", error_msg))
         }
     }
@@ -1159,6 +1058,7 @@ impl WfpController {
         #[cfg(target_os = "windows")]
         {
             match *layer_key {
+                // ALE (Application Layer Enforcement) 层
                 FWPM_LAYER_ALE_AUTH_CONNECT_V4 => "ALE_AUTH_CONNECT_V4",
                 FWPM_LAYER_ALE_AUTH_CONNECT_V6 => "ALE_AUTH_CONNECT_V6",
                 FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4 => "ALE_AUTH_RECV_ACCEPT_V4",
@@ -1171,14 +1071,39 @@ impl WfpController {
                 FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6 => "ALE_ENDPOINT_CLOSURE_V6",
                 FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 => "ALE_RESOURCE_ASSIGNMENT_V4",
                 FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6 => "ALE_RESOURCE_ASSIGNMENT_V6",
+                
+                // 传输层
                 FWPM_LAYER_OUTBOUND_TRANSPORT_V4 => "OUTBOUND_TRANSPORT_V4",
                 FWPM_LAYER_OUTBOUND_TRANSPORT_V6 => "OUTBOUND_TRANSPORT_V6",
                 FWPM_LAYER_INBOUND_TRANSPORT_V4 => "INBOUND_TRANSPORT_V4",
                 FWPM_LAYER_INBOUND_TRANSPORT_V6 => "INBOUND_TRANSPORT_V6",
+                
+                // 网络层
                 FWPM_LAYER_OUTBOUND_IPPACKET_V4 => "OUTBOUND_IPPACKET_V4",
                 FWPM_LAYER_OUTBOUND_IPPACKET_V6 => "OUTBOUND_IPPACKET_V6",
                 FWPM_LAYER_INBOUND_IPPACKET_V4 => "INBOUND_IPPACKET_V4",
                 FWPM_LAYER_INBOUND_IPPACKET_V6 => "INBOUND_IPPACKET_V6",
+                
+                // DISCARD 层 - 用于检查被丢弃的数据包
+                FWPM_LAYER_ALE_AUTH_CONNECT_DISCARD_V4 => "ALE_AUTH_CONNECT_DISCARD_V4",
+                FWPM_LAYER_ALE_AUTH_CONNECT_DISCARD_V6 => "ALE_AUTH_CONNECT_DISCARD_V6",
+                FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_DISCARD_V4 => "ALE_AUTH_RECV_ACCEPT_DISCARD_V4",
+                FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_DISCARD_V6 => "ALE_AUTH_RECV_ACCEPT_DISCARD_V6",
+                FWPM_LAYER_ALE_AUTH_LISTEN_DISCARD_V4 => "ALE_AUTH_LISTEN_DISCARD_V4",
+                FWPM_LAYER_ALE_AUTH_LISTEN_DISCARD_V6 => "ALE_AUTH_LISTEN_DISCARD_V6",
+                
+                // STREAM 层 - 用于流数据检查
+                FWPM_LAYER_STREAM_V4 => "STREAM_V4",
+                FWPM_LAYER_STREAM_V6 => "STREAM_V6",
+                FWPM_LAYER_STREAM_V4_DISCARD => "STREAM_V4_DISCARD",
+                FWPM_LAYER_STREAM_V6_DISCARD => "STREAM_V6_DISCARD",
+                
+                // ICMP 错误层
+                FWPM_LAYER_OUTBOUND_ICMP_ERROR_V4 => "OUTBOUND_ICMP_ERROR_V4",
+                FWPM_LAYER_OUTBOUND_ICMP_ERROR_V6 => "OUTBOUND_ICMP_ERROR_V6",
+                FWPM_LAYER_INBOUND_ICMP_ERROR_V4 => "INBOUND_ICMP_ERROR_V4",
+                FWPM_LAYER_INBOUND_ICMP_ERROR_V6 => "INBOUND_ICMP_ERROR_V6",
+                
                 _ => "UNKNOWN_LAYER",
             }
         }
@@ -1243,6 +1168,46 @@ impl WfpController {
         }
         
         Ok(deleted_count)
+    }
+
+    /// 验证过滤规则与WFP层的兼容性
+    /// 
+    /// 检查指定的过滤规则是否与给定的WFP层兼容，
+    /// 避免在不支持的层上使用不兼容的条件
+    #[cfg(target_os = "windows")]
+    fn validate_rule_layer_compatibility(&self, rule: &FilterRule, layer_key: &GUID) -> anyhow::Result<()> {
+        let layer_name = self.get_layer_name(layer_key);
+        let mut errors = Vec::new();
+        
+        // 检查ALE_RESOURCE_ASSIGNMENT层的限制
+        if matches!(*layer_key, FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 | FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6) {
+            if rule.remote_port.is_some() {
+                errors.push(format!("层 {} 不支持远程端口条件", layer_name));
+            }
+            if rule.remote_port_range.is_some() {
+                errors.push(format!("层 {} 不支持远程端口范围条件", layer_name));
+            }
+        }
+        
+        // 检查应用程序ID支持
+        let supports_app_id = matches!(*layer_key, 
+            FWPM_LAYER_ALE_AUTH_CONNECT_V4 | FWPM_LAYER_ALE_AUTH_CONNECT_V6 |
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4 | FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6 |
+            FWPM_LAYER_ALE_AUTH_LISTEN_V4 | FWPM_LAYER_ALE_AUTH_LISTEN_V6 |
+            FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4 | FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6 |
+            FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4 | FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6 |
+            FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V4 | FWPM_LAYER_ALE_RESOURCE_ASSIGNMENT_V6
+        );
+        
+        if rule.app_path.is_some() && !supports_app_id {
+            errors.push(format!("层 {} 不支持应用程序ID条件", layer_name));
+        }
+        
+        if errors.is_empty() {
+            Ok(())
+        } else {
+            Err(anyhow::anyhow!("规则与层不兼容: {}", errors.join("; ")))
+        }
     }
 
 }

@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.10.0';
 
   @override
-  int get rustContentHash => 709008119;
+  int get rustContentHash => -1811977965;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -86,15 +86,7 @@ abstract class RustLibApi extends BaseApi {
     required FilterRule that,
   });
 
-  String? crateApiAstralWfpFilterRuleAutoAccessorGetDescription({
-    required FilterRule that,
-  });
-
   Direction crateApiAstralWfpFilterRuleAutoAccessorGetDirection({
-    required FilterRule that,
-  });
-
-  bool crateApiAstralWfpFilterRuleAutoAccessorGetEnabled({
     required FilterRule that,
   });
 
@@ -148,19 +140,9 @@ abstract class RustLibApi extends BaseApi {
     String? appPath,
   });
 
-  void crateApiAstralWfpFilterRuleAutoAccessorSetDescription({
-    required FilterRule that,
-    String? description,
-  });
-
   void crateApiAstralWfpFilterRuleAutoAccessorSetDirection({
     required FilterRule that,
     required Direction direction,
-  });
-
-  void crateApiAstralWfpFilterRuleAutoAccessorSetEnabled({
-    required FilterRule that,
-    required bool enabled,
   });
 
   void crateApiAstralWfpFilterRuleAutoAccessorSetFilterIds({
@@ -213,8 +195,6 @@ abstract class RustLibApi extends BaseApi {
     (int, int)? remotePortRange,
   });
 
-  Future<FilterRule> crateApiAstralWfpFilterRuleNew({required String name});
-
   Future<FilterRule> crateApiAstralWfpFilterRuleNewWithParams({
     required String name,
     String? appPath,
@@ -229,66 +209,6 @@ abstract class RustLibApi extends BaseApi {
     required FilterAction action,
     int? priority,
     String? description,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetAction({
-    required FilterRule that,
-    required FilterAction action,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetAppPath({
-    required FilterRule that,
-    String? path,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetDescription({
-    required FilterRule that,
-    String? description,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetDirection({
-    required FilterRule that,
-    required Direction direction,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetLocalIp({
-    required FilterRule that,
-    String? ip,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetLocalPort({
-    required FilterRule that,
-    int? port,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetLocalPortRange({
-    required FilterRule that,
-    (int, int)? range,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetPriority({
-    required FilterRule that,
-    required int priority,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetProtocol({
-    required FilterRule that,
-    Protocol? protocol,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetRemoteIp({
-    required FilterRule that,
-    String? ip,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetRemotePort({
-    required FilterRule that,
-    int? port,
-  });
-
-  Future<void> crateApiAstralWfpFilterRuleSetRemotePortRange({
-    required FilterRule that,
-    (int, int)? range,
   });
 
   Future<void> crateApiAstralWfpFilterRuleValidate({required FilterRule that});
@@ -546,39 +466,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  String? crateApiAstralWfpFilterRuleAutoAccessorGetDescription({
-    required FilterRule that,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_opt_String,
-          decodeErrorData: null,
-        ),
-        constMeta:
-            kCrateApiAstralWfpFilterRuleAutoAccessorGetDescriptionConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateApiAstralWfpFilterRuleAutoAccessorGetDescriptionConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_auto_accessor_get_description",
-        argNames: ["that"],
-      );
-
-  @override
   Direction crateApiAstralWfpFilterRuleAutoAccessorGetDirection({
     required FilterRule that,
   }) {
@@ -590,7 +477,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_direction,
@@ -612,38 +499,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  bool crateApiAstralWfpFilterRuleAutoAccessorGetEnabled({
-    required FilterRule that,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_bool,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleAutoAccessorGetEnabledConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateApiAstralWfpFilterRuleAutoAccessorGetEnabledConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_auto_accessor_get_enabled",
-        argNames: ["that"],
-      );
-
-  @override
   Uint64List crateApiAstralWfpFilterRuleAutoAccessorGetFilterIds({
     required FilterRule that,
   }) {
@@ -655,7 +510,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_64_strict,
@@ -688,7 +543,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -719,7 +574,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_u_16,
@@ -752,7 +607,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_record_u_16_u_16,
@@ -785,7 +640,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -816,7 +671,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_u_32,
@@ -848,7 +703,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_protocol,
@@ -880,7 +735,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -912,7 +767,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_u_16,
@@ -945,7 +800,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_record_u_16_u_16,
@@ -980,7 +835,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_filter_action(action, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1014,7 +869,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(appPath, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1035,41 +890,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  void crateApiAstralWfpFilterRuleAutoAccessorSetDescription({
-    required FilterRule that,
-    String? description,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_String(description, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta:
-            kCrateApiAstralWfpFilterRuleAutoAccessorSetDescriptionConstMeta,
-        argValues: [that, description],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateApiAstralWfpFilterRuleAutoAccessorSetDescriptionConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_auto_accessor_set_description",
-        argNames: ["that", "description"],
-      );
-
-  @override
   void crateApiAstralWfpFilterRuleAutoAccessorSetDirection({
     required FilterRule that,
     required Direction direction,
@@ -1083,7 +903,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_direction(direction, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1105,40 +925,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  void crateApiAstralWfpFilterRuleAutoAccessorSetEnabled({
-    required FilterRule that,
-    required bool enabled,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_bool(enabled, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleAutoAccessorSetEnabledConstMeta,
-        argValues: [that, enabled],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateApiAstralWfpFilterRuleAutoAccessorSetEnabledConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_auto_accessor_set_enabled",
-        argNames: ["that", "enabled"],
-      );
-
-  @override
   void crateApiAstralWfpFilterRuleAutoAccessorSetFilterIds({
     required FilterRule that,
     required Uint64List filterIds,
@@ -1152,7 +938,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_list_prim_u_64_strict(filterIds, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1187,7 +973,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(local, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1220,7 +1006,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_box_autoadd_u_16(localPort, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1258,7 +1044,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             localPortRange,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1293,7 +1079,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1326,7 +1112,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_u_32(priority, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1360,7 +1146,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_box_autoadd_protocol(protocol, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1394,7 +1180,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(remote, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1428,7 +1214,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_box_autoadd_u_16(remotePort, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1466,7 +1252,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             remotePortRange,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1486,35 +1272,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         debugName: "FilterRule_auto_accessor_set_remote_port_range",
         argNames: ["that", "remotePortRange"],
       );
-
-  @override
-  Future<FilterRule> crateApiAstralWfpFilterRuleNew({required String name}) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_String(name, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 31,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleNewConstMeta,
-        argValues: [name],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleNewConstMeta =>
-      const TaskConstMeta(debugName: "FilterRule_new", argNames: ["name"]);
 
   @override
   Future<FilterRule> crateApiAstralWfpFilterRuleNewWithParams({
@@ -1558,7 +1315,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 32,
+            funcId: 27,
             port: port_,
           );
         },
@@ -1609,462 +1366,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiAstralWfpFilterRuleSetAction({
-    required FilterRule that,
-    required FilterAction action,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_filter_action(action, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 33,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetActionConstMeta,
-        argValues: [that, action],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetActionConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_action",
-        argNames: ["that", "action"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetAppPath({
-    required FilterRule that,
-    String? path,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_String(path, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 34,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetAppPathConstMeta,
-        argValues: [that, path],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetAppPathConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_app_path",
-        argNames: ["that", "path"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetDescription({
-    required FilterRule that,
-    String? description,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_String(description, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 35,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetDescriptionConstMeta,
-        argValues: [that, description],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetDescriptionConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_description",
-        argNames: ["that", "description"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetDirection({
-    required FilterRule that,
-    required Direction direction,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_direction(direction, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 36,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetDirectionConstMeta,
-        argValues: [that, direction],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetDirectionConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_direction",
-        argNames: ["that", "direction"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetLocalIp({
-    required FilterRule that,
-    String? ip,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_String(ip, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 37,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetLocalIpConstMeta,
-        argValues: [that, ip],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetLocalIpConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_local_ip",
-        argNames: ["that", "ip"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetLocalPort({
-    required FilterRule that,
-    int? port,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_box_autoadd_u_16(port, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 38,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetLocalPortConstMeta,
-        argValues: [that, port],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetLocalPortConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_local_port",
-        argNames: ["that", "port"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetLocalPortRange({
-    required FilterRule that,
-    (int, int)? range,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_box_autoadd_record_u_16_u_16(range, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 39,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetLocalPortRangeConstMeta,
-        argValues: [that, range],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetLocalPortRangeConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_local_port_range",
-        argNames: ["that", "range"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetPriority({
-    required FilterRule that,
-    required int priority,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_u_32(priority, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 40,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetPriorityConstMeta,
-        argValues: [that, priority],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetPriorityConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_priority",
-        argNames: ["that", "priority"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetProtocol({
-    required FilterRule that,
-    Protocol? protocol,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_box_autoadd_protocol(protocol, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 41,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetProtocolConstMeta,
-        argValues: [that, protocol],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetProtocolConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_protocol",
-        argNames: ["that", "protocol"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetRemoteIp({
-    required FilterRule that,
-    String? ip,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_String(ip, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 42,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetRemoteIpConstMeta,
-        argValues: [that, ip],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetRemoteIpConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_remote_ip",
-        argNames: ["that", "ip"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetRemotePort({
-    required FilterRule that,
-    int? port,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_box_autoadd_u_16(port, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 43,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetRemotePortConstMeta,
-        argValues: [that, port],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetRemotePortConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_remote_port",
-        argNames: ["that", "port"],
-      );
-
-  @override
-  Future<void> crateApiAstralWfpFilterRuleSetRemotePortRange({
-    required FilterRule that,
-    (int, int)? range,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFilterRule(
-            that,
-            serializer,
-          );
-          sse_encode_opt_box_autoadd_record_u_16_u_16(range, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 44,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateApiAstralWfpFilterRuleSetRemotePortRangeConstMeta,
-        argValues: [that, range],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiAstralWfpFilterRuleSetRemotePortRangeConstMeta =>
-      const TaskConstMeta(
-        debugName: "FilterRule_set_remote_port_range",
-        argNames: ["that", "range"],
-      );
-
-  @override
   Future<void> crateApiAstralWfpFilterRuleValidate({required FilterRule that}) {
     return handler.executeNormal(
       NormalTask(
@@ -2077,7 +1378,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 45,
+            funcId: 28,
             port: port_,
           );
         },
@@ -2107,7 +1408,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -2139,7 +1440,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_u_8,
@@ -2176,7 +1477,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             ip,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -2209,7 +1510,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_u_8(prefixLen, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -2239,7 +1540,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 50,
+            funcId: 33,
             port: port_,
           );
         },
@@ -2278,7 +1579,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 51,
+            funcId: 34,
             port: port_,
           );
         },
@@ -2311,7 +1612,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_64_strict,
@@ -2346,7 +1647,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_list_prim_u_64_strict(filterIds, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -2382,7 +1683,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 54,
+            funcId: 37,
             port: port_,
           );
         },
@@ -2420,7 +1721,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 55,
+            funcId: 38,
             port: port_,
           );
         },
@@ -2461,7 +1762,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 56,
+            funcId: 39,
             port: port_,
           );
         },
@@ -2497,7 +1798,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 57,
+            funcId: 40,
             port: port_,
           );
         },
@@ -2527,7 +1828,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 58,
+            funcId: 41,
             port: port_,
           );
         },
@@ -2555,7 +1856,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 59,
+            funcId: 42,
             port: port_,
           );
         },
@@ -2603,7 +1904,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 60,
+            funcId: 43,
             port: port_,
           );
         },
@@ -2655,7 +1956,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 61,
+            funcId: 44,
             port: port_,
           );
         },
@@ -2682,7 +1983,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 62,
+            funcId: 45,
             port: port_,
           );
         },
@@ -2713,7 +2014,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 63,
+            funcId: 46,
             port: port_,
           );
         },
@@ -2743,7 +2044,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 64,
+            funcId: 47,
             port: port_,
           );
         },
@@ -2770,7 +2071,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 65,
+            funcId: 48,
             port: port_,
           );
         },
@@ -2798,7 +2099,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 66,
+            funcId: 49,
             port: port_,
           );
         },
@@ -2825,7 +2126,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 67,
+            funcId: 50,
             port: port_,
           );
         },
@@ -2853,7 +2154,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 68,
+            funcId: 51,
             port: port_,
           );
         },
@@ -2886,7 +2187,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 69,
+            funcId: 52,
             port: port_,
           );
         },
@@ -2914,7 +2215,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 70,
+            funcId: 53,
             port: port_,
           );
         },
@@ -2941,7 +2242,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 71,
+            funcId: 54,
             port: port_,
           );
         },
@@ -2969,7 +2270,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 72,
+            funcId: 55,
             port: port_,
           );
         },
@@ -3004,7 +2305,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 73,
+            funcId: 56,
             port: port_,
           );
         },
@@ -3039,7 +2340,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 74,
+            funcId: 57,
             port: port_,
           );
         },
@@ -3070,7 +2371,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 75,
+            funcId: 58,
             port: port_,
           );
         },
@@ -3098,7 +2399,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 76,
+            funcId: 59,
             port: port_,
           );
         },
@@ -5319,14 +4620,8 @@ class FilterRuleImpl extends RustOpaque implements FilterRule {
   String? get appPath => RustLib.instance.api
       .crateApiAstralWfpFilterRuleAutoAccessorGetAppPath(that: this);
 
-  String? get description => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleAutoAccessorGetDescription(that: this);
-
   Direction get direction => RustLib.instance.api
       .crateApiAstralWfpFilterRuleAutoAccessorGetDirection(that: this);
-
-  bool get enabled => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleAutoAccessorGetEnabled(that: this);
 
   Uint64List get filterIds => RustLib.instance.api
       .crateApiAstralWfpFilterRuleAutoAccessorGetFilterIds(that: this);
@@ -5370,22 +4665,10 @@ class FilterRuleImpl extends RustOpaque implements FilterRule {
         appPath: appPath,
       );
 
-  set description(String? description) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleAutoAccessorSetDescription(
-        that: this,
-        description: description,
-      );
-
   set direction(Direction direction) =>
       RustLib.instance.api.crateApiAstralWfpFilterRuleAutoAccessorSetDirection(
         that: this,
         direction: direction,
-      );
-
-  set enabled(bool enabled) =>
-      RustLib.instance.api.crateApiAstralWfpFilterRuleAutoAccessorSetEnabled(
-        that: this,
-        enabled: enabled,
       );
 
   set filterIds(Uint64List filterIds) =>
@@ -5444,48 +4727,6 @@ class FilterRuleImpl extends RustOpaque implements FilterRule {
         that: this,
         remotePortRange: remotePortRange,
       );
-
-  Future<void> setAction({required FilterAction action}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetAction(that: this, action: action);
-
-  Future<void> setAppPath({String? path}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetAppPath(that: this, path: path);
-
-  Future<void> setDescription({String? description}) =>
-      RustLib.instance.api.crateApiAstralWfpFilterRuleSetDescription(
-        that: this,
-        description: description,
-      );
-
-  Future<void> setDirection({required Direction direction}) =>
-      RustLib.instance.api.crateApiAstralWfpFilterRuleSetDirection(
-        that: this,
-        direction: direction,
-      );
-
-  Future<void> setLocalIp({String? ip}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetLocalIp(that: this, ip: ip);
-
-  Future<void> setLocalPort({int? port}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetLocalPort(that: this, port: port);
-
-  Future<void> setLocalPortRange({(int, int)? range}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetLocalPortRange(that: this, range: range);
-
-  Future<void> setPriority({required int priority}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetPriority(that: this, priority: priority);
-
-  Future<void> setProtocol({Protocol? protocol}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetProtocol(that: this, protocol: protocol);
-
-  Future<void> setRemoteIp({String? ip}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetRemoteIp(that: this, ip: ip);
-
-  Future<void> setRemotePort({int? port}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetRemotePort(that: this, port: port);
-
-  Future<void> setRemotePortRange({(int, int)? range}) => RustLib.instance.api
-      .crateApiAstralWfpFilterRuleSetRemotePortRange(that: this, range: range);
 
   Future<void> validate() =>
       RustLib.instance.api.crateApiAstralWfpFilterRuleValidate(that: this);

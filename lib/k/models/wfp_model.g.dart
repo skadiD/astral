@@ -27,60 +27,40 @@ const WfpModelSchema = CollectionSchema(
       name: r'appPath',
       type: IsarType.string,
     ),
-    r'description': PropertySchema(
-      id: 2,
-      name: r'description',
-      type: IsarType.string,
-    ),
     r'direction': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'direction',
       type: IsarType.string,
     ),
-    r'local': PropertySchema(
+    r'enabled': PropertySchema(
+      id: 3,
+      name: r'enabled',
+      type: IsarType.bool,
+    ),
+    r'localRule': PropertySchema(
       id: 4,
-      name: r'local',
+      name: r'localRule',
       type: IsarType.string,
     ),
-    r'localPort': PropertySchema(
-      id: 5,
-      name: r'localPort',
-      type: IsarType.long,
-    ),
-    r'localPortRange': PropertySchema(
-      id: 6,
-      name: r'localPortRange',
-      type: IsarType.longList,
-    ),
     r'name': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'priority': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'priority',
       type: IsarType.long,
     ),
     r'protocol': PropertySchema(
-      id: 9,
+      id: 7,
       name: r'protocol',
       type: IsarType.string,
     ),
-    r'remote': PropertySchema(
-      id: 10,
-      name: r'remote',
+    r'remoteRule': PropertySchema(
+      id: 8,
+      name: r'remoteRule',
       type: IsarType.string,
-    ),
-    r'remotePort': PropertySchema(
-      id: 11,
-      name: r'remotePort',
-      type: IsarType.long,
-    ),
-    r'remotePortRange': PropertySchema(
-      id: 12,
-      name: r'remotePortRange',
-      type: IsarType.longList,
     )
   },
   estimateSize: _wfpModelEstimateSize,
@@ -124,42 +104,19 @@ int _wfpModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.description;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   bytesCount += 3 + object.direction.length * 3;
   {
-    final value = object.local;
+    final value = object.localRule;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.localPortRange;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
     }
   }
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.protocol.length * 3;
   {
-    final value = object.protocol;
+    final value = object.remoteRule;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.remote;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.remotePortRange;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
     }
   }
   return bytesCount;
@@ -173,17 +130,13 @@ void _wfpModelSerialize(
 ) {
   writer.writeString(offsets[0], object.action);
   writer.writeString(offsets[1], object.appPath);
-  writer.writeString(offsets[2], object.description);
-  writer.writeString(offsets[3], object.direction);
-  writer.writeString(offsets[4], object.local);
-  writer.writeLong(offsets[5], object.localPort);
-  writer.writeLongList(offsets[6], object.localPortRange);
-  writer.writeString(offsets[7], object.name);
-  writer.writeLong(offsets[8], object.priority);
-  writer.writeString(offsets[9], object.protocol);
-  writer.writeString(offsets[10], object.remote);
-  writer.writeLong(offsets[11], object.remotePort);
-  writer.writeLongList(offsets[12], object.remotePortRange);
+  writer.writeString(offsets[2], object.direction);
+  writer.writeBool(offsets[3], object.enabled);
+  writer.writeString(offsets[4], object.localRule);
+  writer.writeString(offsets[5], object.name);
+  writer.writeLong(offsets[6], object.priority);
+  writer.writeString(offsets[7], object.protocol);
+  writer.writeString(offsets[8], object.remoteRule);
 }
 
 WfpModel _wfpModelDeserialize(
@@ -195,18 +148,14 @@ WfpModel _wfpModelDeserialize(
   final object = WfpModel();
   object.action = reader.readString(offsets[0]);
   object.appPath = reader.readStringOrNull(offsets[1]);
-  object.description = reader.readStringOrNull(offsets[2]);
-  object.direction = reader.readString(offsets[3]);
+  object.direction = reader.readString(offsets[2]);
+  object.enabled = reader.readBool(offsets[3]);
   object.id = id;
-  object.local = reader.readStringOrNull(offsets[4]);
-  object.localPort = reader.readLongOrNull(offsets[5]);
-  object.localPortRange = reader.readLongList(offsets[6]);
-  object.name = reader.readString(offsets[7]);
-  object.priority = reader.readLongOrNull(offsets[8]);
-  object.protocol = reader.readStringOrNull(offsets[9]);
-  object.remote = reader.readStringOrNull(offsets[10]);
-  object.remotePort = reader.readLongOrNull(offsets[11]);
-  object.remotePortRange = reader.readLongList(offsets[12]);
+  object.localRule = reader.readStringOrNull(offsets[4]);
+  object.name = reader.readString(offsets[5]);
+  object.priority = reader.readLong(offsets[6]);
+  object.protocol = reader.readString(offsets[7]);
+  object.remoteRule = reader.readStringOrNull(offsets[8]);
   return object;
 }
 
@@ -222,27 +171,19 @@ P _wfpModelDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
-    case 3:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readBool(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readLongOrNull(offset)) as P;
-    case 9:
       return (reader.readStringOrNull(offset)) as P;
-    case 10:
-      return (reader.readStringOrNull(offset)) as P;
-    case 11:
-      return (reader.readLongOrNull(offset)) as P;
-    case 12:
-      return (reader.readLongList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -657,155 +598,6 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'description',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      descriptionIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'description',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      descriptionGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'description',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'description',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> descriptionIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'description',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      descriptionIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'description',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> directionEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -937,6 +729,16 @@ extension WfpModelQueryFilter
     });
   }
 
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> enabledEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'enabled',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -989,36 +791,36 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localIsNull() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'local',
+        property: r'localRule',
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localIsNotNull() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'local',
+        property: r'localRule',
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localEqualTo(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'local',
+        property: r'localRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localGreaterThan(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1026,14 +828,14 @@ extension WfpModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'local',
+        property: r'localRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localLessThan(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1041,14 +843,14 @@ extension WfpModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'local',
+        property: r'localRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localBetween(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1057,7 +859,7 @@ extension WfpModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'local',
+        property: r'localRule',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1067,303 +869,72 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localStartsWith(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'local',
+        property: r'localRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localEndsWith(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'local',
+        property: r'localRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localContains(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'local',
+        property: r'localRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localMatches(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'local',
+        property: r'localRule',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localIsEmpty() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localRuleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'local',
+        property: r'localRule',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localIsNotEmpty() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
+      localRuleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'local',
+        property: r'localRule',
         value: '',
       ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localPortIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'localPort',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localPortIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'localPort',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localPortEqualTo(
-      int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'localPort',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localPortGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'localPort',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localPortLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'localPort',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> localPortBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'localPort',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'localPortRange',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'localPortRange',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeElementEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'localPortRange',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeElementGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'localPortRange',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeElementLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'localPortRange',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeElementBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'localPortRange',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'localPortRange',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'localPortRange',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'localPortRange',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'localPortRange',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'localPortRange',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      localPortRangeLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'localPortRange',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -1497,24 +1068,8 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> priorityIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'priority',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> priorityIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'priority',
-      ));
-    });
-  }
-
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> priorityEqualTo(
-      int? value) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'priority',
@@ -1524,7 +1079,7 @@ extension WfpModelQueryFilter
   }
 
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> priorityGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1537,7 +1092,7 @@ extension WfpModelQueryFilter
   }
 
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> priorityLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1550,8 +1105,8 @@ extension WfpModelQueryFilter
   }
 
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> priorityBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -1566,24 +1121,8 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> protocolIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'protocol',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> protocolIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'protocol',
-      ));
-    });
-  }
-
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> protocolEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1596,7 +1135,7 @@ extension WfpModelQueryFilter
   }
 
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> protocolGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1611,7 +1150,7 @@ extension WfpModelQueryFilter
   }
 
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> protocolLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1626,8 +1165,8 @@ extension WfpModelQueryFilter
   }
 
   QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> protocolBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1712,36 +1251,37 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteIsNull() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'remote',
+        property: r'remoteRule',
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteIsNotNull() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
+      remoteRuleIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'remote',
+        property: r'remoteRule',
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteEqualTo(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'remote',
+        property: r'remoteRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteGreaterThan(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1749,14 +1289,14 @@ extension WfpModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'remote',
+        property: r'remoteRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteLessThan(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1764,14 +1304,14 @@ extension WfpModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'remote',
+        property: r'remoteRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteBetween(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1780,7 +1320,7 @@ extension WfpModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'remote',
+        property: r'remoteRule',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1790,304 +1330,72 @@ extension WfpModelQueryFilter
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteStartsWith(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'remote',
+        property: r'remoteRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteEndsWith(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'remote',
+        property: r'remoteRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteContains(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'remote',
+        property: r'remoteRule',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteMatches(
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'remote',
+        property: r'remoteRule',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteIsEmpty() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteRuleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'remote',
+        property: r'remoteRule',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remoteIsNotEmpty() {
+  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
+      remoteRuleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'remote',
+        property: r'remoteRule',
         value: '',
       ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remotePortIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'remotePort',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'remotePort',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remotePortEqualTo(
-      int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'remotePort',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remotePortGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'remotePort',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remotePortLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'remotePort',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition> remotePortBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'remotePort',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'remotePortRange',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'remotePortRange',
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeElementEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'remotePortRange',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeElementGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'remotePortRange',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeElementLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'remotePortRange',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeElementBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'remotePortRange',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'remotePortRange',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'remotePortRange',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'remotePortRange',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'remotePortRange',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'remotePortRange',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterFilterCondition>
-      remotePortRangeLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'remotePortRange',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 }
@@ -2123,18 +1431,6 @@ extension WfpModelQuerySortBy on QueryBuilder<WfpModel, WfpModel, QSortBy> {
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByDescription() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByDescriptionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.desc);
-    });
-  }
-
   QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByDirection() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'direction', Sort.asc);
@@ -2147,27 +1443,27 @@ extension WfpModelQuerySortBy on QueryBuilder<WfpModel, WfpModel, QSortBy> {
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByLocal() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByEnabled() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'local', Sort.asc);
+      return query.addSortBy(r'enabled', Sort.asc);
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByLocalDesc() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'local', Sort.desc);
+      return query.addSortBy(r'enabled', Sort.desc);
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByLocalPort() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByLocalRule() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'localPort', Sort.asc);
+      return query.addSortBy(r'localRule', Sort.asc);
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByLocalPortDesc() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByLocalRuleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'localPort', Sort.desc);
+      return query.addSortBy(r'localRule', Sort.desc);
     });
   }
 
@@ -2207,27 +1503,15 @@ extension WfpModelQuerySortBy on QueryBuilder<WfpModel, WfpModel, QSortBy> {
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByRemote() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByRemoteRule() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remote', Sort.asc);
+      return query.addSortBy(r'remoteRule', Sort.asc);
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByRemoteDesc() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByRemoteRuleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remote', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByRemotePort() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remotePort', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> sortByRemotePortDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remotePort', Sort.desc);
+      return query.addSortBy(r'remoteRule', Sort.desc);
     });
   }
 }
@@ -2258,18 +1542,6 @@ extension WfpModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByDescription() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByDescriptionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.desc);
-    });
-  }
-
   QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByDirection() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'direction', Sort.asc);
@@ -2279,6 +1551,18 @@ extension WfpModelQuerySortThenBy
   QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByDirectionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'direction', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'enabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'enabled', Sort.desc);
     });
   }
 
@@ -2294,27 +1578,15 @@ extension WfpModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByLocal() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByLocalRule() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'local', Sort.asc);
+      return query.addSortBy(r'localRule', Sort.asc);
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByLocalDesc() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByLocalRuleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'local', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByLocalPort() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'localPort', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByLocalPortDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'localPort', Sort.desc);
+      return query.addSortBy(r'localRule', Sort.desc);
     });
   }
 
@@ -2354,27 +1626,15 @@ extension WfpModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByRemote() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByRemoteRule() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remote', Sort.asc);
+      return query.addSortBy(r'remoteRule', Sort.asc);
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByRemoteDesc() {
+  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByRemoteRuleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remote', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByRemotePort() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remotePort', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QAfterSortBy> thenByRemotePortDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remotePort', Sort.desc);
+      return query.addSortBy(r'remoteRule', Sort.desc);
     });
   }
 }
@@ -2395,13 +1655,6 @@ extension WfpModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByDescription(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByDirection(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2409,22 +1662,16 @@ extension WfpModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByLocal(
+  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'enabled');
+    });
+  }
+
+  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByLocalRule(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'local', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByLocalPort() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'localPort');
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByLocalPortRange() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'localPortRange');
+      return query.addDistinctBy(r'localRule', caseSensitive: caseSensitive);
     });
   }
 
@@ -2448,22 +1695,10 @@ extension WfpModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByRemote(
+  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByRemoteRule(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'remote', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByRemotePort() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'remotePort');
-    });
-  }
-
-  QueryBuilder<WfpModel, WfpModel, QDistinct> distinctByRemotePortRange() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'remotePortRange');
+      return query.addDistinctBy(r'remoteRule', caseSensitive: caseSensitive);
     });
   }
 }
@@ -2488,34 +1723,21 @@ extension WfpModelQueryProperty
     });
   }
 
-  QueryBuilder<WfpModel, String?, QQueryOperations> descriptionProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'description');
-    });
-  }
-
   QueryBuilder<WfpModel, String, QQueryOperations> directionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'direction');
     });
   }
 
-  QueryBuilder<WfpModel, String?, QQueryOperations> localProperty() {
+  QueryBuilder<WfpModel, bool, QQueryOperations> enabledProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'local');
+      return query.addPropertyName(r'enabled');
     });
   }
 
-  QueryBuilder<WfpModel, int?, QQueryOperations> localPortProperty() {
+  QueryBuilder<WfpModel, String?, QQueryOperations> localRuleProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'localPort');
-    });
-  }
-
-  QueryBuilder<WfpModel, List<int>?, QQueryOperations>
-      localPortRangeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'localPortRange');
+      return query.addPropertyName(r'localRule');
     });
   }
 
@@ -2525,34 +1747,21 @@ extension WfpModelQueryProperty
     });
   }
 
-  QueryBuilder<WfpModel, int?, QQueryOperations> priorityProperty() {
+  QueryBuilder<WfpModel, int, QQueryOperations> priorityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'priority');
     });
   }
 
-  QueryBuilder<WfpModel, String?, QQueryOperations> protocolProperty() {
+  QueryBuilder<WfpModel, String, QQueryOperations> protocolProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'protocol');
     });
   }
 
-  QueryBuilder<WfpModel, String?, QQueryOperations> remoteProperty() {
+  QueryBuilder<WfpModel, String?, QQueryOperations> remoteRuleProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'remote');
-    });
-  }
-
-  QueryBuilder<WfpModel, int?, QQueryOperations> remotePortProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'remotePort');
-    });
-  }
-
-  QueryBuilder<WfpModel, List<int>?, QQueryOperations>
-      remotePortRangeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'remotePortRange');
+      return query.addPropertyName(r'remoteRule');
     });
   }
 }
