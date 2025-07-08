@@ -377,9 +377,10 @@ class _EditRuleDialogState extends State<_EditRuleDialog> {
            children: [
              _buildBasicSettings(),
              const SizedBox(height: 24),
-             _buildNetworkSettings(),
-             const SizedBox(height: 24),
              _buildRuleConfig(),
+             const SizedBox(height: 24),
+             _buildNetworkSettings(),
+
            ],
          ),
       ),
@@ -401,24 +402,6 @@ class _EditRuleDialogState extends State<_EditRuleDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle('基本设置'),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            const Text('启用此规则'),
-            const SizedBox(width: 8),
-            Switch(
-              value: isEnabled,
-              onChanged: (value) => setState(() => isEnabled = value),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                isEnabled ? '规则将在 WFP 启动时生效' : '规则已禁用，不会生效',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ],
-        ),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -521,8 +504,6 @@ class _EditRuleDialogState extends State<_EditRuleDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('规则配置'),
-        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(

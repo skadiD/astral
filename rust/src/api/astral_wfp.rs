@@ -573,6 +573,8 @@ impl WfpController {
         // 在函数开始处声明这些变量，确保它们在整个函数生命周期内有效
         let mut appid_utf16: Option<Vec<u16>> = None;
         let mut app_id_blob: Option<FWP_BYTE_BLOB> = None;
+        let mut local_port_range: Option<FWP_RANGE0> = None;
+        let mut remote_port_range: Option<FWP_RANGE0> = None;
         
         // 根据层类型决定是否添加某些条件
         let layer_name = self.get_layer_name(&layer_key);
@@ -685,13 +687,15 @@ impl WfpController {
                 },
             };
             
+            local_port_range = Some(range);
+            
             conditions.push(FWPM_FILTER_CONDITION0 {
                 fieldKey: FWPM_CONDITION_IP_LOCAL_PORT,
                 matchType: FWP_MATCH_RANGE,
                 conditionValue: FWP_CONDITION_VALUE0 {
                     r#type: FWP_RANGE_TYPE,
                     Anonymous: FWP_CONDITION_VALUE0_0 {
-                        rangeValue: &range as *const _ as *mut _,
+                        rangeValue: local_port_range.as_ref().unwrap() as *const _ as *mut _,
                     },
                 },
             });
@@ -734,13 +738,15 @@ impl WfpController {
                     },
                 };
                 
+                remote_port_range = Some(range);
+                
                 conditions.push(FWPM_FILTER_CONDITION0 {
                     fieldKey: FWPM_CONDITION_IP_REMOTE_PORT,
                     matchType: FWP_MATCH_RANGE,
                     conditionValue: FWP_CONDITION_VALUE0 {
                         r#type: FWP_RANGE_TYPE,
                         Anonymous: FWP_CONDITION_VALUE0_0 {
-                            rangeValue: &range as *const _ as *mut _,
+                            rangeValue: remote_port_range.as_ref().unwrap() as *const _ as *mut _,
                         },
                     },
                 });
