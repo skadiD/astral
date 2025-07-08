@@ -407,7 +407,7 @@ impl WfpController {
         
         // 如果有应用程序路径，使用ALE层进行应用程序级别的过滤
         if rule.app_path.is_some() {
-            println!("🎯 检测到应用程序路径，使用ALE层进行应用程序过滤");
+            println!("🎯 检测到应用程序路径，使用ALE层+传输层进行应用程序过滤");
             
             // 对于应用程序级别的过滤，使用更全面的层组合
             if !is_ipv6 {
@@ -420,6 +420,8 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);
                         // 端点关闭层（确保连接完全被控制）
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);
+                        // 添加传输层以控制已建立连接的数据包
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V4);
                     },
                     Direction::Inbound => {
                         // 入站连接：拦截应用程序接收的连接
@@ -430,6 +432,8 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);
                         // 端点关闭层
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);
+                        // 添加传输层以控制已建立连接的数据包
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V4);
                     },
                     Direction::Both => {
                         // 双向控制：完全控制应用程序的所有网络活动
@@ -438,6 +442,9 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V4);         // 监听端口
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V4);    // 已建立的流量
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4);    // 端点关闭
+                        // 添加传输层以控制已建立连接的数据包
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V4);
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V4);
                         
                         // 只有在没有远程端口条件时才添加资源分配层
                         // ALE_RESOURCE_ASSIGNMENT 层不支持远程端口条件
@@ -453,12 +460,16 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V6);
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
+                        // 添加传输层以控制已建立连接的数据包
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V6);
                     },
                     Direction::Inbound => {
                         layers.push(FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6);
                         layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V6);
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
+                        // 添加传输层以控制已建立连接的数据包
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V6);
                     },
                     Direction::Both => {
                         layers.push(FWPM_LAYER_ALE_AUTH_CONNECT_V6);
@@ -466,6 +477,9 @@ impl WfpController {
                         layers.push(FWPM_LAYER_ALE_AUTH_LISTEN_V6);
                         layers.push(FWPM_LAYER_ALE_FLOW_ESTABLISHED_V6);
                         layers.push(FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V6);
+                        // 添加传输层以控制已建立连接的数据包
+                        layers.push(FWPM_LAYER_OUTBOUND_TRANSPORT_V6);
+                        layers.push(FWPM_LAYER_INBOUND_TRANSPORT_V6);
                         
                         // 只有在没有远程端口条件时才添加资源分配层
                         // ALE_RESOURCE_ASSIGNMENT 层不支持远程端口条件
