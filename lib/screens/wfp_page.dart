@@ -2,9 +2,7 @@ import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/models/wfp_model.dart';
 import 'package:astral/src/rust/api/nt.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:astral/src/rust/api/astral_wfp.dart';
-import 'package:isar/isar.dart';
 import 'dart:io';
 import 'wfp_components.dart';
 
@@ -382,11 +380,8 @@ class _WfpPageState extends State<WfpPage> {
                   valueListenable:
                       Aps().wfpModels as ValueNotifier<List<WfpModel>>,
                   builder: (context, rules, _) {
-                    final enabledRules = rules.where((r) => r.enabled).length;
-                    final disabledRules = rules.where((r) => !r.enabled).length;
 
                     return Card(
-                      elevation: 2,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -397,18 +392,14 @@ class _WfpPageState extends State<WfpPage> {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color:
-                                        isRunning
-                                            ? Colors.green.withOpacity(0.1)
-                                            : Colors.grey.withOpacity(0.1),
+                               
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(
                                     isRunning
                                         ? Icons.security
                                         : Icons.security_outlined,
-                                    color:
-                                        isRunning ? Colors.green : Colors.grey,
+                               
                                     size: 24,
                                   ),
                                 ),
@@ -455,10 +446,6 @@ class _WfpPageState extends State<WfpPage> {
                                       Text(
                                         isRunning ? '正在运行，规则已生效' : '已停止，规则未生效',
                                         style: TextStyle(
-                                          color:
-                                              isRunning
-                                                  ? Colors.green
-                                                  : Colors.grey,
                                           fontSize: 14,
                                         ),
                                       ),
@@ -482,10 +469,6 @@ class _WfpPageState extends State<WfpPage> {
                                     Text(
                                       isRunning ? '已启用' : '已禁用',
                                       style: TextStyle(
-                                        color:
-                                            isRunning
-                                                ? Colors.green
-                                                : Colors.grey,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -645,14 +628,68 @@ class _WfpRulesTable extends StatelessWidget {
       itemCount: rules.length,
       itemBuilder: (context, index) {
         final rule = rules[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+        return _WfpRuleCard(
+          rule: rule,
+          isWfpRunning: isWfpRunning,
+          onEditRule: onEditRule,
+          onDeleteRule: onDeleteRule,
+          onToggleRule: onToggleRule,
+          getRuleDisplay: _getRuleDisplay,
+          getAppPathDisplay: _getAppPathDisplay,
+        );
+      },
+    );
+  }
+}
+
+// 单个规则卡片组件
+class _WfpRuleCard extends StatefulWidget {
+  final WfpModel rule;
+  final bool isWfpRunning;
+  final Function(BuildContext, WfpModel?) onEditRule;
+  final Function(BuildContext, WfpModel) onDeleteRule;
+  final Function(WfpModel) onToggleRule;
+  final String Function(String?) getRuleDisplay;
+  final String Function(String?) getAppPathDisplay;
+
+  const _WfpRuleCard({
+    required this.rule,
+    required this.isWfpRunning,
+    required this.onEditRule,
+    required this.onDeleteRule,
+    required this.onToggleRule,
+    required this.getRuleDisplay,
+    required this.getAppPathDisplay,
+  });
+
+  @override
+  State<_WfpRuleCard> createState() => _WfpRuleCardState();
+}
+
+class _WfpRuleCardState extends State<_WfpRuleCard> {
+  bool isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            color: isHovered ? theme.colorScheme.primary : Colors.transparent,
+            width: 1,
           ),
+        ),
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(8),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(12.0),
             child: Stack(
               children: [
                 // 主体内容
@@ -664,40 +701,40 @@ class _WfpRulesTable extends StatelessWidget {
                       children: [
                         // 启用状态开关
                         Switch(
-                          value: rule.enabled ?? false,
+                          value: widget.rule.enabled ?? false,
                           onChanged:
-                              isWfpRunning
+                              widget.isWfpRunning
                                   ? null
-                                  : (value) => onToggleRule(rule),
+                                  : (value) => widget.onToggleRule(widget.rule),
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            rule.name,
+                            widget.rule.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: rule.enabled ? null : Colors.grey,
+                              color: widget.rule.enabled ? null : Colors.grey,
                             ),
                           ),
                         ),
                         // 操作按钮
                         PopupMenuButton<String>(
                           icon: const Icon(Icons.more_vert),
-                          enabled: !isWfpRunning,
-                          tooltip: isWfpRunning ? 'WFP运行时无法操作' : '更多操作',
+                          enabled: !widget.isWfpRunning,
+                          tooltip: widget.isWfpRunning ? 'WFP运行时无法操作' : '更多操作',
                           onSelected: (value) {
                             switch (value) {
                               case 'edit':
-                                onEditRule(context, rule);
+                                widget.onEditRule(context, widget.rule);
                                 break;
                               case 'delete':
-                                onDeleteRule(context, rule);
+                                widget.onDeleteRule(context, widget.rule);
                                 break;
                               case 'toggle':
-                                onToggleRule(rule);
+                                widget.onToggleRule(widget.rule);
                                 break;
                             }
                           },
@@ -708,18 +745,18 @@ class _WfpRulesTable extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Icon(
-                                        rule.enabled ?? false
+                                        widget.rule.enabled ?? false
                                             ? Icons.toggle_off
                                             : Icons.toggle_on,
                                         size: 16,
                                         color:
-                                            rule.enabled ?? false
+                                            widget.rule.enabled ?? false
                                                 ? Colors.orange
                                                 : Colors.green,
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
-                                        rule.enabled ?? false ? '禁用规则' : '启用规则',
+                                        widget.rule.enabled ?? false ? '禁用规则' : '启用规则',
                                       ),
                                     ],
                                   ),
@@ -762,34 +799,34 @@ class _WfpRulesTable extends StatelessWidget {
                       children: [
                         _InfoChip(
                           label: '应用程序',
-                          value: _getAppPathDisplay(rule.appPath),
+                          value: widget.getAppPathDisplay(widget.rule.appPath),
                         ),
                         _InfoChip(
                           label: '协议',
                           value:
-                              rule.protocol != null && rule.protocol!.isNotEmpty
-                                  ? protocolOptions[rule.protocol!
+                              widget.rule.protocol != null && widget.rule.protocol!.isNotEmpty
+                                  ? protocolOptions[widget.rule.protocol!
                                           .toLowerCase()] ??
-                                      rule.protocol!
+                                      widget.rule.protocol!
                                   : '不限制',
                         ),
                         _InfoChip(
                           label: '方向',
                           value:
-                              directionOptions[rule.direction] ??
-                              rule.direction,
+                              directionOptions[widget.rule.direction] ??
+                              widget.rule.direction,
                         ),
                         _InfoChip(
                           label: '动作',
-                          value: actionOptions[rule.action] ?? rule.action,
+                          value: actionOptions[widget.rule.action] ?? widget.rule.action,
                           color:
-                              rule.action == 'allow'
+                              widget.rule.action == 'allow'
                                   ? Colors.green
                                   : Colors.red,
                         ),
                         _InfoChip(
                           label: '优先级',
-                          value: rule.priority?.toString() ?? '-',
+                          value: widget.rule.priority?.toString() ?? '-',
                         ),
                       ],
                     ),
@@ -799,14 +836,14 @@ class _WfpRulesTable extends StatelessWidget {
                         Expanded(
                           child: _FieldRow(
                             label: '本地规则',
-                            value: _getRuleDisplay(rule.localRule),
+                            value: widget.getRuleDisplay(widget.rule.localRule),
                           ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: _FieldRow(
                             label: '远程规则',
-                            value: _getRuleDisplay(rule.remoteRule),
+                            value: widget.getRuleDisplay(widget.rule.remoteRule),
                           ),
                         ),
                       ],
@@ -816,8 +853,8 @@ class _WfpRulesTable extends StatelessWidget {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

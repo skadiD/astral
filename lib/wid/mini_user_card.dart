@@ -50,7 +50,6 @@ class _MiniUserCardState extends State<MiniUserCard> {
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
       child: Card(
-        elevation: isHovered ? 8 : 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
@@ -210,69 +209,58 @@ class _MiniUserCardState extends State<MiniUserCard> {
   }
 }
 
-// 将NAT类型转换为中文
+// 将NAT类型转换为NAT1-4显示
 String _mapNatType(String natType) {
   switch (natType) {
     case 'Unknown':
-      return '未知';
+      return 'NAT?';
     case 'OpenInternet':
-      return '开放网络';
     case 'NoPat':
-      return '无PAT';
     case 'FullCone':
-      return '全锥形';
+      return 'NAT1';
     case 'Restricted':
-      return '受限锥形';
+      return 'NAT2';
     case 'PortRestricted':
-      return '端口受限锥形';
+      return 'NAT3';
     case 'Symmetric':
-      return '对称型';
     case 'SymUdpFirewall':
-      return '对称UDP防火墙';
     case 'SymmetricEasyInc':
-      return '对称递增型';
     case 'SymmetricEasyDec':
-      return '对称递减型';
+      return 'NAT4';
     default:
-      return '未知';
+      return 'NAT?';
   }
 }
 
 // 根据NAT类型获取图标
 IconData _getNatTypeIcon(String natType) {
-  if (natType.contains('开放') || natType.contains('全锥形')) {
-    return Icons.public;
-  } else if (natType.contains('受限')) {
-    return Icons.shield;
-  } else if (natType.contains('端口受限')) {
-    return Icons.security;
-  } else if (natType.contains('对称')) {
-    return Icons.sync_alt;
-  } else if (natType.contains('防火墙')) {
-    return Icons.fireplace;
-  } else if (natType.contains('递增')) {
-    return Icons.trending_up;
-  } else if (natType.contains('递减')) {
-    return Icons.trending_down;
-  } else if (natType.contains('无PAT')) {
-    return Icons.router;
-  } else {
-    return Icons.help_outline;
+  switch (natType) {
+    case 'NAT1':
+      return Icons.public;
+    case 'NAT2':
+      return Icons.shield;
+    case 'NAT3':
+      return Icons.security;
+    case 'NAT4':
+      return Icons.sync_alt;
+    default:
+      return Icons.help_outline;
   }
 }
 
 // 根据NAT类型获取颜色
 Color _getNatTypeColor(String natType) {
-  if (natType.contains('开放') ||
-      natType.contains('全锥形') ||
-      natType.contains('无PAT')) {
-    return Colors.green;
-  } else if (natType.contains('受限') || natType.contains('端口受限')) {
-    return Colors.orange;
-  } else if (natType.contains('对称') || natType.contains('防火墙')) {
-    return Colors.red;
-  } else {
-    return Colors.grey;
+  switch (natType) {
+    case 'NAT1':
+      return Colors.green;
+    case 'NAT2':
+      return Colors.lightGreen;
+    case 'NAT3':
+      return Colors.orange;
+    case 'NAT4':
+      return Colors.red;
+    default:
+      return Colors.grey;
   }
 }
 

@@ -134,7 +134,6 @@ class _RuleCard extends StatelessWidget {
         vertical: _Constants.spacing,
         horizontal: 4,
       ),
-      elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_Constants.borderRadius),
       ),

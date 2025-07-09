@@ -547,8 +547,6 @@ class _ConnectButtonState extends State<ConnectButton>
                     Aps().Connec_state.watch(context) != CoState.idle
                         ? colorScheme.onTertiary.withAlpha(51)
                         : colorScheme.onPrimary.withAlpha(51),
-                highlightElevation: 6,
-                elevation: 2,
                 icon: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 150),
                   switchInCurve: Curves.easeInOut,

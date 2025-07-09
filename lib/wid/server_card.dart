@@ -30,17 +30,18 @@ class _ServerCardState extends State<ServerCard> {
   Widget build(BuildContext context) {
     final server = widget.server;
     final colorScheme = Theme.of(context).colorScheme;
+    final isHovered = _hoveredSignal.watch(context);
 
     return MouseRegion(
       onEnter: (_) => _hoveredSignal.value = true,
       onExit: (_) => _hoveredSignal.value = false,
       child: Card(
-        elevation: _hoveredSignal.value ? 8.0 : 4.0,
+        // elevation: isHovered ? 2 : 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
             color:
-                _hoveredSignal.value ? colorScheme.primary : Colors.transparent,
+                isHovered ? colorScheme.primary : Colors.transparent,
             width: 1,
           ),
         ),

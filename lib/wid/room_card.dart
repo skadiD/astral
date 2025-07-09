@@ -36,7 +36,6 @@ class _RoomCardState extends State<RoomCard> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: Card(
-        elevation: _isHovered ? 8 : 4,
         color:
             widget.isSelected
                 ? Theme.of(context).brightness == Brightness.dark

@@ -20,7 +20,6 @@ class BottomNav extends StatelessWidget {
 
     return BottomNavigationBar(
       backgroundColor: colorScheme.surfaceContainerLow,
-      elevation: 8,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: colorScheme.primary,
       unselectedItemColor: colorScheme.onSurfaceVariant,

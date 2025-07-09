@@ -142,8 +142,8 @@ class _RoomPageState extends State<RoomPage> {
           padding: const EdgeInsets.all(16.0),
           sliver: SliverMasonryGrid.count(
             crossAxisCount: columnCount,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
             childCount: rooms.length,
             itemBuilder: (context, index) {
               final room = rooms[index];
@@ -182,15 +182,14 @@ class _RoomPageState extends State<RoomPage> {
       body: Column(
         children: [
           // 顶部显示当前选中房间信息
-          if (selectedRoom != null)
+          if (selectedRoom != null && isConnected == CoState.connected)
             MouseRegion(
               onEnter: (_) => setState(() => isHovered = true),
               onExit: (_) => setState(() => isHovered = false),
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.only(bottom: 0),
                 child: Card(
-                  margin: const EdgeInsets.fromLTRB(18, 18, 18, 0),
-                  elevation: 4,
+                  margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: BorderSide(

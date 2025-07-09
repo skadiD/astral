@@ -583,7 +583,6 @@ class _AllUserCardState extends State<AllUserCard> {
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
       child: Card(
-        elevation: isHovered ? 8 : 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(

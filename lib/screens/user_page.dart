@@ -116,23 +116,33 @@ class _UserPageState extends State<UserPage> {
                   node.hostname.startsWith('PublicServer_')).toList();
             }
 
+            // 返回一个可滚动的视图
             return CustomScrollView(
+              // 始终允许滚动,即使内容不足一屏
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
+                // 为网格添加内边距
                 SliverPadding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                  // 使用瀑布流网格布局
                   sliver: SliverMasonryGrid(
+                    // 配置网格布局参数
                     gridDelegate:
                         SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                          // 根据屏幕宽度动态计算列数
                           crossAxisCount: _getColumnCount(
                             MediaQuery.of(context).size.width,
                           ),
                         ),
+                    // 设置网格项之间的间距
                     mainAxisSpacing: 8.0,
                     crossAxisSpacing: 8.0,
+                    // 配置子项构建器
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
+                        // 获取当前索引对应的玩家数据
                         final player = filteredNodes[index];
+                        // 根据简单列表模式选项返回不同的卡片组件
                         return Aps().userListSimple.watch(context)
                             ? MiniUserCard(
                                 player: player,
@@ -145,6 +155,7 @@ class _UserPageState extends State<UserPage> {
                                 localIPv4: Aps().ipv4.watch(context),
                               );
                       },
+                      // 设置子项数量为过滤后的节点数量
                       childCount: filteredNodes.length,
                     ),
                   ),
@@ -218,7 +229,6 @@ class _PlayerListItemState extends State<PlayerListItem> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: Card(
-        elevation: _isHovered ? 8 : 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(

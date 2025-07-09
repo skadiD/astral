@@ -44,7 +44,6 @@ class _HomeBoxState extends State<HomeBox> {
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
       child: Card(
-        elevation: isHovered ? 8 : 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(widget.isBorder ?? true ? 8 : 1),
           side: BorderSide(
@@ -54,8 +53,6 @@ class _HomeBoxState extends State<HomeBox> {
         ),
         child: InkWell(
           onTap: () {},
-          splashColor: theme.colorScheme.primary.withValues(alpha: 0.3),
-          highlightColor: theme.colorScheme.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           child: Container(
             padding: EdgeInsets.all(widget.isBorder ?? true ? 12 : 1.0),
