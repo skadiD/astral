@@ -4,12 +4,6 @@
 
 ![访问次数](https://count.getloli.com/@astral?name=astral-home&theme=original-new&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto)
 
->     <img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" 
->          style="width: 400px; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
->          alt="浪浪云赞助">
->   </a>
-> </div>
-
 > 感谢浪浪云提供云服务器赞助  
 > <div style="margin: 15px 0; text-align: center;">
 >   <a href="https://langlangy.cn/?ife9268:https://astral.fan/images/%E8%B5%9E%E5%8A%A9/logo%20(1).png" style="display: inline-block;">
