@@ -2,6 +2,8 @@
 
 # Astral [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ldoubil/astral)
 
+![Alt](https://repobeats.axiom.co/api/embed/c8f00565120b9bd12bd4e50050e44b3515acb1cb.svg "Repobeats analytics image")
+
 ![访问次数](https://count.getloli.com/@astral?name=astral-home&theme=original-new&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto)
 
 > 感谢浪浪云提供云服务器赞助  
