@@ -3,7 +3,7 @@ import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适�
 import 'package:astral/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:astral/k/app_s/aps.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class KevinApp extends StatefulWidget {
   const KevinApp({super.key});
@@ -29,14 +29,10 @@ class _KevinAppState extends State<KevinApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: const [
-        // 添加国际化支持
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       // Insert this line
-      supportedLocales: const [Locale("zh", "CN"), Locale("en", "US")],
       builder: (BuildContext context, Widget? child) {
         // 处理 MediaQuery 异常问题，特别是小米澎湃系统和安卓小窗口
         MediaQueryData mediaQuery = MediaQuery.of(context);

@@ -2,6 +2,8 @@ import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/wid/home_box.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class ServersHome extends StatelessWidget {
   const ServersHome({super.key});
@@ -18,8 +20,8 @@ class ServersHome extends StatelessWidget {
             children: [
               Icon(Icons.dns, color: colorScheme.primary, size: 22),
               const SizedBox(width: 8),
-              const Text(
-                '当前服务器',
+              Text(
+                LocaleKeys.current_servers.tr(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
             ],
@@ -31,8 +33,8 @@ class ServersHome extends StatelessWidget {
               var enabledServers =
                   servers.where((s) => s.enable == true).toList();
               if (enabledServers.isEmpty) {
-                return const Text(
-                  '暂无启用服务器',
+                return Text(
+                  LocaleKeys.no_enabled_servers.tr(),
                   style: TextStyle(color: Colors.grey),
                 );
               }

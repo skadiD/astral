@@ -52,6 +52,8 @@ dependencies:
   crypto: ^3.0.3
   pointycastle: ^4.0.0
   file_picker: ^10.2.0
+  easy_localization: ^3.0.7+1
+  easy_localization_loader: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +73,7 @@ flutter:
     # - assets/dlls/
     - assets/icon.ico
     - assets/logo.png
+    - assets/translations/
 
   fonts:
     - family: MiSans

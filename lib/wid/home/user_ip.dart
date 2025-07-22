@@ -4,6 +4,8 @@ import 'package:astral/wid/canvas_jump.dart';
 import 'package:astral/k/models/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class UserIpBox extends StatefulWidget {
   const UserIpBox({super.key});
@@ -114,9 +116,9 @@ class _UserIpBoxState extends State<UserIpBox> {
             children: [
               Icon(Icons.person, color: colorScheme.primary, size: 22),
               const SizedBox(width: 8),
-              const Text(
-                '用户信息',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+              Text(
+                LocaleKeys.user_info.tr(),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
               const Spacer(),
               if (Aps().Connec_state.watch(context) != CoState.idle)
@@ -130,7 +132,7 @@ class _UserIpBoxState extends State<UserIpBox> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '已锁定',
+                    LocaleKeys.locked.tr(),
                     style: TextStyle(
                       color: colorScheme.onSecondaryContainer,
                       fontSize: 12,
@@ -155,8 +157,8 @@ class _UserIpBoxState extends State<UserIpBox> {
               });
             },
             decoration: InputDecoration(
-              labelText: '用户名',
-              hintText: '输入喜欢的名字',
+              labelText: LocaleKeys.username.tr(),
+              hintText: LocaleKeys.username_hint.tr(),
               border: const OutlineInputBorder(),
               prefixIcon: Icon(Icons.person, color: colorScheme.primary),
               floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -181,7 +183,7 @@ class _UserIpBoxState extends State<UserIpBox> {
                     : null,
             child: InputDecorator(
               decoration: InputDecoration(
-                labelText: '选择房间',
+                labelText: LocaleKeys.select_room.tr(),
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 12,
                   horizontal: 12,
@@ -196,7 +198,7 @@ class _UserIpBoxState extends State<UserIpBox> {
                 ignoring:
                     Aps().Connec_state.watch(context) == CoState.connected,
                 child: Text(
-                  Aps().selectroom.watch(context)?.name ?? '请选择房间',
+                  Aps().selectroom.watch(context)?.name ?? LocaleKeys.select_room_hint.tr(),
                   style: TextStyle(
                     color:
                         Aps().Connec_state.watch(context) != CoState.connected
@@ -231,9 +233,9 @@ class _UserIpBoxState extends State<UserIpBox> {
                       }
                     },
                     decoration: InputDecoration(
-                      labelText: '虚拟网IP',
+                      labelText: LocaleKeys.virtual_network_ip.tr(),
                       // 添加提示文本
-                      hintText: '不明白的话自动即可',
+                      hintText: LocaleKeys.virtual_network_ip_hint.tr(),
                       border: const OutlineInputBorder(),
                       prefixIcon: Icon(Icons.lan, color: colorScheme.primary),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -243,7 +245,7 @@ class _UserIpBoxState extends State<UserIpBox> {
                       ),
                       errorText:
                           (!_aps.dhcp.watch(context) && !_isValidIP)
-                              ? '请输入有效的IPv4地址'
+                              ? LocaleKeys.invalid_ipv4_error.tr()
                               : null,
                     ),
                   ),
@@ -261,7 +263,7 @@ class _UserIpBoxState extends State<UserIpBox> {
                       },
                     ),
                     Text(
-                      _aps.dhcp.watch(context) ? "自动" : "手动",
+                      _aps.dhcp.watch(context) ? LocaleKeys.automatic.tr() : LocaleKeys.manual.tr(),
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],
@@ -271,9 +273,9 @@ class _UserIpBoxState extends State<UserIpBox> {
           ),
 
           if (_aps.dhcp.watch(context))
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: Text('系统将自动分配虚拟网IP', style: TextStyle(fontSize: 12)),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(LocaleKeys.auto_assign_ip_notice.tr(), style: const TextStyle(fontSize: 12)),
             )
           else
             const SizedBox(height: 12),

@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/wid/home_box.dart';
 import 'package:flutter/material.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 // 添加模拟数据模型
 class NetworkNode {
   final String id;
@@ -40,8 +41,8 @@ class VirtualIpBox extends StatelessWidget {
             children: [
               Icon(Icons.network_check, color: colorScheme.primary, size: 22),
               const SizedBox(width: 8),
-              const Text(
-                '网络状态',
+              Text(
+                LocaleKeys.firewall.tr(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
               const Spacer(),
@@ -75,12 +76,12 @@ class VirtualIpBox extends StatelessWidget {
                   spacing: 8,
                   children: [
                     Icon(Icons.shield, size: 20, color: colorScheme.primary),
-                    const Text(
-                      '防火墙: ',
+                    Text(
+                      '${LocaleKeys.firewall_label.tr()}: ',
                       style: TextStyle(fontWeight: FontWeight.w700),
                     ),
                     Text(
-                      Aps().firewallStatus.watch(context) ? '已开启' : '已关闭',
+                      Aps().firewallStatus.watch(context) ? LocaleKeys.firewall_enabled.tr() : LocaleKeys.firewall_disabled.tr(),
                       style: TextStyle(color: colorScheme.secondary),
                     ),
                   ],
@@ -105,8 +106,8 @@ class VirtualIpBox extends StatelessWidget {
               spacing: 8,
               children: [
                 Icon(Icons.public, size: 20, color: colorScheme.primary),
-                const Text(
-                  '虚拟IP: ',
+                Text(
+                  '${LocaleKeys.virtual_ip_label.tr()}: ',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 Text(
@@ -138,10 +139,10 @@ Color _getStatusColor(CoState state, ColorScheme colorScheme) {
 String _getStatusText(CoState state) {
   switch (state) {
     case CoState.idle:
-      return '未连接';
+      return LocaleKeys.status_disconnected.tr();
     case CoState.connecting:
-      return '连接中';
+      return LocaleKeys.status_connecting.tr();
     case CoState.connected:
-      return '已连接';
+      return LocaleKeys.status_connected.tr();
   }
 }

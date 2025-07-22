@@ -5,6 +5,8 @@ import 'package:astral/src/rust/api/simple.dart';
 import 'package:astral/wid/home_box.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class AboutHome extends StatefulWidget {
   const AboutHome({super.key});
@@ -42,8 +44,8 @@ class _AboutHomeState extends State<AboutHome> {
                 size: 22,
               ), // 修改标题图标
               const SizedBox(width: 8),
-              const Text(
-                '关于',
+              Text(
+                LocaleKeys.about.tr(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
             ],
@@ -57,8 +59,8 @@ class _AboutHomeState extends State<AboutHome> {
                 size: 20,
                 color: colorScheme.primary,
               ), // 软件版本图标
-              const Text(
-                '软件版本: ',
+              Text(
+                '${LocaleKeys.software_version.tr()}: ',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
               Builder(
@@ -104,8 +106,8 @@ class _AboutHomeState extends State<AboutHome> {
                 size: 20,
                 color: colorScheme.primary,
               ), // 内核版本图标
-              const Text(
-                '内核版本: ',
+              Text(
+                '${LocaleKeys.kernel_version.tr()}: ',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
               Text(version, style: TextStyle(color: colorScheme.secondary)),

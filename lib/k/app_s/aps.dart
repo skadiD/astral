@@ -78,6 +78,9 @@ class Aps {
     final database = AppDatabase();
     themeMode.value = await database.themeSettings.getThemeMode();
     themeColor.value = Color(await database.themeSettings.getThemeColor());
+    // 初始化语言设置，默认为中文
+
+    currentLanguage.value = 'zh';
   }
 
   // 杂项初始化
@@ -334,6 +337,14 @@ class Aps {
   Future<void> updateThemeMode(ThemeMode mode) async {
     themeMode.value = mode;
     await AppDatabase().themeSettings.updateThemeMode(mode);
+  }
+
+  /// **********************************************************************************************************
+  /// 语言设置
+  final Signal<String> currentLanguage = signal('zh'); // 初始化为中文
+  // 更新语言设置
+  Future<void> updateLanguage(String languageCode) async {
+    currentLanguage.value = languageCode;
   }
 
   /// **********************************************************************************************************

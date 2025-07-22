@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class Contributors extends StatefulWidget {
   const Contributors({super.key});
@@ -47,15 +49,15 @@ class _ContributorsState extends State<Contributors> {
             // 根据贡献数量和用户名确定角色
             String role;
             if (isAuthor) {
-              role = '项目作者 & 维护者';
+              role = LocaleKeys.project_author_maintainer.tr();
             } else if (contributor['contributions'] >= 30) {
-              role = '核心贡献者';
+              role = LocaleKeys.core_contributor.tr();
             } else if (contributor['contributions'] >= 5) {
-              role = '贡献者';
+              role = LocaleKeys.contributor.tr();
             } else if (login.contains('bot')) {
-              role = '自动化助手';
+              role = LocaleKeys.automation_assistant.tr();
             } else {
-              role = '贡献者';
+              role = LocaleKeys.contributor.tr();
             }
             
             return {
@@ -83,12 +85,12 @@ class _ContributorsState extends State<Contributors> {
     } catch (e) {
       setState(() {
         isLoading = false;
-        errorMessage = '加载贡献者信息失败: $e';
+        errorMessage = '${LocaleKeys.load_contributors_failed.tr()}: $e';
         // 使用备用数据
         contributors = [
           {
             'name': 'ldoubil',
-            'role': '项目作者 & 维护者',
+            'role': LocaleKeys.project_author_maintainer.tr(),
             'avatar': 'https://avatars.githubusercontent.com/u/26994456?v=4',
             'github': 'https://github.com/ldoubil',
             'isAuthor': true,
@@ -115,8 +117,8 @@ class _ContributorsState extends State<Contributors> {
                 size: 22,
               ),
               const SizedBox(width: 8),
-              const Text(
-                '贡献者',
+              Text(
+                LocaleKeys.contributors.tr(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
               if (isLoading) ...[
@@ -162,10 +164,10 @@ class _ContributorsState extends State<Contributors> {
               ),
             ),
           if (isLoading)
-            const Center(
+             Center(
               child: Padding(
                 padding: EdgeInsets.all(20),
-                child: Text('正在加载贡献者信息...'),
+                child: Text(LocaleKeys.loading_contributors.tr()),
               ),
             )
           else
@@ -186,7 +188,7 @@ class _ContributorsState extends State<Contributors> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '查看所有贡献者',
+                  LocaleKeys.view_all_contributors.tr(),
                   style: TextStyle(
                     color: colorScheme.primary,
                     fontSize: 14,

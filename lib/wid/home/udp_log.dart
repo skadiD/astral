@@ -3,6 +3,8 @@ import 'package:astral/wid/home_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class UdpLog extends StatefulWidget {
   const UdpLog({super.key});
@@ -80,7 +82,7 @@ class _UdpLogState extends State<UdpLog> {
     Clipboard.setData(ClipboardData(text: logsText));
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('日志内容已复制')));
+    ).showSnackBar(SnackBar(content: Text(LocaleKeys.logs_copied.tr())));
   }
 
   @override
@@ -95,14 +97,14 @@ class _UdpLogState extends State<UdpLog> {
         children: [
           Row(
             children: [
-              const Text(
-                'UDP 日志监听 (127.0.0.1:9999)',
+              Text(
+                LocaleKeys.udp_log_listener.tr(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               IconButton(
                 icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-                tooltip: _expanded ? '折叠日志' : '展开日志',
+                tooltip: _expanded ? LocaleKeys.collapse_log.tr() : LocaleKeys.expand_log.tr(),
                 onPressed: () {
                   setState(() {
                     _expanded = !_expanded;
@@ -111,7 +113,7 @@ class _UdpLogState extends State<UdpLog> {
               ),
               IconButton(
                 icon: const Icon(Icons.copy),
-                tooltip: '复制全部日志',
+                tooltip: LocaleKeys.copy_all_logs.tr(),
                 onPressed: _logs.isEmpty ? null : _copyLogs,
               ),
             ],

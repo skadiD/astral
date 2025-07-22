@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:astral/fun/up.dart';
 import 'package:astral/fun/reg.dart'; // 添加这行导入
 import 'package:astral/k/app_s/log_capture.dart';
 import 'package:astral/k/database/app_data.dart';
 import 'package:astral/k/mod/window_manager.dart';
 import 'package:astral/services/app_links/app_link_registry.dart';
+import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:astral/src/rust/frb_generated.dart';
@@ -24,7 +25,7 @@ void main() async {
     }
   }
   WidgetsFlutterBinding.ensureInitialized();
-
+  await EasyLocalization.ensureInitialized();
   await AppDatabase().init();
   AppInfoUtil.init();
   await RustLib.init();
@@ -34,7 +35,14 @@ void main() async {
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     await WindowManagerUtils.initializeWindow();
   }
-  runApp(const KevinApp());
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [ Locale('zh'),Locale('en')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('zh'),
+      child: const KevinApp(),
+    ),
+  );
 }
 
 Future<void> _initAppLinks() async {

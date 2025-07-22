@@ -3,6 +3,8 @@ import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
 import 'package:astral/wid/theme_selector.dart';
 import 'package:astral/wid/windows_controls.dart';
+import 'package:astral/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -68,6 +70,20 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                 Aps().updateThemeMode(newMode);
               },
               padding: const EdgeInsets.all(4), // 减小内边距
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.language,
+                size: 16,
+              ),
+              onPressed: () {
+                final currentLang = Aps().currentLanguage.value;
+                final newLang = currentLang == 'zh' ? 'en' : 'zh';
+                Aps().updateLanguage(newLang);
+                context.setLocale(Locale(newLang));
+              },
+              tooltip: LocaleKeys.language.tr(),
+              padding: const EdgeInsets.all(4),
             ),
           ],
         ),
@@ -138,6 +154,17 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () => showThemeColorPicker(context),
               tooltip: '选择主题颜色',
               padding: const EdgeInsets.all(4), // 减小内边距
+            ),
+            IconButton(
+              icon: const Icon(Icons.language, size: 20),
+              onPressed: () {
+                final currentLang = Aps().currentLanguage.value;
+                final newLang = currentLang == 'zh' ? 'en' : 'zh';
+                Aps().updateLanguage(newLang);
+                context.setLocale(Locale(newLang));
+              },
+              tooltip: LocaleKeys.language.tr(),
+              padding: const EdgeInsets.all(8),
             ),
             if (Platform.isWindows || Platform.isMacOS || Platform.isLinux)
               const WindowControls(),

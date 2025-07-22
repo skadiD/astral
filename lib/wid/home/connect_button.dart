@@ -9,6 +9,8 @@ import 'package:astral/src/rust/api/hops.dart';
 import 'package:astral/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 import 'package:vpn_service_plugin/vpn_service_plugin.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class ConnectButton extends StatefulWidget {
   const ConnectButton({super.key});
@@ -124,9 +126,9 @@ class _ConnectButtonState extends State<ConnectButton>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('请先添加并启用至少一个服务器'),
+            content: Text(LocaleKeys.add_server_first.tr()),
             action: SnackBarAction(
-              label: '去添加',
+              label: LocaleKeys.go_add.tr(),
               onPressed: () {
                 // 跳转到服务器页面（索引为2）
                 Aps().selectedIndex.set(2);

@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:astral/generated/locale_keys.g.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -55,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
       await _checkInstallPermission(); // 重新检查权限状态
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(status.isGranted ? '安装权限获取成功' : '安装权限获取失败')),
+        SnackBar(content: Text(status.isGranted ? LocaleKeys.permission_install_success.tr() : LocaleKeys.permission_install_failed.tr())),
       );
 
       // 如果权限被永久拒绝，提示用户去设置页面
@@ -66,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('请求安装权限失败')));
+      ).showSnackBar(SnackBar(content: Text(LocaleKeys.permission_install_request_failed.tr())));
     }
   }
 
@@ -75,19 +77,19 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('权限被拒绝'),
-          content: const Text('安装权限被永久拒绝，请前往设置页面手动开启权限。'),
+          title: Text(LocaleKeys.permission_denied.tr()),
+          content: Text(LocaleKeys.permission_denied_message.tr()),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('取消'),
+              child: Text(LocaleKeys.cancel.tr()),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 openAppSettings();
               },
-              child: const Text('去设置'),
+              child: Text(LocaleKeys.go_settings.tr()),
             ),
           ],
         );
@@ -109,7 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ExpansionTile(
               initiallyExpanded: false, // 默认折叠,
               leading: const Icon(Icons.broadcast_on_personal),
-              title: const Text('转发管理'),
+              title: Text(LocaleKeys.forwarding_management.tr()),
               children: [
                 Builder(
                   builder: (context) {
@@ -134,17 +136,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                 },
                               ),
                               title: Text(
-                                manager.name.isEmpty ? '未命名分组' : manager.name,
+                                manager.name.isEmpty ? LocaleKeys.unnamed_group.tr() : manager.name,
                               ),
                               subtitle: Text(
-                                '${manager.connections.length} 个连接',
+                                '${manager.connections.length} ${LocaleKeys.connections_count.tr()}',
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
                                     icon: const Icon(Icons.edit, size: 20),
-                                    tooltip: '编辑',
+                                    tooltip: LocaleKeys.edit.tr(),
                                     onPressed:
                                         () => editConnectionManager(
                                           context,
@@ -154,7 +156,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete, size: 20),
-                                    tooltip: '删除',
+                                    tooltip: LocaleKeys.delete.tr(),
                                     onPressed:
                                         () => deleteConnectionManager(
                                           context,
@@ -172,13 +174,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                     title: Text(
                                       '${conn.bindAddr} → ${conn.dstAddr}',
                                     ),
-                                    subtitle: Text('协议: ${conn.proto}'),
+                                    subtitle: Text('${LocaleKeys.protocol.tr()}: ${conn.proto}'),
                                   ),
                                 ),
                                 if (manager.connections.isEmpty)
-                                  const ListTile(
+                                  ListTile(
                                     dense: true,
-                                    title: Text('暂无连接配置'),
+                                    title: Text(LocaleKeys.no_connection_config.tr()),
                                   ),
                               ],
                             ),
@@ -186,7 +188,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         }),
                         ListTile(
                           leading: const Icon(Icons.add),
-                          title: const Text('新增转发分组'),
+                          title: Text(LocaleKeys.add_forwarding_group.tr()),
                           onTap: () => addConnectionManager(context),
                         ),
                       ],
@@ -204,11 +206,11 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ExpansionTile(
               initiallyExpanded: false, // 默认折叠
               leading: const Icon(Icons.network_check),
-              title: const Text('网卡跃点设置'),
+              title: Text(LocaleKeys.network_adapter_hop_settings.tr()),
               children: [
                 SwitchListTile(
-                  title: const Text('自动设置跃点'),
-                  subtitle: const Text('每次启动网卡自动设置跃点最小'),
+                  title: Text(LocaleKeys.auto_set_hop.tr()),
+                  subtitle: Text(LocaleKeys.auto_set_hop_desc.tr()),
                   value: Aps().autoSetMTU.watch(context),
                   onChanged: (value) {
                     Aps().setAutoSetMTU(value);
@@ -216,7 +218,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.list),
-                  title: const Text('查看跃点列表'),
+                  title: Text(LocaleKeys.view_hop_list.tr()),
                   onTap: () async {
                     try {
                       final result = await getAllInterfacesMetrics();
@@ -226,7 +228,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         context: context,
                         builder:
                             (context) => AlertDialog(
-                              title: const Text('网卡跃点列表'),
+                              title: Text(LocaleKeys.network_adapter_hop_list.tr()),
                               content: SingleChildScrollView(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -240,7 +242,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: const Text('关闭'),
+                                  child: Text(LocaleKeys.close.tr()),
                                 ),
                               ],
                             ),
@@ -251,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       ScaffoldMessenger.of(
                         context,
-                      ).showSnackBar(const SnackBar(content: Text('获取跃点列表失败')));
+                      ).showSnackBar(SnackBar(content: Text(LocaleKeys.get_hop_list_failed.tr())));
                     }
                   },
                 ),
@@ -267,11 +269,11 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ExpansionTile(
               initiallyExpanded: false, // 默认折叠
               leading: const Icon(Icons.launch),
-              title: const Text('自启动相关'),
+              title: Text(LocaleKeys.startup_related.tr()),
               children: [
                 SwitchListTile(
-                  title: const Text('开机自启动'),
-                  subtitle: const Text('将程序添加到系统启动项，开机时自动运行'),
+                  title: Text(LocaleKeys.startup_on_boot.tr()),
+                  subtitle: Text(LocaleKeys.startup_on_boot_desc.tr()),
                   value: Aps().startup.watch(context),
                   onChanged: (value) {
                     Aps().setStartup(value);
@@ -279,16 +281,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 SwitchListTile(
-                  title: const Text('启动后最小化'),
-                  subtitle: const Text('程序启动后自动最小化到系统托盘'),
+                  title: Text(LocaleKeys.startup_minimize.tr()),
+                  subtitle: Text(LocaleKeys.startup_minimize_desc.tr()),
                   value: Aps().startupMinimize.watch(context),
                   onChanged: (value) {
                     Aps().setStartupMinimize(value);
                   },
                 ),
                 SwitchListTile(
-                  title: const Text('启动后自动连接'),
-                  subtitle: const Text('程序启动后自动连接到上次使用的服务器'),
+                  title: Text(LocaleKeys.startup_auto_connect.tr()),
+                  subtitle: Text(LocaleKeys.startup_auto_connect_desc.tr()),
                   value: Aps().startupAutoConnect.watch(context),
                   onChanged: (value) {
                     Aps().setStartupAutoConnect(value);
@@ -303,7 +305,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: ExpansionTile(
             initiallyExpanded: false, // 默认折叠
             leading: const Icon(Icons.list_alt),
-            title: const Text('监听列表'),
+            title: Text(LocaleKeys.listen_list.tr()),
             children: [
               Builder(
                 builder: (context) {
@@ -319,7 +321,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.edit, size: 20),
-                                tooltip: '编辑',
+                                tooltip: LocaleKeys.edit.tr(),
                                 onPressed: () async {
                                   final controller = TextEditingController(
                                     text: item,
@@ -328,19 +330,19 @@ class _SettingsPageState extends State<SettingsPage> {
                                     context: context,
                                     builder:
                                         (context) => AlertDialog(
-                                          title: const Text('编辑监听项'),
+                                          title: Text(LocaleKeys.edit_listen_item.tr()),
                                           content: TextField(
                                             controller: controller,
                                             autofocus: true,
-                                            decoration: const InputDecoration(
-                                              labelText: '监听项',
+                                            decoration: InputDecoration(
+                                              labelText: LocaleKeys.listen_item.tr(),
                                             ),
                                           ),
                                           actions: [
                                             TextButton(
                                               onPressed:
                                                   () => Navigator.pop(context),
-                                              child: const Text('取消'),
+                                              child: Text(LocaleKeys.cancel.tr()),
                                             ),
                                             TextButton(
                                               onPressed:
@@ -348,7 +350,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     context,
                                                     controller.text,
                                                   ),
-                                              child: const Text('保存'),
+                                              child: Text(LocaleKeys.save.tr()),
                                             ),
                                           ],
                                         ),
@@ -365,14 +367,14 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.delete, size: 20),
-                                tooltip: '删除',
+                                tooltip: LocaleKeys.delete.tr(),
                                 onPressed: () async {
                                   final confirm = await showDialog<bool>(
                                     context: context,
                                     builder:
                                         (context) => AlertDialog(
-                                          title: const Text('确认删除'),
-                                          content: Text('确定要删除监听项 "$item" 吗？'),
+                                          title: Text(LocaleKeys.confirm_delete.tr()),
+                                          content: Text(LocaleKeys.confirm_delete_listen_item.tr(namedArgs: {'item': item})),
                                           actions: [
                                             TextButton(
                                               onPressed:
@@ -380,7 +382,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     context,
                                                     false,
                                                   ),
-                                              child: const Text('取消'),
+                                              child: Text(LocaleKeys.cancel.tr()),
                                             ),
                                             TextButton(
                                               onPressed:
@@ -388,7 +390,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     context,
                                                     true,
                                                   ),
-                                              child: const Text('删除'),
+                                              child: Text(LocaleKeys.delete.tr()),
                                             ),
                                           ],
                                         ),
@@ -404,7 +406,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }),
                       ListTile(
                         leading: const Icon(Icons.add),
-                        title: const Text('新增监听项'),
+                        title: Text(LocaleKeys.add_listen_item.tr()),
                         onTap: () async {
                           final controller = TextEditingController();
                           final result = await showDialog<String>(
@@ -415,14 +417,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                   content: TextField(
                                     controller: controller,
                                     autofocus: true,
-                                    decoration: const InputDecoration(
-                                      labelText: '监听项',
+                                    decoration: InputDecoration(
+                                      labelText: LocaleKeys.listen_item.tr(),
                                     ),
                                   ),
                                   actions: [
                                     TextButton(
                                       onPressed: () => Navigator.pop(context),
-                                      child: const Text('取消'),
+                                      child: Text(LocaleKeys.cancel.tr()),
                                     ),
                                     TextButton(
                                       onPressed:
@@ -430,7 +432,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             context,
                                             controller.text,
                                           ),
-                                      child: const Text('添加'),
+                                      child: Text(LocaleKeys.add.tr()),
                                     ),
                                   ],
                                 ),
@@ -455,7 +457,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ExpansionTile(
               initiallyExpanded: false,
               leading: const Icon(Icons.route),
-              title: const Text('子网代理 (CIDR)'),
+              title: Text(LocaleKeys.subnet_proxy_cidr.tr()),
               children: [
                 Builder(
                   builder: (context) {
@@ -479,12 +481,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                       context: context,
                                       builder:
                                           (context) => AlertDialog(
-                                            title: const Text('编辑CIDR'),
+                                            title: Text(LocaleKeys.edit_cidr.tr()),
                                             content: TextField(
                                               controller: controller,
-                                              decoration: const InputDecoration(
-                                                labelText:
-                                                    'CIDR格式 (例: 192.168.1.0/24)',
+                                              decoration: InputDecoration(
+                                                labelText: LocaleKeys.cidr_format_example.tr(),
                                               ),
                                             ),
                                             actions: [
@@ -492,7 +493,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 onPressed:
                                                     () =>
                                                         Navigator.pop(context),
-                                                child: const Text('取消'),
+                                                child: Text(LocaleKeys.cancel.tr()),
                                               ),
                                               TextButton(
                                                 onPressed:
@@ -500,7 +501,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       controller.text,
                                                     ),
-                                                child: const Text('保存'),
+                                                child: Text(LocaleKeys.save.tr()),
                                               ),
                                             ],
                                           ),
@@ -520,9 +521,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                       context: context,
                                       builder:
                                           (context) => AlertDialog(
-                                            title: const Text('确认删除'),
+                                            title: Text(LocaleKeys.confirm_delete.tr()),
                                             content: Text(
-                                              '确定要删除CIDR "$cidr" 吗？',
+                                              LocaleKeys.confirm_delete_cidr.tr(namedArgs: {'cidr': cidr}),
                                             ),
                                             actions: [
                                               TextButton(
@@ -531,7 +532,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       false,
                                                     ),
-                                                child: const Text('取消'),
+                                                child: Text(LocaleKeys.cancel.tr()),
                                               ),
                                               TextButton(
                                                 onPressed:
@@ -539,7 +540,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       true,
                                                     ),
-                                                child: const Text('删除'),
+                                                child: Text(LocaleKeys.delete.tr()),
                                               ),
                                             ],
                                           ),
@@ -555,25 +556,25 @@ class _SettingsPageState extends State<SettingsPage> {
                         }),
                         ListTile(
                           leading: const Icon(Icons.add),
-                          title: const Text('添加CIDR代理'),
+                          title: Text(LocaleKeys.add_cidr_proxy.tr()),
                           onTap: () async {
                             final controller = TextEditingController();
                             final result = await showDialog<String>(
                               context: context,
                               builder:
                                   (context) => AlertDialog(
-                                    title: const Text('添加CIDR代理'),
+                                    title: Text(LocaleKeys.add_cidr_proxy.tr()),
                                     content: TextField(
                                       controller: controller,
-                                      decoration: const InputDecoration(
-                                        labelText: 'CIDR格式 (例: 192.168.1.0/24)',
-                                        hintText: '请输入CIDR网段',
-                                      ),
+                                      decoration: InputDecoration(
+                        labelText: LocaleKeys.cidr_format_example.tr(),
+                        hintText: LocaleKeys.cidr_input_hint.tr(),
+                      ),
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: const Text('取消'),
+                                        child: Text(LocaleKeys.cancel.tr()),
                                       ),
                                       TextButton(
                                         onPressed:
@@ -581,7 +582,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               context,
                                               controller.text,
                                             ),
-                                        child: const Text('添加'),
+                                        child: Text(LocaleKeys.add.tr()),
                                       ),
                                     ],
                                   ),
@@ -606,7 +607,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ExpansionTile(
               initiallyExpanded: false,
               leading: const Icon(Icons.vpn_lock),
-              title: const Text('自定义VPN网段'),
+              title: Text(LocaleKeys.custom_vpn_segment.tr()),
               children: [
                 Builder(
                   builder: (context) {
@@ -630,12 +631,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                       context: context,
                                       builder:
                                           (context) => AlertDialog(
-                                            title: const Text('编辑VPN网段'),
+                                            title: Text(LocaleKeys.edit_vpn_segment.tr()),
                                             content: TextField(
                                               controller: controller,
-                                              decoration: const InputDecoration(
-                                                labelText:
-                                                    'VPN网段格式 (例: 10.0.0.0/8)',
+                                              decoration: InputDecoration(
+                                                labelText: LocaleKeys.vpn_segment_format_example.tr(),
                                               ),
                                             ),
                                             actions: [
@@ -643,7 +643,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 onPressed:
                                                     () =>
                                                         Navigator.pop(context),
-                                                child: const Text('取消'),
+                                                child: Text(LocaleKeys.cancel.tr()),
                                               ),
                                               TextButton(
                                                 onPressed:
@@ -651,7 +651,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       controller.text,
                                                     ),
-                                                child: const Text('保存'),
+                                                child: Text(LocaleKeys.save.tr()),
                                               ),
                                             ],
                                           ),
@@ -671,9 +671,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                       context: context,
                                       builder:
                                           (context) => AlertDialog(
-                                            title: const Text('确认删除'),
+                                            title: Text(LocaleKeys.confirm_delete.tr()),
                                             content: Text(
-                                              '确定要删除VPN网段 "$vpn" 吗？',
+                                              LocaleKeys.confirm_delete_vpn_segment.tr(namedArgs: {'vpn': vpn}),
                                             ),
                                             actions: [
                                               TextButton(
@@ -682,7 +682,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       false,
                                                     ),
-                                                child: const Text('取消'),
+                                                child: Text(LocaleKeys.cancel.tr()),
                                               ),
                                               TextButton(
                                                 onPressed:
@@ -690,7 +690,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       true,
                                                     ),
-                                                child: const Text('删除'),
+                                                child: Text(LocaleKeys.delete.tr()),
                                               ),
                                             ],
                                           ),
@@ -706,25 +706,25 @@ class _SettingsPageState extends State<SettingsPage> {
                         }),
                         ListTile(
                           leading: const Icon(Icons.add),
-                          title: const Text('添加VPN网段'),
+                          title: Text(LocaleKeys.add_vpn_segment.tr()),
                           onTap: () async {
                             final controller = TextEditingController();
                             final result = await showDialog<String>(
                               context: context,
                               builder:
                                   (context) => AlertDialog(
-                                    title: const Text('添加VPN网段'),
+                                    title: Text(LocaleKeys.add_vpn_segment.tr()),
                                     content: TextField(
                                       controller: controller,
-                                      decoration: const InputDecoration(
-                                        labelText: 'VPN网段格式 (例: 10.0.0.0/8)',
-                                        hintText: '请输入VPN网段',
-                                      ),
+                                      decoration: InputDecoration(
+                        labelText: LocaleKeys.vpn_segment_format_example.tr(),
+                        hintText: LocaleKeys.vpn_segment_input_hint.tr(),
+                      ),
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: const Text('取消'),
+                                        child: Text(LocaleKeys.cancel.tr()),
                                       ),
                                       TextButton(
                                         onPressed:
@@ -732,7 +732,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               context,
                                               controller.text,
                                             ),
-                                        child: const Text('添加'),
+                                        child: Text(LocaleKeys.add.tr()),
                                       ),
                                     ],
                                   ),
@@ -754,12 +754,12 @@ class _SettingsPageState extends State<SettingsPage> {
           child: ExpansionTile(
             initiallyExpanded: false, // 默认折叠
             leading: const Icon(Icons.network_wifi),
-            title: const Text('网络设置'),
+            title: Text(LocaleKeys.network_settings.tr()),
             children: [
               // 压缩算法下拉单选
               ListTile(
-                title: const Text('P2P打洞'),
-                subtitle: const Text('优先采用什么协议'),
+                title: Text(LocaleKeys.p2p_hole_punching.tr()),
+                subtitle: Text(LocaleKeys.preferred_protocol.tr()),
                 trailing: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -815,8 +815,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('是否启用加密'),
-                subtitle: const Text('会自动设置MTU'),
+                title: Text(LocaleKeys.enable_encryption.tr()),
+                subtitle: Text(LocaleKeys.auto_set_mtu.tr()),
                 value: Aps().enableEncryption.watch(context),
                 onChanged: (value) {
                   Aps().updateEnableEncryption(value);
@@ -824,8 +824,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('延迟优先'),
-                subtitle: const Text('是否优先考虑延迟'),
+                title: Text(LocaleKeys.latency_first.tr()),
+                subtitle: Text(LocaleKeys.latency_first_desc.tr()),
                 value: Aps().latencyFirst.watch(context),
                 onChanged: (value) {
                   Aps().updateLatencyFirst(value);
@@ -833,16 +833,16 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('魔术DNS'),
-                subtitle: const Text('是否启用魔术DNS'),
+                title: Text(LocaleKeys.magic_dns.tr()),
+                subtitle: Text(LocaleKeys.magic_dns_desc.tr()),
                 value: Aps().accept_dns.watch(context),
                 onChanged: (value) {
                   Aps().updateAcceptDns(value);
                 },
               ),
               SwitchListTile(
-                title: const Text('TUN设备'),
-                subtitle: const Text('是否禁用TUN设备'),
+                title: Text(LocaleKeys.tun_device.tr()),
+                subtitle: Text(LocaleKeys.tun_device_desc.tr()),
                 value: Aps().noTun.watch(context),
                 onChanged: (value) {
                   Aps().updateNoTun(value);
@@ -852,7 +852,7 @@ class _SettingsPageState extends State<SettingsPage> {
               SwitchListTile(
                 title: Row(
                   children: [
-                    const Text('smoltcp网络栈'),
+                    Text(LocaleKeys.smoltcp_stack.tr()),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -863,14 +863,14 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: Colors.red[100],
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Text(
-                        '不推荐',
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      child: Text(
+                        LocaleKeys.not_recommended.tr(),
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
                       ),
                     ),
                   ],
                 ),
-                subtitle: const Text('轻量级 TCP/IP 协议栈'),
+                subtitle: Text(LocaleKeys.smoltcp_stack_desc.tr()),
                 value: Aps().useSmoltcp.watch(context),
                 onChanged: (value) {
                   Aps().updateUseSmoltcp(value);
@@ -878,8 +878,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('禁用P2P'),
-                subtitle: const Text('如果打洞困难可以禁用p2p'),
+                title: Text(LocaleKeys.disable_p2p.tr()),
+                subtitle: Text(LocaleKeys.disable_p2p_desc.tr()),
                 value: Aps().disableP2p.watch(context),
                 onChanged: (value) {
                   Aps().updateDisableP2p(value);
@@ -887,8 +887,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('中继对等RPC'),
-                subtitle: const Text('是否中继所有对等RPC'),
+                title: Text(LocaleKeys.relay_peer_rpc.tr()),
+                subtitle: Text(LocaleKeys.relay_peer_rpc_desc.tr()),
                 value: Aps().relayAllPeerRpc.watch(context),
                 onChanged: (value) {
                   Aps().updateRelayAllPeerRpc(value);
@@ -896,8 +896,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('禁用UDP打洞'),
-                subtitle: const Text('是否禁用UDP打洞'),
+                title: Text(LocaleKeys.disable_udp_hole_punching.tr()),
+                subtitle: Text(LocaleKeys.disable_udp_hole_punching_desc.tr()),
                 value: Aps().disableUdpHolePunching.watch(context),
                 onChanged: (value) {
                   Aps().updateDisableUdpHolePunching(value);
@@ -905,8 +905,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('启用多线程'),
-                subtitle: const Text('是否启用多线程'),
+                title: Text(LocaleKeys.enable_multi_thread.tr()),
+                subtitle: Text(LocaleKeys.enable_multi_thread_desc.tr()),
                 value: Aps().multiThread.watch(context),
                 onChanged: (value) {
                   Aps().updateMultiThread(value);
@@ -915,8 +915,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
               // 压缩算法下拉单选
               ListTile(
-                title: const Text('压缩算法'),
-                subtitle: const Text('选择数据压缩方式'),
+                title: Text(LocaleKeys.compression_algorithm.tr()),
+                subtitle: Text(LocaleKeys.compression_algorithm_desc.tr()),
                 trailing: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -930,16 +930,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       child: DropdownButton<int>(
                         value: Aps().dataCompressAlgo.watch(context),
-                        items: const [
+                        items:  [
                           DropdownMenuItem(
                             value: 1,
-                            child: Text('不压缩', style: TextStyle(fontSize: 14)),
+                            child: Text(LocaleKeys.no_compression.tr(), style: const TextStyle(fontSize: 14)),
                           ),
                           DropdownMenuItem(
                             value: 2,
                             child: Text(
-                              '高性能压缩(Zstd)',
-                              style: TextStyle(fontSize: 14),
+                              LocaleKeys.high_performance_compression.tr(),
+                              style: const TextStyle(fontSize: 14),
                             ),
                           ),
                         ],
@@ -957,8 +957,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('绑定设备'),
-                subtitle: const Text('只使用物理网卡,防止和其他虚拟网卡沟通'),
+                title: Text(LocaleKeys.bind_device.tr()),
+                subtitle: Text(LocaleKeys.bind_device_desc.tr()),
                 value: Aps().bindDevice.watch(context),
                 onChanged: (value) {
                   Aps().updateBindDevice(value);
@@ -966,8 +966,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('启用KCP代理'),
-                subtitle: const Text('是否启用 KCP 代理'),
+                title: Text(LocaleKeys.enable_kcp_proxy.tr()),
+                subtitle: Text(LocaleKeys.enable_kcp_proxy_desc.tr()),
                 value: Aps().enableKcpProxy.watch(context),
                 onChanged: (value) {
                   Aps().updateEnableKcpProxy(value);
@@ -975,8 +975,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('KCP输入'),
-                subtitle: const Text('是否接收 KCP 协议的数据'),
+                title: Text(LocaleKeys.kcp_input.tr()),
+                subtitle: Text(LocaleKeys.kcp_input_desc.tr()),
                 value: Aps().disableKcpInput.watch(context),
                 onChanged: (value) {
                   Aps().updateDisableKcpInput(value);
@@ -984,8 +984,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('禁用中继KCP'),
-                subtitle: const Text('是否为其他节点转发 KCP 流量'),
+                title: Text(LocaleKeys.disable_relay_kcp.tr()),
+                subtitle: Text(LocaleKeys.disable_relay_kcp_desc.tr()),
                 value: Aps().disableRelayKcp.watch(context),
                 onChanged: (value) {
                   Aps().updateDisableRelayKcp(value);
@@ -993,8 +993,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('私有模式'),
-                subtitle: const Text('是否启用私有模式'),
+                title: Text(LocaleKeys.private_mode.tr()),
+                subtitle: Text(LocaleKeys.private_mode_desc.tr()),
                 value: Aps().privateMode.watch(context),
                 onChanged: (value) {
                   Aps().updatePrivateMode(value);
@@ -1002,8 +1002,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('启用QUIC代理'),
-                subtitle: const Text('是否启用 QUIC 代理'),
+                title: Text(LocaleKeys.enable_quic_proxy.tr()),
+                subtitle: Text(LocaleKeys.enable_quic_proxy_desc.tr()),
                 value: Aps().enableQuicProxy.watch(context),
                 onChanged: (value) {
                   Aps().updateEnableQuicProxy(value);
@@ -1011,8 +1011,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               SwitchListTile(
-                title: const Text('禁用QUIC输入'),
-                subtitle: const Text('是否禁用 QUIC 协议的数据输入'),
+                title: Text(LocaleKeys.disable_quic_input.tr()),
+                subtitle: Text(LocaleKeys.disable_quic_input_desc.tr()),
                 value: Aps().disableQuicInput.watch(context),
                 onChanged: (value) {
                   Aps().updateDisableQuicInput(value);
@@ -1026,7 +1026,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: ExpansionTile(
             initiallyExpanded: false, // 默认折叠,
             leading: const Icon(Icons.info),
-            title: const Text('软件设置'),
+            title: Text(LocaleKeys.software_settings.tr()),
             children: [
               // if (Platform.isAndroid)
               //   ListTile(
@@ -1052,9 +1052,9 @@ class _SettingsPageState extends State<SettingsPage> {
               if (Platform.isAndroid)
                 ListTile(
                   leading: const Icon(Icons.install_mobile),
-                  title: const Text('获取安装权限'),
+                  title: Text(LocaleKeys.get_install_permission.tr()),
                   subtitle: Text(
-                    _hasInstallPermission ? '已获得安装权限' : '未获得安装权限，点击申请',
+                    _hasInstallPermission ? LocaleKeys.install_permission_granted.tr() : LocaleKeys.install_permission_not_granted.tr(),
                   ),
                   trailing:
                       _hasInstallPermission
@@ -1065,16 +1065,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               if (!Platform.isAndroid)
                 SwitchListTile(
-                  title: const Text('最小化'),
-                  subtitle: const Text('是否点击关闭按钮最小化到托盘'),
+                  title: Text(LocaleKeys.minimize.tr()),
+                  subtitle: Text(LocaleKeys.minimize_desc.tr()),
                   value: Aps().closeMinimize.watch(context),
                   onChanged: (value) {
                     Aps().updateCloseMinimize(value);
                   },
                 ),
               SwitchListTile(
-                title: const Text('玩家列表卡片'),
-                subtitle: const Text('是否简约显示'),
+                title: Text(LocaleKeys.player_list_card.tr()),
+                subtitle: Text(LocaleKeys.player_list_card_desc.tr()),
                 value: Aps().userListSimple.watch(context),
                 onChanged: (value) {
                   Aps().setUserListSimple(value);
@@ -1088,11 +1088,11 @@ class _SettingsPageState extends State<SettingsPage> {
           child: ExpansionTile(
             initiallyExpanded: false, // 默认折叠,
             leading: const Icon(Icons.system_update),
-            title: const Text('更新设置'),
+            title: Text(LocaleKeys.update_settings.tr()),
             children: [
               SwitchListTile(
-                title: const Text('参与内测版'),
-                subtitle: const Text('加群分享你的bug'),
+                title: Text(LocaleKeys.join_beta.tr()),
+                subtitle: Text(LocaleKeys.join_beta_desc.tr()),
                 value: Aps().beta.watch(context),
                 onChanged: (value) {
                   Aps().setBeta(value);
@@ -1100,19 +1100,19 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               if (!Aps().beta.watch(context))
                 SwitchListTile(
-                  title: const Text('自动更新'),
-                  subtitle: const Text('享受最新bug'),
+                  title: Text(LocaleKeys.auto_update.tr()),
+                  subtitle: Text(LocaleKeys.auto_update_desc.tr()),
                   value: Aps().autoCheckUpdate.watch(context),
                   onChanged: (value) {
                     Aps().setAutoCheckUpdate(value);
                   },
                 ),
               ListTile(
-                title: const Text('下载加速'),
+                title: Text(LocaleKeys.download_acceleration.tr()),
                 subtitle: TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: '启用下载加速功能',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    hintText: LocaleKeys.download_acceleration_hint.tr(),
+                    border: const OutlineInputBorder(),
                   ),
                   initialValue: Aps().downloadAccelerate.watch(context),
                   onChanged: (value) {
@@ -1127,14 +1127,14 @@ class _SettingsPageState extends State<SettingsPage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Column(
             children: [
-              const ListTile(leading: Icon(Icons.info), title: Text('关于')),
+              ListTile(leading: const Icon(Icons.info), title: Text(LocaleKeys.about.tr())),
               ListTile(
                 leading: Hero(
                   tag: "logs_hero",
                   child: const Icon(Icons.article),
                 ),
-                title: const Text('查看日志'),
-                subtitle: const Text('查看应用运行日志'),
+                title: Text(LocaleKeys.view_logs.tr()),
+                subtitle: Text(LocaleKeys.view_logs_desc.tr()),
                 onTap: () {
                   Navigator.of(context).push(
                     PageRouteBuilder(
@@ -1167,24 +1167,24 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.group),
-                title: const Text('官方QQ群 808169040'),
-                subtitle: const Text('点击复制群号'),
+                title: Text(LocaleKeys.official_qq_group.tr()),
+                subtitle: Text(LocaleKeys.click_copy_group_number.tr()),
                 onTap: () async {
                   const qqGroup = '808169040'; // 替换为实际QQ群号
                   await Clipboard.setData(const ClipboardData(text: qqGroup));
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('群号已复制到剪贴板')));
+                  ).showSnackBar(SnackBar(content: Text(LocaleKeys.group_number_copied.tr())));
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.feedback),
-                title: const Text('用户反馈'),
+                title: Text(LocaleKeys.user_feedback.tr()),
                 onTap: _sendFeedback,
               ),
               ListTile(
                 leading: const Icon(Icons.update),
-                title: const Text('检查更新'),
+                title: Text(LocaleKeys.check_update.tr()),
                 onTap: () {
                   final updateChecker = UpdateChecker(
                     owner: 'ldoubil',
@@ -1211,30 +1211,30 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('用户反馈'),
+            title: Text(LocaleKeys.user_feedback.tr()),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: '姓名',
-                    hintText: '请输入您的姓名',
+                  decoration: InputDecoration(
+                    labelText: LocaleKeys.name.tr(),
+                    hintText: LocaleKeys.name_hint.tr(),
                   ),
                 ),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(
-                    labelText: '邮箱',
-                    hintText: '请输入您的邮箱',
+                  decoration: InputDecoration(
+                    labelText: LocaleKeys.email.tr(),
+                    hintText: LocaleKeys.email_hint.tr(),
                   ),
                 ),
                 TextField(
                   controller: feedbackController,
                   maxLines: 5,
-                  decoration: const InputDecoration(
-                    labelText: '反馈内容',
-                    hintText: '请输入您的反馈意见',
+                  decoration: InputDecoration(
+                    labelText: LocaleKeys.feedback_content.tr(),
+                    hintText: LocaleKeys.feedback_content_hint.tr(),
                   ),
                 ),
               ],
@@ -1242,7 +1242,7 @@ class _SettingsPageState extends State<SettingsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('取消'),
+                child: Text(LocaleKeys.cancel.tr()),
               ),
               TextButton(
                 onPressed:
@@ -1251,7 +1251,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       'email': emailController.text,
                       'feedback': feedbackController.text,
                     }),
-                child: const Text('提交'),
+                child: Text(LocaleKeys.submit.tr()),
               ),
             ],
           ),
