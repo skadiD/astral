@@ -20,7 +20,7 @@ class SmallWindowAdapter {
 
     final Size screenSize = original.size;
     final bool isSmallWindow =
-        screenSize.width < 300 || screenSize.height < 400;
+        screenSize.width < 600 || screenSize.height < 400;
 
     if (!isSmallWindow) return original;
 
@@ -39,7 +39,7 @@ class SmallWindowAdapter {
                 : original.viewInsets.bottom,
       ),
       devicePixelRatio: 1.0, // 确保像素比例合理
-      textScaleFactor: 0.9, // 在小窗口模式下略微缩小文本
+      textScaler: const TextScaler.linear(0.9), // 在小窗口模式下略微缩小文本
     );
   }
 
