@@ -1,4 +1,5 @@
 import 'package:astral/fun/net_astral_udp.dart';
+import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
 import 'package:astral/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:astral/k/app_s/aps.dart';
@@ -36,19 +37,14 @@ class _KevinAppState extends State<KevinApp> {
         // 处理 MediaQuery 异常问题，特别是小米澎湃系统和安卓小窗口
         MediaQueryData mediaQuery = MediaQuery.of(context);
 
-        double safeTop = mediaQuery.padding.top;
-
-        // 如果出现异常值，使用默认值替代
-        if (safeTop > 80 || safeTop < 0) {
-          print('Detected abnormal top padding: $safeTop, using fallback.');
-          safeTop = 24.0; // 合理默认值
-        }
+        // 使用小窗口适配器处理媒体查询
+        mediaQuery = SmallWindowAdapter.adaptMediaQuery(mediaQuery);
 
         return MediaQuery(
-          data: mediaQuery.copyWith(
-            padding: mediaQuery.padding.copyWith(top: safeTop),
+          data: mediaQuery,
+          child: SmallWindowAdapter.createSafeAreaAdapter(
+            child ?? const SizedBox.shrink(),
           ),
-          child: child ?? const SizedBox.shrink(),
         );
       },
       theme: ThemeData(

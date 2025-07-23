@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:astral/fun/up.dart';
 import 'package:astral/k/app_s/aps.dart';
+import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
 import 'package:astral/screens/home_page.dart';
 import 'package:astral/screens/room_page.dart';
 import 'package:astral/screens/server_page.dart';
@@ -132,7 +133,8 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     // 获取当前主题的颜色方案
     final colorScheme = Theme.of(context).colorScheme;
-    final isSmallWindow = MediaQuery.of(context).size.width < 600;
+    final isSmallWindow = SmallWindowAdapter.shouldApplyAdapter(context);
+
     // 构建Scaffold组件
     return Scaffold(
       // 自定义应用栏
