@@ -20,7 +20,7 @@ class SmallWindowAdapter {
 
     final Size screenSize = original.size;
     final bool isSmallWindow =
-        screenSize.width < 600 || screenSize.height < 400;
+        screenSize.width < 300 || screenSize.height < 400;
 
     if (!isSmallWindow) return original;
 
