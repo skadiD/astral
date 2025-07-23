@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:astral/k/app_s/aps.dart';
-import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
 import 'package:astral/wid/theme_selector.dart';
 import 'package:astral/wid/windows_controls.dart';
 import 'package:astral/generated/locale_keys.g.dart';
@@ -33,7 +32,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     // 获取当前主题的配色方案
     final colorScheme = Theme.of(context).colorScheme;
-    final bool isSmallWindow = SmallWindowAdapter.shouldApplyAdapter(context);
+    final bool isSmallWindow = MediaQuery.of(context).size.width < 600;
 
     // 在小窗口模式下使用更简洁的状态栏
     if (isSmallWindow) {

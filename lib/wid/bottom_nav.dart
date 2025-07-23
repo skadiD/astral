@@ -1,5 +1,4 @@
 import 'package:astral/k/app_s/aps.dart';
-import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
 import 'package:astral/k/navigtion.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,7 @@ class BottomNav extends StatelessWidget {
   @override
   BottomNavigationBar build(BuildContext context) {
     // 检查是否为小窗口模式
-    final bool isSmallWindow = SmallWindowAdapter.shouldApplyAdapter(context);
+    final bool isSmallWindow = MediaQuery.of(context).size.width < 600;
 
     return BottomNavigationBar(
       backgroundColor: colorScheme.surfaceContainerLow,
