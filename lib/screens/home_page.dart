@@ -1,10 +1,10 @@
-import 'package:astral/wid/home/about_home.dart';
-import 'package:astral/wid/home/contributors.dart'; // 添加这行
-import 'package:astral/wid/home/servers_home.dart';
-import 'package:astral/wid/home/user_ip.dart';
-import 'package:astral/wid/home/virtual_ip.dart';
-import 'package:astral/wid/home/connect_button.dart';
-import 'package:astral/wid/home/hitokoto_card.dart';
+import 'package:astral/widgets/home/about_home.dart';
+import 'package:astral/widgets/home/contributors.dart'; // 添加这行
+import 'package:astral/widgets/home/servers_home.dart';
+import 'package:astral/widgets/home/user_ip.dart';
+import 'package:astral/widgets/home/virtual_ip.dart';
+import 'package:astral/widgets/home/connect_button.dart';
+import 'package:astral/widgets/home/hitokoto_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 

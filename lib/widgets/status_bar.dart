@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
-import 'package:astral/wid/theme_selector.dart';
-import 'package:astral/wid/windows_controls.dart';
+import 'package:astral/widgets/theme_selector.dart';
+import 'package:astral/widgets/windows_controls.dart';
 import 'package:astral/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

@@ -1,14 +1,14 @@
-import 'package:astral/fun/show_server_dialog.dart';
+import 'package:astral/utils/show_server_dialog.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/models/server_mod.dart';
-import 'package:astral/wid/server_card.dart';
+import 'package:astral/widgets/server_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar/isar.dart';
-import 'package:astral/wid/server_reorder_sheet.dart';
-import 'package:astral/wid/public_servers_dialog.dart'; // 新增公共服务器对话框导入
+import 'package:astral/widgets/server_reorder_sheet.dart';
+import 'package:astral/widgets/public_servers_dialog.dart'; // 新增公共服务器对话框导入
 import 'dart:async'; // 添加Timer导入
 
 class ServerPage extends StatefulWidget {

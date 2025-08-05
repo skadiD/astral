@@ -1,4 +1,4 @@
-import 'package:astral/fun/net_astral_udp.dart';
+import 'package:astral/utils/net_astral_udp.dart';
 import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
 import 'package:astral/screens/main_screen.dart';
 import 'package:flutter/material.dart';

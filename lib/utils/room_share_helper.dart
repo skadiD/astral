@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:astral/k/models/room.dart';
-import 'package:astral/fun/e_d_room.dart';
+import 'package:astral/utils/e_d_room.dart';
 import 'package:astral/k/app_s/aps.dart';
 
 /// 房间分享助手类

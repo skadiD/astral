@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:astral/fun/up.dart';
-import 'package:astral/fun/reg.dart'; // 添加这行导入
+import 'package:astral/utils/up.dart';
+import 'package:astral/utils/reg.dart'; // 添加这行导入
 import 'package:astral/k/app_s/log_capture.dart';
 import 'package:astral/k/database/app_data.dart';
 import 'package:astral/k/mod/window_manager.dart';

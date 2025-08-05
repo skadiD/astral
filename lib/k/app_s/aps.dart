@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:astral/fun/net/ping_util.dart';
+import 'package:astral/utils/net/ping_util.dart';
 
-import 'package:astral/fun/random_name.dart';
+import 'package:astral/utils/random_name.dart';
 import 'package:astral/k/models/net_config.dart';
 import 'package:astral/k/models/room.dart';
 import 'package:astral/k/models/server_mod.dart';

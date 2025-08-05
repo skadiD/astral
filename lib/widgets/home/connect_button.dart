@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:astral/fun/net_astral_udp.dart';
+import 'package:astral/utils/net_astral_udp.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/firewall.dart';
 import 'package:astral/src/rust/api/hops.dart';

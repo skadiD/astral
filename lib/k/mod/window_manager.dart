@@ -1,4 +1,4 @@
-import 'package:astral/fun/reg.dart';
+import 'package:astral/utils/reg.dart';
 import 'package:window_manager/window_manager.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';

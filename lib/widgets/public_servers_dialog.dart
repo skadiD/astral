@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:astral/k/app_s/aps.dart';
-import 'package:astral/fun/net/ping_util.dart';
+import 'package:astral/utils/net/ping_util.dart';
 
 // 公共服务器对话框组件
 class PublicServersDialog extends StatefulWidget {

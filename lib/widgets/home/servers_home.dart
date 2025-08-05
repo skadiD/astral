@@ -1,5 +1,5 @@
 import 'package:astral/k/app_s/aps.dart';
-import 'package:astral/wid/home_box.dart';
+import 'package:astral/widgets/home_box.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:easy_localization/easy_localization.dart';

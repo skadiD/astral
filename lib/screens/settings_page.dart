@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:astral/fun/reg.dart';
-import 'package:astral/fun/route_fun.dart';
-import 'package:astral/fun/up.dart';
+import 'package:astral/utils/reg.dart';
+import 'package:astral/utils/route_fun.dart';
+import 'package:astral/utils/up.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/hops.dart';
 import 'package:astral/screens/logs_page.dart';

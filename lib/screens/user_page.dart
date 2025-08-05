@@ -1,11 +1,11 @@
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
-import 'package:astral/wid/all_user_card.dart';
-import 'package:astral/wid/mini_user_card.dart';
+import 'package:astral/widgets/all_user_card.dart';
+import 'package:astral/widgets/mini_user_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:astral/wid/room_settings_sheet.dart';
+import 'package:astral/widgets/room_settings_sheet.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});

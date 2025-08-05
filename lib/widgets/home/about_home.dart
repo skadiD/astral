@@ -1,8 +1,8 @@
-import 'package:astral/fun/up.dart';
-import 'package:astral/fun/version_util.dart';
+import 'package:astral/utils/up.dart';
+import 'package:astral/utils/version_util.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
-import 'package:astral/wid/home_box.dart';
+import 'package:astral/widgets/home_box.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:easy_localization/easy_localization.dart';

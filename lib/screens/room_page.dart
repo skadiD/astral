@@ -1,10 +1,10 @@
-import 'package:astral/fun/random_name.dart';
-import 'package:astral/fun/show_add_room_dialog.dart';
-import 'package:astral/fun/show_edit_room_dialog.dart';
-import 'package:astral/fun/room_share_helper.dart';
+import 'package:astral/utils/random_name.dart';
+import 'package:astral/utils/show_add_room_dialog.dart';
+import 'package:astral/utils/show_edit_room_dialog.dart';
+import 'package:astral/utils/room_share_helper.dart';
 import 'package:astral/screens/user_page.dart';
-import 'package:astral/wid/room_card.dart';
-import 'package:astral/wid/room_reorder_sheet.dart';
+import 'package:astral/widgets/room_card.dart';
+import 'package:astral/widgets/room_reorder_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:astral/k/app_s/aps.dart';
