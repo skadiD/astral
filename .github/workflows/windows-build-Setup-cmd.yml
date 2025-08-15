@@ -29,9 +29,7 @@ jobs:
       # 安装 Rust
       - name: 🦀 安装 Rust 1.89.0
         run: |
-          choco install rust --version 1.89.0 -y
-          echo "Rust 版本验证："
-          rustc --version
+          & "$env:GITHUB_WORKSPACE\scripts\install_rust.ps1"
         shell: pwsh
 
       - name: 🐦 安装Flutter
