@@ -9,13 +9,16 @@ if (Get-Command rustup -ErrorAction SilentlyContinue) {
 
 # 通过rustup安装指定版本的Rust
 Write-Host "Downloading and installing Rust 1.89.0..."
-curl.exe -sSf https://sh.rustup.rs -o rustup-init.exe
+$rustupUrl = "https://win.rustup.rs/x86_64"
+Invoke-WebRequest -Uri $rustupUrl -OutFile "rustup-init.exe"
 .\rustup-init.exe -y --default-toolchain 1.89.0 --profile minimal
 Remove-Item .\rustup-init.exe
 
 # 获取rustup环境
 $env:PATH += ";$env:USERPROFILE\.cargo\bin"
-. "$env:USERPROFILE\.cargo\env.ps1"
+# 刷新环境变量
+$env:CARGO_HOME = "$env:USERPROFILE\.cargo"
+$env:RUSTUP_HOME = "$env:USERPROFILE\.rustup"
 
 # 验证安装
 Write-Host "Rust version:"
