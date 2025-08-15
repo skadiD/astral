@@ -174,7 +174,7 @@ impl FilterRule {
         direction: Direction,
         action: FilterAction,
         priority: Option<u32>,
-        description: Option<String>,
+        _description: Option<String>,
     ) -> Self {
         Self {
             name: name.to_string(),
@@ -1074,7 +1074,7 @@ impl WfpController {
     }
 
     // 获取层的名称用于调试
-    pub fn get_layer_name(&self, layer_key: &GUID) -> &'static str {
+    pub fn get_layer_name(&self, _layer_key: &GUID) -> &'static str {
         #[cfg(target_os = "windows")]
         {
             match *layer_key {

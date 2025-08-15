@@ -537,7 +537,7 @@ pub fn create_server(
     print!("{}", format!("创建服务器: {}，启用DHCP: {}, 指定IP: {}, 房间名称: {}, 房间密码: {}, 服务器URL: {:?}, 监听器URL: {:?}", username, enable_dhcp, specified_ip, room_name, room_password, severurl, onurl));
     RT.spawn(async move {
         // Create config with better error handling
-        let mut cfg = TomlConfigLoader::default();
+        let cfg = TomlConfigLoader::default();
 
         // Set listeners with proper error handling
         let mut listeners = Vec::new();

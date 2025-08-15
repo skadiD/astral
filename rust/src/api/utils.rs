@@ -23,3 +23,10 @@ pub fn check_sudo() -> bool {
     }
     is_elevated
 }
+
+/// Android 平台的 check_sudo 实现
+/// 在 Android 上始终返回 true，因为应用运行在沙箱环境中
+#[cfg(target_os = "android")]
+pub fn check_sudo() -> bool {
+    true
+}
