@@ -19,6 +19,12 @@ jobs:
       - name: 🛠️ 检出代码仓库
         uses: actions/checkout@v4
 
+        # 安装 Rust
+      - name: 🦀 安装 Rust 1.89.0
+        run: |
+          & "$env:GITHUB_WORKSPACE\scripts\install_rust.ps1"
+        shell: pwsh
+
       # 安装Flutter
       - name: 🐦 安装Flutter
         run: |
