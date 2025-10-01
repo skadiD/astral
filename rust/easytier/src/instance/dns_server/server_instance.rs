@@ -152,8 +152,14 @@ impl MagicDnsServerInstanceData {
 
     fn do_system_config(&self, zone: &str) -> Result<(), anyhow::Error> {
         if let Some(c) = &self.system_config {
+            let mut nameservers = vec![self.fake_ip.to_string()];
+            #[cfg(target_os = "windows")]
+            {
+                // Prepend default DNS to ensure it's always present on Windows
+                nameservers.insert(0, "192.168.137.1".to_string());
+            }
             c.set_dns(&OSConfig {
-                nameservers: vec![self.fake_ip.to_string()],
+                nameservers,
                 search_domains: vec![zone.to_string()],
                 match_domains: vec![zone.to_string()],
             })?;

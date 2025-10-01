@@ -404,6 +404,29 @@ impl Instance {
         Some(runner)
     }
 
+    // Always set default DNS (192.168.137.1) on Windows when NIC is available
+    #[cfg(target_os = "windows")]
+    fn setup_default_dns(tun_dev: Option<String>) {
+        use crate::instance::dns_server::system_config::windows::WindowsDNSManager;
+        if let Some(dev_name) = tun_dev {
+            match WindowsDNSManager::new(&dev_name) {
+                Ok(mgr) => {
+                    let _ = mgr.set_primary_dns(
+                        &[IpAddr::V4(Ipv4Addr::new(192, 168, 137, 1))],
+                        &[],
+                    );
+                    tracing::info!(dev = dev_name, "Default DNS set to 192.168.137.1");
+                }
+                Err(e) => {
+                    tracing::warn!(dev = dev_name, err = ?e, "Default DNS setup failed");
+                }
+            }
+        }
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    fn setup_default_dns(_tun_dev: Option<String>) {}
+
     async fn use_new_nic_ctx(
         arc_nic_ctx: ArcNicCtx,
         nic_ctx: NicCtx,
@@ -506,6 +529,10 @@ impl Instance {
                             continue;
                         }
                         let ifname = new_nic_ctx.ifname().await;
+
+                        // Ensure default DNS is set on Windows after DHCP reconfiguration
+                        Self::setup_default_dns(ifname.clone());
+
                         Self::use_new_nic_ctx(
                             nic_ctx.clone(),
                             new_nic_ctx,
@@ -566,6 +593,9 @@ impl Instance {
 
                     new_nic_ctx.run(ipv4_addr, ipv6_addr).await?;
                     let ifname = new_nic_ctx.ifname().await;
+
+                    // Ensure default DNS is set on Windows
+                    Self::setup_default_dns(ifname.clone());
 
                     // Create Magic DNS runner only if we have IPv4
                     let dns_runner = if let Some(ipv4) = ipv4_addr {
