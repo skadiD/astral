@@ -1,22 +1,18 @@
 // 导入所需的包
-import 'dart:io';
-
-import 'package:astral/state/base_state.dart';
-import 'package:astral/utils/up.dart';
-import 'package:astral/k/app_s/aps.dart';
-import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
-import 'package:astral/screens/home_page.dart';
 import 'package:astral/screens/room_page.dart';
-import 'package:astral/screens/server_page.dart';
+import 'package:astral/state/app_state.dart';
+import 'package:astral/utils/up.dart';
+import 'package:astral/core/mod/small_window_adapter.dart'; // 导入小窗口适配器
+import 'package:astral/screens/home_page.dart';
 import 'package:astral/screens/settings_page.dart';
-import 'package:astral/screens/wfp_page.dart';
 import 'package:astral/widgets/bottom_nav.dart';
 import 'package:astral/widgets/left_nav.dart';
 import 'package:astral/widgets/status_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:astral/k/navigtion.dart';
+import 'package:astral/core/navigtion.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:astral/generated/locale_keys.g.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 // 主屏幕Widget，使用StatefulWidget以管理状态
 class MainScreen extends StatefulWidget {
@@ -37,12 +33,13 @@ class _MainScreenState extends State<MainScreen>
     // 在第一帧渲染完成后获取屏幕宽度并更新分割宽度
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final screenWidth = MediaQuery.of(context).size.width;
-      BaseState().updateScreenSplitWidth(screenWidth);
+      AppState().baseState.updateScreenSplitWidth(screenWidth);
     });
 
     // 在初始化时进行更新检查
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Aps().autoCheckUpdate.value || Aps().beta.value) {
+      if (AppState().updateState.autoCheckUpdate.value ||
+          AppState().updateState.beta.value) {
         final updateChecker = UpdateChecker(owner: 'ldoubil', repo: 'astral');
         if (mounted) {
           Future.delayed(const Duration(milliseconds: 1000), () {
@@ -84,7 +81,7 @@ class _MainScreenState extends State<MainScreen>
     );
 
     // 更新分割宽度
-    BaseState().updateScreenSplitWidth(screenWidth);
+    AppState().baseState.updateScreenSplitWidth(screenWidth);
 
     // 强制刷新UI以适应新的尺寸
     if (mounted) {
@@ -101,24 +98,12 @@ class _MainScreenState extends State<MainScreen>
       page: const HomePage(), // 对应的页面
     ),
     NavigationItem(
-      icon: Icons.room_preferences_outlined, // 未选中时的图标
-      activeIcon: Icons.room_preferences, // 选中时的图标Icon(Icons.room_preferences)
+      icon: Icons.group_outlined, // 未选中时的图标
+      activeIcon: Icons.group, // 选中时的图标
       label: LocaleKeys.nav_room.tr(), // 导航项标签
       page: const RoomPage(), // 对应的页面
     ),
-    if (Platform.isWindows)
-      NavigationItem(
-        icon: Icons.shield_outlined, // 未选中时的图标（防火墙）
-        activeIcon: Icons.shield, // 选中时的图标（防火墙）
-        label: LocaleKeys.nav_firewall.tr(), // 导航项标签
-        page: const WfpPage(), // 对应的页面
-      ),
-    NavigationItem(
-      icon: Icons.dns_outlined, // 未选中时的图标
-      activeIcon: Icons.dns, // 选中时的图标Icon(Icons.room_preferences)
-      label: LocaleKeys.nav_server.tr(), // 导航项标签
-      page: const ServerPage(), // 对应的页面
-    ),
+
     NavigationItem(
       icon: Icons.settings_outlined, // 未选中时的图标
       activeIcon: Icons.settings, // 选中时的图标
@@ -144,7 +129,7 @@ class _MainScreenState extends State<MainScreen>
       body: Row(
         children: [
           // 根据是否为桌面端决定是否显示左侧导航
-          if (BaseState().isDesktop.watch(context) && !isSmallWindow)
+          if (AppState().baseState.isDesktop.watch(context) && !isSmallWindow)
             LeftNav(items: navigationItems, colorScheme: colorScheme),
           // 主要内容区域
           Expanded(
@@ -158,7 +143,9 @@ class _MainScreenState extends State<MainScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      navigationItems[BaseState().selectedIndex.watch(context)]
+                      navigationItems[AppState().baseState.selectedIndex.watch(
+                            context,
+                          )]
                           .label,
                       style: TextStyle(
                         fontSize: 16,
@@ -170,7 +157,7 @@ class _MainScreenState extends State<MainScreen>
                 // 主内容区域
                 Expanded(
                   child: IndexedStack(
-                    index: BaseState().selectedIndex.watch(
+                    index: AppState().baseState.selectedIndex.watch(
                       context,
                     ), // 当前选中的页面索引
                     children: _pages, // 页面列表
@@ -183,7 +170,7 @@ class _MainScreenState extends State<MainScreen>
       ),
       // 底部导航栏：在非桌面端或小窗口模式下显示
       bottomNavigationBar:
-          (BaseState().isDesktop.watch(context) && !isSmallWindow)
+          (AppState().baseState.isDesktop.watch(context) && !isSmallWindow)
               ? null
               : BottomNav(
                 navigationItems: navigationItems,

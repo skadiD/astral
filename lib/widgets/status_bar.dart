@@ -1,24 +1,23 @@
 import 'dart:io';
-import 'package:astral/k/app_s/aps.dart';
-import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
-import 'package:astral/state/base_state.dart';
-import 'package:astral/state/theme_settings_state.dart';
+import 'package:astral/core/mod/small_window_adapter.dart'; // 导入小窗口适配器
+import 'package:astral/state/app_state.dart';
 import 'package:astral/widgets/theme_selector.dart';
 import 'package:astral/widgets/windows_controls.dart';
 import 'package:astral/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 // 获取主题模式的文本描述
 String getThemeModeText(ThemeMode mode) {
   switch (mode) {
     case ThemeMode.light:
-      return '亮色模式';
+      return LocaleKeys.theme_light.tr();
     case ThemeMode.dark:
-      return '暗色模式';
+      return LocaleKeys.theme_dark.tr();
     case ThemeMode.system:
-      return '跟随系统';
+      return LocaleKeys.theme_system.tr();
   }
 }
 
@@ -46,7 +45,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
           foregroundColor: colorScheme.onPrimaryContainer,
           toolbarHeight: 32, // 在小窗口模式下降低高度
           title: Text(
-            BaseState().appName.watch(context),
+            AppState().baseState.appName.watch(context),
             style: TextStyle(
               fontSize: 14, // 在小窗口模式下使用更小的字体
               fontWeight: FontWeight.bold,
@@ -55,7 +54,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
           actions: [
             IconButton(
               icon: Icon(
-                switch (ThemeSettingsState().themeMode.watch(context)) {
+                switch (AppState().themeState.themeModeValue.watch(context)) {
                   ThemeMode.light => Icons.wb_sunny,
                   ThemeMode.dark => Icons.nightlight_round,
                   ThemeMode.system => Icons.auto_mode,
@@ -63,13 +62,13 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                 size: 16, // 在小窗口模式下使用更小的图标
               ),
               onPressed: () {
-                final currentMode = ThemeSettingsState().themeMode.value;
+                final currentMode = AppState().themeState.themeModeValue.value;
                 final newMode = switch (currentMode) {
                   ThemeMode.light => ThemeMode.dark,
                   ThemeMode.dark => ThemeMode.system,
                   ThemeMode.system => ThemeMode.light,
                 };
-                ThemeSettingsState().themeMode.value = newMode;
+                AppState().themeState.themeModeValue.value = newMode;
               },
               padding: const EdgeInsets.all(4), // 减小内边距
             ),
@@ -81,7 +80,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                     locale.countryCode != null
                         ? '${locale.languageCode}_${locale.countryCode}'
                         : locale.languageCode;
-                ThemeSettingsState().currentLanguage.value = langCode;
+                AppState().baseState.currentLanguage.value = langCode;
                 context.setLocale(locale);
               },
               itemBuilder:
@@ -92,20 +91,11 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                         children: [
                           Text('🇨🇳'),
                           SizedBox(width: 8),
-                          Text('简体中文'),
+                          Text(LocaleKeys.lang_zh.tr()),
                         ],
                       ),
                     ),
-                    PopupMenuItem(
-                      value: const Locale('zh', 'TW'),
-                      child: Row(
-                        children: [
-                          Text('🇹🇼'),
-                          SizedBox(width: 8),
-                          Text('繁體中文'),
-                        ],
-                      ),
-                    ),
+
                     PopupMenuItem(
                       value: const Locale('en'),
                       child: Row(
@@ -143,36 +133,6 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                           Text('🇷🇺'),
                           SizedBox(width: 8),
                           Text('Русский'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: const Locale('fr'),
-                      child: Row(
-                        children: [
-                          Text('🇫🇷'),
-                          SizedBox(width: 8),
-                          Text('Français'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: const Locale('de'),
-                      child: Row(
-                        children: [
-                          Text('🇩🇪'),
-                          SizedBox(width: 8),
-                          Text('Deutsch'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: const Locale('es'),
-                      child: Row(
-                        children: [
-                          Text('🇪🇸'),
-                          SizedBox(width: 8),
-                          Text('Español'),
                         ],
                       ),
                     ),
@@ -204,7 +164,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ).createShader(bounds),
             child: Text(
-              BaseState().appName.watch(context),
+              AppState().baseState.appName.watch(context),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -222,7 +182,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               icon: Icon(
                 // 根据当前主题模式选择对应图标
-                switch (ThemeSettingsState().themeMode.watch(context)) {
+                switch (AppState().themeState.themeModeValue.watch(context)) {
                   ThemeMode.light => Icons.wb_sunny,
                   ThemeMode.dark => Icons.nightlight_round,
                   ThemeMode.system => Icons.auto_mode,
@@ -230,16 +190,16 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                 size: 20,
               ),
               onPressed: () {
-                final currentMode = ThemeSettingsState().themeMode.value;
+                final currentMode = AppState().themeState.themeModeValue.value;
                 final newMode = switch (currentMode) {
                   ThemeMode.light => ThemeMode.dark,
                   ThemeMode.dark => ThemeMode.system,
                   ThemeMode.system => ThemeMode.light,
                 };
-                ThemeSettingsState().themeMode.value = newMode;
+                AppState().themeState.themeModeValue.value = newMode;
               },
               tooltip: getThemeModeText(
-                ThemeSettingsState().themeMode.watch(context),
+                AppState().themeState.themeModeValue.watch(context),
               ),
               padding: const EdgeInsets.all(8),
             ),
@@ -258,7 +218,7 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                     locale.countryCode != null
                         ? '${locale.languageCode}_${locale.countryCode}'
                         : locale.languageCode;
-                ThemeSettingsState().currentLanguage.value = langCode;
+                AppState().baseState.currentLanguage.value = langCode;
                 context.setLocale(locale);
               },
               itemBuilder:
@@ -269,20 +229,11 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                         children: [
                           Text('🇨🇳'),
                           SizedBox(width: 8),
-                          Text('简体中文'),
+                          Text(LocaleKeys.lang_zh.tr()),
                         ],
                       ),
                     ),
-                    PopupMenuItem(
-                      value: const Locale('zh', 'TW'),
-                      child: Row(
-                        children: [
-                          Text('🇹🇼'),
-                          SizedBox(width: 8),
-                          Text('繁體中文'),
-                        ],
-                      ),
-                    ),
+
                     PopupMenuItem(
                       value: const Locale('en'),
                       child: Row(
@@ -320,36 +271,6 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
                           Text('🇷🇺'),
                           SizedBox(width: 8),
                           Text('Русский'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: const Locale('fr'),
-                      child: Row(
-                        children: [
-                          Text('🇫🇷'),
-                          SizedBox(width: 8),
-                          Text('Français'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: const Locale('de'),
-                      child: Row(
-                        children: [
-                          Text('🇩🇪'),
-                          SizedBox(width: 8),
-                          Text('Deutsch'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: const Locale('es'),
-                      child: Row(
-                        children: [
-                          Text('🇪🇸'),
-                          SizedBox(width: 8),
-                          Text('Español'),
                         ],
                       ),
                     ),
