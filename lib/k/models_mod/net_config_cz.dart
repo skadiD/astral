@@ -300,6 +300,23 @@ class NetConfigRepository {
     return config?.latency_first ?? false;
   }
 
+  // 更新强制中转节点IP
+  Future<void> updateForceRelayNodeIp(String forceRelayNodeIp) async {
+    NetConfig? config = await _isar.netConfigs.get(1);
+    if (config != null) {
+      config.force_relay_node_ip = forceRelayNodeIp;
+      await _isar.writeTxn(() async {
+        await _isar.netConfigs.put(config);
+      });
+    }
+  }
+
+  // 获取强制中转节点IP
+  Future<String> getForceRelayNodeIp() async {
+    NetConfig? config = await _isar.netConfigs.get(1);
+    return config?.force_relay_node_ip ?? '';
+  }
+
   // 更新出口节点设置
   Future<void> updateEnableExitNode(bool enableExitNode) async {
     NetConfig? config = await _isar.netConfigs.get(1);

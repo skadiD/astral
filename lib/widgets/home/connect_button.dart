@@ -340,6 +340,7 @@ class _ConnectButtonState extends State<ConnectButton>
     privateMode: aps.privateMode.value,
     enableQuicProxy: aps.enableQuicProxy.value,
     disableQuicInput: aps.disableQuicInput.value,
+    forceRelayNodeIp: aps.forceRelayNodeIp.value,
   );
 
   Future<void> _beginConnectionProcess() async {

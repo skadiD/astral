@@ -1,10 +1,41 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:astral/generated/locale_keys.g.dart';
 import 'package:astral/k/app_s/aps.dart';
 
-class NetworkSettingsPage extends StatelessWidget {
+class NetworkSettingsPage extends StatefulWidget {
   const NetworkSettingsPage({super.key});
+
+  @override
+  State<NetworkSettingsPage> createState() => _NetworkSettingsPageState();
+}
+
+class _NetworkSettingsPageState extends State<NetworkSettingsPage> {
+  late TextEditingController _forceRelayNodeController;
+  StreamSubscription? _forceRelayNodeSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _forceRelayNodeController = TextEditingController(
+      text: Aps().forceRelayNodeIp.value,
+    );
+    
+    // 监听forceRelayNodeIp的变化，同步到controller
+    _forceRelayNodeSubscription = Aps().forceRelayNodeIp.listen((value) {
+      if (_forceRelayNodeController.text != value) {
+        _forceRelayNodeController.text = value;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _forceRelayNodeController.dispose();
+    _forceRelayNodeSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +122,40 @@ class NetworkSettingsPage extends StatelessWidget {
                     Aps().updateLatencyFirst(value);
                   },
                 ),
+
+                // 强制中转节点IP配置
+                ListTile(
+                  title: const Text('强制中转节点'),
+                  subtitle: const Text('指定成员IP进行全局中转访问'),
+                  trailing: SizedBox(
+                    width: 200,
+                    child: TextField(
+                      controller: _forceRelayNodeController,
+                      decoration: const InputDecoration(
+                        hintText: '输入成员IP地址',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                      ),
+                      style: const TextStyle(fontSize: 14),
+                      onSubmitted: (value) {
+                        Aps().updateForceRelayNodeIp(value.trim());
+                      },
+                      onChanged: (value) {
+                        // 实时更新状态，但不立即保存到数据库
+                        setState(() {});
+                      },
+                      onEditingComplete: () {
+                        // 当用户完成编辑时保存
+                        Aps().updateForceRelayNodeIp(_forceRelayNodeController.text.trim());
+                      },
+                    ),
+                  ),
+                ),
+
+                const Divider(),
 
                 SwitchListTile(
                   title: Text(LocaleKeys.magic_dns.tr()),

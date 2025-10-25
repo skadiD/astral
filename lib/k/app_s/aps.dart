@@ -328,6 +328,7 @@ class Aps {
   final Signal<bool> enableIpv6 = signal(true); // IPv6设置
   final Signal<int> mtu = signal(1360); // MTU值
   final Signal<bool> latencyFirst = signal(false); // 延迟优先设置
+  final Signal<String> forceRelayNodeIp = signal(''); // 强制中转节点IP设置
   final Signal<bool> enableExitNode = signal(false); // 出口节点设置
   final Signal<bool> noTun = signal(false); // TUN设备禁用设置
   final Signal<bool> useSmoltcp = signal(false); // smoltcp网络栈设置
@@ -390,6 +391,8 @@ class Aps {
     mtu.value = await database.netConfigSetting.getMtu(); // MTU值
     latencyFirst.value =
         await database.netConfigSetting.getLatencyFirst(); // 延迟优先
+    forceRelayNodeIp.value =
+        await database.netConfigSetting.getForceRelayNodeIp(); // 强制中转节点IP
     enableExitNode.value =
         await database.netConfigSetting.getEnableExitNode(); // 出口节点
     noTun.value = await database.netConfigSetting.getNoTun(); // TUN设备禁用
@@ -523,6 +526,12 @@ class Aps {
   Future<void> updateLatencyFirst(bool value) async {
     latencyFirst.value = value;
     await AppDatabase().netConfigSetting.updateLatencyFirst(value);
+  }
+
+  // 更新强制中转节点IP设置
+  Future<void> updateForceRelayNodeIp(String value) async {
+    forceRelayNodeIp.value = value;
+    await AppDatabase().netConfigSetting.updateForceRelayNodeIp(value);
   }
 
   // 更新出口节点设置

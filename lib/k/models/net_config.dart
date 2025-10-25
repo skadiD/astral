@@ -71,6 +71,9 @@ class NetConfig {
   /// 是否优先考虑延迟
   bool latency_first = false; //x
 
+  /// 强制中转节点IP地址
+  String force_relay_node_ip = ''; //x
+
   /// 是否启用出口节点
   bool enable_exit_node = false; //x
 
