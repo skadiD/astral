@@ -513,6 +513,7 @@ pub struct FlagsC {
     pub private_mode: bool,
     pub enable_quic_proxy: bool,
     pub disable_quic_input: bool,
+    pub force_relay_node_ip: String,
 }
 
 pub struct Forward {
@@ -602,6 +603,7 @@ pub fn create_server(
         flags.private_mode = flag.private_mode;
         flags.enable_quic_proxy = flag.enable_quic_proxy;
         flags.disable_quic_input = flag.disable_quic_input;
+        flags.force_relay_node_ip = flag.force_relay_node_ip;
         cfg.set_flags(flags);
         // Configure peer connections with proper error handling
         let mut peer_configs = Vec::new();

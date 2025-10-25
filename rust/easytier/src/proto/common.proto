@@ -52,6 +52,9 @@ message FlagsInConfig {
   
     // encryption algorithm to use, empty string means default (aes-gcm)
   string encryption_algorithm = 29;
+  
+  // force relay node ip, empty string means no forced relay
+  string force_relay_node_ip = 30;
 }
 
 message RpcDescriptor {

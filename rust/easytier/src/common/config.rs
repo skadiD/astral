@@ -49,6 +49,7 @@ pub fn gen_default_flags() -> Flags {
         foreign_relay_bps_limit: u64::MAX, // 外部中继带宽限制
         multi_thread_count: 2, // 多线程数量
         encryption_algorithm: "aes-gcm".to_string(), // 加密算法
+        force_relay_node_ip: "".to_string(), // 强制中转节点IP
     }
 }
 

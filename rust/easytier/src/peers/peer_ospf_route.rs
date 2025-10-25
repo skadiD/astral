@@ -2221,6 +2221,57 @@ impl Route for PeerRoute {
         dst_peer_id: PeerId,
         policy: NextHopPolicy,
     ) -> Option<PeerId> {
+        // Check if force relay node is configured
+        let force_relay_ip = self.global_ctx.get_flags().force_relay_node_ip.clone();
+        if !force_relay_ip.is_empty() {
+            // Try to parse the IP address and find corresponding peer
+            if let Ok(relay_ipv4) = force_relay_ip.parse::<std::net::Ipv4Addr>() {
+                if let Some(relay_peer_id) = self.get_peer_id_by_ipv4(&relay_ipv4).await {
+                    // Check if the relay node is reachable
+                    let route_table = if matches!(policy, NextHopPolicy::LeastCost) {
+                        &self.service_impl.route_table_with_cost
+                    } else {
+                        &self.service_impl.route_table
+                    };
+                    
+                    if route_table.peer_reachable(relay_peer_id) {
+                        // If destination is the relay node itself, use normal routing
+                        if dst_peer_id == relay_peer_id {
+                            return route_table
+                                .get_next_hop(dst_peer_id)
+                                .map(|x| x.next_hop_peer_id);
+                        }
+                        
+                        // Force route through the relay node
+                        tracing::debug!(
+                            ?dst_peer_id, 
+                            ?relay_peer_id, 
+                            force_relay_ip = %force_relay_ip,
+                            "Forcing route through relay node"
+                        );
+                        return Some(relay_peer_id);
+                    } else {
+                        tracing::warn!(
+                            ?relay_peer_id,
+                            force_relay_ip = %force_relay_ip,
+                            "Force relay node is not reachable, falling back to normal routing"
+                        );
+                    }
+                } else {
+                    tracing::warn!(
+                        force_relay_ip = %force_relay_ip,
+                        "Force relay node IP not found in peer list, falling back to normal routing"
+                    );
+                }
+            } else {
+                tracing::warn!(
+                    force_relay_ip = %force_relay_ip,
+                    "Invalid force relay node IP format, falling back to normal routing"
+                );
+            }
+        }
+
+        // Fall back to normal routing
         let route_table = if matches!(policy, NextHopPolicy::LeastCost) {
             &self.service_impl.route_table_with_cost
         } else {
