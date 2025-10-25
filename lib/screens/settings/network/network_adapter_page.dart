@@ -1,8 +1,9 @@
+import 'package:astral/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:astral/generated/locale_keys.g.dart';
-import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/hops.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class NetworkAdapterPage extends StatelessWidget {
   const NetworkAdapterPage({super.key});
@@ -20,14 +21,16 @@ class NetworkAdapterPage extends StatelessWidget {
           Card(
             child: Column(
               children: [
-                SwitchListTile(
-                  title: Text(LocaleKeys.auto_set_hop.tr()),
-                  subtitle: Text(LocaleKeys.auto_set_hop_desc.tr()),
-                  value: Aps().autoSetMTU.watch(context),
-                  onChanged: (value) {
-                    Aps().setAutoSetMTU(value);
-                  },
-                ),
+                // SwitchListTile(
+                //   title: Text(LocaleKeys.auto_set_hop.tr()),
+                //   subtitle: Text(LocaleKeys.auto_set_hop_desc.tr()),
+                //   value: AppState().appSettings.watch(context).autoSetMTU,
+                //   onChanged: (value) {
+                //     // 更新AppSettings中的autoSetMTU
+                //     final currentSettings = AppState().appSettings.value;
+                //     AppState().appSettings.value = currentSettings.copyWith(autoSetMTU: value);
+                //   },
+                // ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.list),
