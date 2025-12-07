@@ -1,5 +1,6 @@
 import 'package:astral/src/rust/api/astral_wfp.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
+
 part 'wfp_model.g.dart';
 
 // WfpModel
