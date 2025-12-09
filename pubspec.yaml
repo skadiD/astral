@@ -55,6 +55,7 @@ dependencies:
   easy_localization_loader: ^2.0.2
   http: ^1.1.0
   flutter_local_notifications: ^19.3.1
+  fl_chart: ^0.70.1
 
 dev_dependencies:
   flutter_test:
