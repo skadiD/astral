@@ -1,5 +1,6 @@
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
+import 'package:astral/utils/platform_version_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -233,9 +234,9 @@ class _AllUserCardState extends State<AllUserCard> {
         const SizedBox(height: 8),
 
         _buildInfoRow(
-          Icons.memory_outlined, // Changed icon
+          PlatformVersionParser.getPlatformIcon(player.version),
           'ET版本',
-          player.version,
+          PlatformVersionParser.getVersionNumber(player.version),
           colorScheme,
         ),
         const SizedBox(height: 8),

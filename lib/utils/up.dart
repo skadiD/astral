@@ -255,16 +255,10 @@ class UpdateChecker {
         'file': 'astral-arm64-v8a.apk',
         'desc': '适用于大多数现代 Android 设备',
       },
-      {'name': '通用版本', 'file': 'astral-universal.apk', 'desc': '兼容所有架构，文件较大'},
       {
         'name': 'ARMv7',
         'file': 'astral-armeabi-v7a.apk',
         'desc': '适用于较旧的 32 位设备',
-      },
-      {
-        'name': 'x86_64',
-        'file': 'astral-x86_64.apk',
-        'desc': '适用于 Intel/AMD 处理器',
       },
     ];
 

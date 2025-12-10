@@ -1,4 +1,5 @@
 import 'package:astral/src/rust/api/simple.dart';
+import 'package:astral/utils/platform_version_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:astral/k/app_s/aps.dart';
@@ -166,12 +167,12 @@ class _MiniUserCardState extends State<MiniUserCard> {
                     ),
                     const SizedBox(width: 10),
                     Icon(
-                      Icons.memory_outlined,
+                      PlatformVersionParser.getPlatformIcon(player.version),
                       size: 16,
                       color: colorScheme.primary,
                     ),
                     Text(
-                      player.version,
+                      PlatformVersionParser.getVersionNumber(player.version),
                       style: TextStyle(
                         color: colorScheme.secondary,
                         fontSize: 13,

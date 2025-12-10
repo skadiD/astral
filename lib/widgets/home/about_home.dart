@@ -1,5 +1,6 @@
 import 'package:astral/utils/up.dart';
 import 'package:astral/utils/version_util.dart';
+import 'package:astral/utils/platform_version_parser.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
 import 'package:astral/widgets/home_box.dart';
@@ -17,7 +18,7 @@ class AboutHome extends StatefulWidget {
 
 class _AboutHomeState extends State<AboutHome> {
   String version = '';
-  
+
   @override
   void initState() {
     super.initState();
@@ -100,17 +101,40 @@ class _AboutHomeState extends State<AboutHome> {
           const SizedBox(height: 4),
           Wrap(
             spacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Icon(
-                Icons.memory,
+                PlatformVersionParser.getPlatformIcon(version),
                 size: 20,
                 color: colorScheme.primary,
-              ), // 内核版本图标
+              ),
               Text(
                 '${LocaleKeys.kernel_version.tr()}: ',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
-              Text(version, style: TextStyle(color: colorScheme.secondary)),
+              Text(
+                PlatformVersionParser.getVersionNumber(version),
+                style: TextStyle(color: colorScheme.secondary),
+              ),
+              if (PlatformVersionParser.getPlatformName(
+                version,
+              ).isNotEmpty) ...[
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    PlatformVersionParser.getPlatformName(version),
+                    style: TextStyle(
+                      color: colorScheme.onPrimaryContainer,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ],
