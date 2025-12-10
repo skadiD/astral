@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         VirtualIpBox(),
                         UserIpBox(),
-                        TrafficStats(),
+                        // TrafficStats(),
                         ServersHome(),
                         // UdpLog(),
                         AboutHome(),
