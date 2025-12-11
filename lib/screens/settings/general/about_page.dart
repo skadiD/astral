@@ -63,26 +63,6 @@ class AboutPage extends StatelessWidget {
                 const Divider(),
 
                 ListTile(
-                  leading: const Icon(Icons.group),
-                  title: Text(LocaleKeys.official_qq_group.tr()),
-                  subtitle: Text(LocaleKeys.click_copy_group_number.tr()),
-                  trailing: const Icon(Icons.copy),
-                  onTap: () => _copyQQGroup(context),
-                ),
-
-                const Divider(),
-
-                ListTile(
-                  leading: const Icon(Icons.feedback),
-                  title: Text(LocaleKeys.user_feedback.tr()),
-                  subtitle: Text('提交问题反馈和建议'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _sendFeedback(context),
-                ),
-
-                const Divider(),
-
-                ListTile(
                   leading: const Icon(Icons.update),
                   title: Text(LocaleKeys.check_update.tr()),
                   subtitle: Text('检查是否有新版本'),
@@ -93,42 +73,42 @@ class AboutPage extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
-          Card(
-            child: Column(
-              children: [
-                // ListTile(
-                //   title: Text('开源信息'),
-                //   subtitle: Text('项目信息和许可证'),
-                //   leading: const Icon(Icons.code),
-                // ),
+          // Card(
+          //   child: Column(
+          //     children: [
+          // ListTile(
+          //   title: Text('开源信息'),
+          //   subtitle: Text('项目信息和许可证'),
+          //   leading: const Icon(Icons.code),
+          // ),
 
-                // const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.link),
-                  title: Text('GitHub 仓库'),
-                  subtitle: Text('github.com/ldoubil/astral'),
-                  trailing: const Icon(Icons.open_in_new),
-                  onTap: () => _openGitHub(context),
-                ),
+          // const Divider(),
+          // ListTile(
+          //   leading: const Icon(Icons.link),
+          //   title: Text('GitHub 仓库'),
+          //   subtitle: Text('github.com/ldoubil/astral'),
+          //   trailing: const Icon(Icons.open_in_new),
+          //   onTap: () => _openGitHub(context),
+          // ),
 
-                // ListTile(
-                //   leading: const Icon(Icons.balance),
-                //   title: Text('开源许可证'),
-                //   subtitle: Text('MIT License'),
-                //   trailing: const Icon(Icons.chevron_right),
-                //   onTap: () => _showLicense(context),
-                // ),
+          // ListTile(
+          //   leading: const Icon(Icons.balance),
+          //   title: Text('开源许可证'),
+          //   subtitle: Text('MIT License'),
+          //   trailing: const Icon(Icons.chevron_right),
+          //   onTap: () => _showLicense(context),
+          // ),
 
-                // ListTile(
-                //   leading: const Icon(Icons.person),
-                //   title: Text('开发者'),
-                //   subtitle: Text('ldoubil'),
-                // ),
-              ],
-            ),
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.person),
+          //   title: Text('开发者'),
+          //   subtitle: Text('ldoubil'),
+          // ),
+          //     ],
+          //   ),
+          // ),
 
           // const SizedBox(height: 16),
 
