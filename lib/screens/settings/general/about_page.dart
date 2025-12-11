@@ -8,6 +8,7 @@ import 'package:astral/utils/up.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
+  // 创建后运行
 
   @override
   Widget build(BuildContext context) {
