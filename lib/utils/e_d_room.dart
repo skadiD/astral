@@ -184,8 +184,7 @@ String generateRoomSummary(Room room) {
   return '''
 🏠 房间：${room.name}
 $type$tags
-'''
-      .trim();
+'''.trim();
 }
 
 /// 检查分享码格式
