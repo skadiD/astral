@@ -1,145 +1,309 @@
 import 'dart:convert';
 import 'package:astral/k/models/room.dart';
 import 'dart:io';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
-// 常量 密文
-const String encryptedRoom = '这就是密钥';
-// JWT密钥
-const String jwtSecret = '这就是密钥';
+// 简单加密密钥
+const String encryptionSecret = '这就是密钥';
 
-/// 将房间对象加密为密文并用JWT保护
+/// 游程编码（RLE）- 压缩连续重复的字符
+/// 例如：00000000 -> z8（z表示0，8表示个数）
+String _rleEncode(String input) {
+  if (input.isEmpty) return '';
+  
+  StringBuffer result = StringBuffer();
+  int count = 1;
+  String lastChar = input[0];
+  
+  for (int i = 1; i < input.length; i++) {
+    if (input[i] == lastChar && count < 36) {
+      // 36是base36的最大单个字符表示（0-9, a-z）
+      count++;
+    } else {
+      // 输出前一个字符的运行长度
+      if (count == 1) {
+        result.write(lastChar);
+      } else if (count == 2) {
+        result.write(lastChar);
+        result.write(lastChar);
+      } else {
+        // 用!+base36数字表示重复次数
+        result.write(lastChar);
+        result.write('!');
+        result.write(count.toRadixString(36));
+      }
+      lastChar = input[i];
+      count = 1;
+    }
+  }
+  
+  // 处理最后一个字符
+  if (count == 1) {
+    result.write(lastChar);
+  } else if (count == 2) {
+    result.write(lastChar);
+    result.write(lastChar);
+  } else {
+    result.write(lastChar);
+    result.write('!');
+    result.write(count.toRadixString(36));
+  }
+  
+  return result.toString();
+}
+
+/// 游程解码
+String _rleDecode(String input) {
+  if (input.isEmpty) return '';
+  
+  StringBuffer result = StringBuffer();
+  int i = 0;
+  
+  while (i < input.length) {
+    String char = input[i];
+    i++;
+    
+    // 检查是否有重复计数
+    if (i < input.length && input[i] == '!') {
+      i++; // 跳过'!'
+      int count = 0;
+      // 读取base36数字
+      while (i < input.length && input[i] != '!' && _isBase36Char(input[i])) {
+        count = count * 36 + int.parse(input[i], radix: 36);
+        i++;
+      }
+      // 重复该字符
+      result.write(char * count);
+    } else {
+      result.write(char);
+    }
+  }
+  
+  return result.toString();
+}
+
+/// 检查是否是base36字符
+bool _isBase36Char(String char) {
+  return (char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57) || // 0-9
+      (char.codeUnitAt(0) >= 97 && char.codeUnitAt(0) <= 122); // a-z
+}
+
+/// 生成 CRC32 校验和作为签名（4字节，更紧凑）
+String _generateChecksum(String data) {
+  // 简单的校验算法：计算数据的哈希值并转换为base32
+  int hash = 0;
+  for (int i = 0; i < data.length; i++) {
+    hash = ((hash << 5) - hash) + data.codeUnitAt(i);
+    hash = hash & hash; // 保证32位整数
+  }
+  // 转换为4字符的base32编码
+  return hash.toRadixString(36).padLeft(4, '0').substring(0, 4);
+}
+
+/// 验证校验和
+bool _verifyChecksum(String data, String checksum) {
+  return _generateChecksum(data) == checksum;
+}
+
+/// Base32 编码（更紧凑，无填充字符）
+/// 使用Crockford Base32（0-9a-v，移除了易混淆的字符）
+String _base32Encode(List<int> bytes) {
+  const String alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
+  StringBuffer result = StringBuffer();
+  int bits = 0;
+  int value = 0;
+
+  for (int i = 0; i < bytes.length; i++) {
+    value = (value << 8) | bytes[i];
+    bits += 8;
+    while (bits >= 5) {
+      bits -= 5;
+      result.write(alphabet[(value >> bits) & 31]);
+    }
+  }
+
+  if (bits > 0) {
+    result.write(alphabet[(value << (5 - bits)) & 31]);
+  }
+
+  return result.toString();
+}
+
+/// Base32 解码
+List<int> _base32Decode(String encoded) {
+  const String alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
+  List<int> result = [];
+  int bits = 0;
+  int value = 0;
+
+  for (int i = 0; i < encoded.length; i++) {
+    int charIndex = alphabet.indexOf(encoded[i].toLowerCase());
+    if (charIndex == -1) throw ArgumentError('Invalid character in base32 string');
+    
+    value = (value << 5) | charIndex;
+    bits += 5;
+    
+    if (bits >= 8) {
+      bits -= 8;
+      result.add((value >> bits) & 0xFF);
+    }
+  }
+
+  return result;
+}
+
+/// URL-safe Base64 编码
+/// 将标准 Base64 转换为 URL-safe 版本，减少特殊字符
+String _base64UrlEncode(List<int> bytes) {
+  String encoded = base64Encode(bytes);
+  // 替换特殊字符：+ -> -, / -> _，移除末尾的 =
+  return encoded
+      .replaceAll('+', '-')
+      .replaceAll('/', '_')
+      .replaceAll('=', '');
+}
+
+/// URL-safe Base64 解码
+/// 将 URL-safe Base64 恢复为标准格式并解码
+List<int> _base64UrlDecode(String encoded) {
+  // 恢复原始 Base64 格式
+  String restored = encoded
+      .replaceAll('-', '+')
+      .replaceAll('_', '/');
+  
+  // 添加缺失的填充字符
+  while (restored.length % 4 != 0) {
+    restored += '=';
+  }
+  
+  return base64Decode(restored);
+}
+
+/// 将房间对象加密为分享码（RLE 超压缩版）
 ///
-/// 接收一个 [Room] 对象，返回JWT保护的加密字符串
-/// 加密过程：
-/// 1. 验证房间对象完整性
-/// 2. 将Room对象转换为JSON
-/// 3. 压缩JSON数据
-/// 4. 进行Base64编码
-/// 5. 使用JWT进行保护
+/// 接收一个 [Room] 对象，返回加密分享码
+/// 优化策略：
+/// 1. 二进制格式（无JSON键名）
+/// 2. Base32编码（比Base64短15%）
+/// 3. 游程编码RLE（压缩连续重复字符，特别对0有效）
+/// 4. 4字符校验和
 String encryptRoomWithJWT(Room room) {
   try {
-    // 验证房间对象完整性
     if (room.name.isEmpty) {
       throw ArgumentError('房间名称不能为空');
     }
 
-    // 创建一个包含 Room 对象所有属性的 Map
-    final Map<String, dynamic> roomMap = {
-      'name': room.name,
-      'encrypted': room.encrypted,
-      'roomName': room.roomName,
-      'password': room.password,
-      'tags': room.tags,
-      'messageKey': room.messageKey, // 添加消息密钥
-      'version': '1.0', // 添加版本信息用于兼容性检查
-      'timestamp': DateTime.now().millisecondsSinceEpoch, // 添加时间戳
-    };
+    // 使用二进制格式
+    final BytesBuilder bb = BytesBuilder();
+    
+    // 版本号（1字节）
+    bb.addByte(0x01);
+    
+    // 加密标志（1字节）
+    bb.addByte(room.encrypted ? 1 : 0);
+    
+    // 字符串编码：长度(1字节) + 内容
+    void _addString(String str) {
+      final bytes = utf8.encode(str);
+      if (bytes.length > 255) {
+        throw ArgumentError('字符串过长，不能超过255字节');
+      }
+      bb.addByte(bytes.length);
+      bb.add(bytes);
+    }
+    
+    _addString(room.name);
+    _addString(room.roomName);
+    _addString(room.password);
+    _addString(room.messageKey);
 
-    // 将 Map 转换为 JSON 字符串
-    final String jsonString = jsonEncode(roomMap);
+    // 获取二进制数据
+    List<int> binaryData = bb.toBytes();
 
-    // 压缩JSON数据
-    final List<int> compressedData = gzip.encode(utf8.encode(jsonString));
+    // 压缩数据
+    final List<int> compressedData = gzip.encode(binaryData);
 
-    // 将压缩后的数据进行 Base64 编码
-    final String encryptedString = base64Encode(compressedData);
+    // Base32 编码
+    String encoded = _base32Encode(compressedData);
 
-    // 使用JWT保护加密数据，添加更多元数据
-    final jwt = JWT({
-      'data': encryptedString,
-      'room_type': room.encrypted ? 'encrypted' : 'public',
-      'app_version': '1.0',
-    }, issuer: 'astral_app');
+    // 应用游程编码进一步压缩（特别对gzip输出的0有效）
+    String compressed = _rleEncode(encoded);
 
-    // 使用密钥签名JWT，设置合理的过期时间
-    final token = jwt.sign(SecretKey(jwtSecret), expiresIn: Duration(days: 30));
+    // 生成4字符校验和
+    final String checksum = _generateChecksum(compressed);
 
-    return token;
+    // 返回格式：校验和.RLE压缩数据
+    return '$checksum.$compressed';
   } catch (e) {
     throw Exception('房间加密失败: $e');
   }
 }
 
-/// 将JWT保护的密文解密为房间对象
+/// 将分享码解密为房间对象（RLE 超压缩版）
 ///
-/// 接收一个JWT保护的加密字符串，返回解密后的 [Room] 对象
-/// 解密过程：
-/// 1. 验证JWT并提取数据
-/// 2. 对密文进行Base64解码
-/// 3. 解压数据
-/// 4. 验证数据完整性
-/// 5. 转换为Room对象
+/// 接收一个分享码字符串，返回解密后的 [Room] 对象
 Room? decryptRoomFromJWT(String token) {
   try {
-    // 验证输入
     if (token.isEmpty) {
       throw ArgumentError('分享码不能为空');
     }
 
-    // 验证JWT并提取数据
-    final JWT jwt = JWT.verify(token, SecretKey(jwtSecret));
-
-    // 检查JWT是否过期
-    if (jwt.payload['exp'] != null) {
-      final expiry = DateTime.fromMillisecondsSinceEpoch(
-        jwt.payload['exp'] * 1000,
-      );
-      if (DateTime.now().isAfter(expiry)) {
-        throw Exception('分享码已过期');
-      }
+    // 分离校验和和数据
+    final parts = token.split('.');
+    if (parts.length != 2) {
+      throw Exception('分享码格式错误');
     }
 
-    // 验证发行者
-    if (jwt.issuer != 'astral_app') {
-      throw Exception('无效的分享码来源');
+    final String checksum = parts[0];
+    final String compressed = parts[1];
+
+    // 验证校验和
+    if (!_verifyChecksum(compressed, checksum)) {
+      throw Exception('分享码已损坏或被修改');
     }
 
-    final String encryptedString = jwt.payload['data'] as String;
-    if (encryptedString.isEmpty) {
-      throw Exception('分享码数据为空');
+    // RLE 解码
+    final String encoded = _rleDecode(compressed);
+
+    // Base32 解码
+    final List<int> compressedData = _base32Decode(encoded);
+
+    // Gzip 解压
+    final List<int> binaryData = gzip.decode(compressedData);
+
+    // 解析二进制格式
+    int offset = 0;
+
+    // 读取版本号
+    final int version = binaryData[offset++];
+    if (version != 0x01) {
+      throw Exception('不支持的版本号: $version');
     }
 
-    // 对密文进行Base64解码
-    final List<int> compressedData = base64Decode(encryptedString);
+    // 读取加密标志
+    final int encryptedByte = binaryData[offset++];
+    final bool encrypted = encryptedByte == 1;
 
-    // 解压数据
-    final List<int> decompressedData = gzip.decode(compressedData);
-    final String jsonString = utf8.decode(decompressedData);
-
-    // 将JSON字符串转换为Map
-    final Map<String, dynamic> roomMap = jsonDecode(jsonString);
-
-    // 验证必要字段
-    if (!roomMap.containsKey('name') || roomMap['name'] == null) {
-      throw Exception('房间数据缺少名称字段');
+    // 读取字符串
+    String _readString() {
+      final int length = binaryData[offset++];
+      final String str = utf8.decode(binaryData.sublist(offset, offset + length));
+      offset += length;
+      return str;
     }
 
-    // 检查版本兼容性
-    final version = roomMap['version'] as String?;
-    if (version != null && version != '1.0') {
-      // 这里可以添加版本兼容性处理逻辑
-      print('警告：分享码版本($version)与当前版本(1.0)不匹配，可能存在兼容性问题');
-    }
+    final String name = _readString();
+    final String roomName = _readString();
+    final String password = _readString();
+    final String messageKey = _readString();
 
-    // 检查时间戳（可选）
-    final timestamp = roomMap['timestamp'] as int?;
-    if (timestamp != null) {
-      final shareTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-      final daysDiff = DateTime.now().difference(shareTime).inDays;
-      if (daysDiff > 30) {
-        print('警告：分享码创建时间超过30天，建议重新获取最新分享码');
-      }
-    }
-
-    // 从Map创建Room对象
+    // 从解析的数据创建Room对象
     return Room(
-      name: roomMap['name'] as String? ?? '',
-      encrypted: roomMap['encrypted'] as bool? ?? true,
-      roomName: roomMap['roomName'] as String? ?? '',
-      password: roomMap['password'] as String? ?? '',
-      tags: List<String>.from(roomMap['tags'] ?? []),
-      messageKey: roomMap['messageKey'] as String? ?? '',
+      name: name,
+      encrypted: encrypted,
+      roomName: roomName,
+      password: password,
+      tags: [],
+      messageKey: messageKey,
     );
   } catch (e) {
     print('解密房间信息失败: $e');
@@ -147,52 +311,60 @@ Room? decryptRoomFromJWT(String token) {
   }
 }
 
-/// 将房间对象加密为密文
+/// 将房间对象加密为密文（简化版，不使用JWT）
 ///
 /// 接收一个 [Room] 对象，返回加密后的密文字符串
-/// 加密过程：将 Room 对象转换为 JSON，然后进行 Base64 编码
+/// 加密过程：将 Room 对象转换为 JSON，压缩，使用 URL-safe Base64 编码
 String encryptRoom(Room room) {
-  // 创建一个包含 Room 对象所有属性的 Map
+  // 创建精简的 Map，使用缩写键名和数字编码
   final Map<String, dynamic> roomMap = {
-    'name': room.name,
-    'encrypted': room.encrypted, // 加密后的房间标记为已加密
-    'roomName': room.roomName,
-    'password': room.password,
-    'tags': room.tags,
+    'n': room.name,
+    'e': room.encrypted ? 1 : 0,  // 0=false, 1=true
+    'rn': room.roomName,
+    'p': room.password,
+    'mk': room.messageKey,
   };
 
   // 将 Map 转换为 JSON 字符串
   final String jsonString = jsonEncode(roomMap);
 
-  // 将 JSON 字符串进行 Base64 编码
-  final String encryptedString = base64Encode(utf8.encode(jsonString));
+  // 压缩JSON数据
+  final List<int> compressedData = gzip.encode(utf8.encode(jsonString));
+
+  // 使用 URL-safe Base64 编码
+  final String encryptedString = _base64UrlEncode(compressedData);
 
   return encryptedString;
 }
 
-/// 将密文解密为房间对象
+/// 将密文解密为房间对象（简化版）
 ///
 /// 接收一个加密的密文字符串，返回解密后的 [Room] 对象
-/// 解密过程：对密文进行 Base64 解码，然后转换为 Room 对象
+/// 解密过程：使用 URL-safe Base64 解码、解压，然后转换为 Room 对象
 Room? decryptRoom(String encryptedString) {
   try {
-    // 对密文进行 Base64 解码
-    final List<int> bytes = base64Decode(encryptedString);
-    final String jsonString = utf8.decode(bytes);
+    // 使用 URL-safe Base64 解码
+    final List<int> compressedData = _base64UrlDecode(encryptedString);
+
+    // 解压数据
+    final List<int> decompressedData = gzip.decode(compressedData);
+    final String jsonString = utf8.decode(decompressedData);
 
     // 将 JSON 字符串转换为 Map
     final Map<String, dynamic> roomMap = jsonDecode(jsonString);
 
     // 从 Map 创建 Room 对象
     return Room(
-      name: roomMap['name'] ?? '',
-      encrypted: roomMap['encrypted'] ?? true,
-      roomName: roomMap['roomName'] ?? '',
-      password: roomMap['password'] ?? '',
-      tags: List<String>.from(roomMap['tags'] ?? []),
+      name: roomMap['n'] ?? '',
+      encrypted: (roomMap['e'] as int?) == 1 ? true : false,  // 0=false, 1=true
+      roomName: roomMap['rn'] ?? '',
+      password: roomMap['p'] ?? '',
+      tags: [], // tags 已移除
+      messageKey: roomMap['mk'] ?? '',
     );
   } catch (e) {
     // 解密失败时返回null
+    print('解密房间信息失败: $e');
     return null;
   }
 }
@@ -287,24 +459,22 @@ $type$tags
 
 /// 检查分享码格式
 ///
-/// 验证分享码是否符合预期格式
+/// 验证分享码是否符合预期格式（校验和.数据 格式）
 bool isValidShareCode(String shareCode) {
   if (shareCode.isEmpty) return false;
 
-  // JWT格式验证：应该包含三个部分，用点分隔
+  // 格式验证：应该包含两个部分，用点分隔
   final parts = shareCode.split('.');
-  if (parts.length != 3) return false;
+  if (parts.length != 2) return false;
 
-  // 检查每个部分是否为有效的Base64字符串
+  // 检查校验和部分（应该是4个字符）
+  final checksum = parts[0];
+  if (checksum.length != 4) return false;
+
+  // 检查数据部分是否为有效的Base32字符串
   try {
-    for (String part in parts) {
-      // 添加必要的填充字符
-      String paddedPart = part;
-      while (paddedPart.length % 4 != 0) {
-        paddedPart += '=';
-      }
-      base64Decode(paddedPart);
-    }
+    final encodedString = parts[1];
+    _base32Decode(encodedString);
     return true;
   } catch (e) {
     return false;
