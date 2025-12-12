@@ -9,11 +9,11 @@ const String encryptionSecret = '这就是密钥';
 /// 例如：00000000 -> z8（z表示0，8表示个数）
 String _rleEncode(String input) {
   if (input.isEmpty) return '';
-  
+
   StringBuffer result = StringBuffer();
   int count = 1;
   String lastChar = input[0];
-  
+
   for (int i = 1; i < input.length; i++) {
     if (input[i] == lastChar && count < 36) {
       // 36是base36的最大单个字符表示（0-9, a-z）
@@ -35,7 +35,7 @@ String _rleEncode(String input) {
       count = 1;
     }
   }
-  
+
   // 处理最后一个字符
   if (count == 1) {
     result.write(lastChar);
@@ -47,21 +47,21 @@ String _rleEncode(String input) {
     result.write('!');
     result.write(count.toRadixString(36));
   }
-  
+
   return result.toString();
 }
 
 /// 游程解码
 String _rleDecode(String input) {
   if (input.isEmpty) return '';
-  
+
   StringBuffer result = StringBuffer();
   int i = 0;
-  
+
   while (i < input.length) {
     String char = input[i];
     i++;
-    
+
     // 检查是否有重复计数
     if (i < input.length && input[i] == '!') {
       i++; // 跳过'!'
@@ -77,7 +77,7 @@ String _rleDecode(String input) {
       result.write(char);
     }
   }
-  
+
   return result.toString();
 }
 
@@ -137,11 +137,12 @@ List<int> _base32Decode(String encoded) {
 
   for (int i = 0; i < encoded.length; i++) {
     int charIndex = alphabet.indexOf(encoded[i].toLowerCase());
-    if (charIndex == -1) throw ArgumentError('Invalid character in base32 string');
-    
+    if (charIndex == -1)
+      throw ArgumentError('Invalid character in base32 string');
+
     value = (value << 5) | charIndex;
     bits += 5;
-    
+
     if (bits >= 8) {
       bits -= 8;
       result.add((value >> bits) & 0xFF);
@@ -156,25 +157,20 @@ List<int> _base32Decode(String encoded) {
 String _base64UrlEncode(List<int> bytes) {
   String encoded = base64Encode(bytes);
   // 替换特殊字符：+ -> -, / -> _，移除末尾的 =
-  return encoded
-      .replaceAll('+', '-')
-      .replaceAll('/', '_')
-      .replaceAll('=', '');
+  return encoded.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
 /// URL-safe Base64 解码
 /// 将 URL-safe Base64 恢复为标准格式并解码
 List<int> _base64UrlDecode(String encoded) {
   // 恢复原始 Base64 格式
-  String restored = encoded
-      .replaceAll('-', '+')
-      .replaceAll('_', '/');
-  
+  String restored = encoded.replaceAll('-', '+').replaceAll('_', '/');
+
   // 添加缺失的填充字符
   while (restored.length % 4 != 0) {
     restored += '=';
   }
-  
+
   return base64Decode(restored);
 }
 
@@ -194,13 +190,13 @@ String encryptRoomWithJWT(Room room) {
 
     // 使用二进制格式
     final BytesBuilder bb = BytesBuilder();
-    
+
     // 版本号（1字节）
     bb.addByte(0x01);
-    
+
     // 加密标志（1字节）
     bb.addByte(room.encrypted ? 1 : 0);
-    
+
     // 字符串编码：长度(1字节) + 内容
     void _addString(String str) {
       final bytes = utf8.encode(str);
@@ -210,7 +206,7 @@ String encryptRoomWithJWT(Room room) {
       bb.addByte(bytes.length);
       bb.add(bytes);
     }
-    
+
     _addString(room.name);
     _addString(room.roomName);
     _addString(room.password);
@@ -286,7 +282,9 @@ Room? decryptRoomFromJWT(String token) {
     // 读取字符串
     String _readString() {
       final int length = binaryData[offset++];
-      final String str = utf8.decode(binaryData.sublist(offset, offset + length));
+      final String str = utf8.decode(
+        binaryData.sublist(offset, offset + length),
+      );
       offset += length;
       return str;
     }
@@ -319,7 +317,7 @@ String encryptRoom(Room room) {
   // 创建精简的 Map，使用缩写键名和数字编码
   final Map<String, dynamic> roomMap = {
     'n': room.name,
-    'e': room.encrypted ? 1 : 0,  // 0=false, 1=true
+    'e': room.encrypted ? 1 : 0, // 0=false, 1=true
     'rn': room.roomName,
     'p': room.password,
     'mk': room.messageKey,
@@ -356,7 +354,7 @@ Room? decryptRoom(String encryptedString) {
     // 从 Map 创建 Room 对象
     return Room(
       name: roomMap['n'] ?? '',
-      encrypted: (roomMap['e'] as int?) == 1 ? true : false,  // 0=false, 1=true
+      encrypted: (roomMap['e'] as int?) == 1 ? true : false, // 0=false, 1=true
       roomName: roomMap['rn'] ?? '',
       password: roomMap['p'] ?? '',
       tags: [], // tags 已移除
