@@ -10,6 +10,7 @@ class WindowManagerUtils {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux ) {
       // 确保窗口管理器已初始化
       await windowManager.ensureInitialized();
+      windowManager.setIcon('assets/logo.png');
       //添加信号监听
       // 创建响应式效果，用于监听和更新窗口标题
       effect(() {
