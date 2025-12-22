@@ -2,7 +2,7 @@
 
 // ignore_for_file: constant_identifier_names
 
-abstract class  LocaleKeys {
+abstract class LocaleKeys {
   static const firewall = 'firewall';
   static const virtual_ip = 'virtual_ip';
   static const status_disconnected = 'status_disconnected';
@@ -49,12 +49,14 @@ abstract class  LocaleKeys {
   static const logs_copied = 'logs_copied';
   static const nav_home = 'nav_home';
   static const nav_room = 'nav_room';
+  static const nav_discover = 'nav_discover';
   static const nav_firewall = 'nav_firewall';
   static const nav_server = 'nav_server';
   static const nav_settings = 'nav_settings';
   static const permission_install_success = 'permission_install_success';
   static const permission_install_failed = 'permission_install_failed';
-  static const permission_install_request_failed = 'permission_install_request_failed';
+  static const permission_install_request_failed =
+      'permission_install_request_failed';
   static const permission_denied = 'permission_denied';
   static const permission_denied_message = 'permission_denied_message';
   static const cancel = 'cancel';
@@ -120,7 +122,8 @@ abstract class  LocaleKeys {
   static const relay_peer_rpc = 'relay_peer_rpc';
   static const relay_peer_rpc_desc = 'relay_peer_rpc_desc';
   static const disable_udp_hole_punching = 'disable_udp_hole_punching';
-  static const disable_udp_hole_punching_desc = 'disable_udp_hole_punching_desc';
+  static const disable_udp_hole_punching_desc =
+      'disable_udp_hole_punching_desc';
   static const enable_multi_thread = 'enable_multi_thread';
   static const enable_multi_thread_desc = 'enable_multi_thread_desc';
   static const compression_algorithm = 'compression_algorithm';
@@ -144,11 +147,16 @@ abstract class  LocaleKeys {
   static const software_settings = 'software_settings';
   static const get_install_permission = 'get_install_permission';
   static const install_permission_granted = 'install_permission_granted';
-  static const install_permission_not_granted = 'install_permission_not_granted';
+  static const install_permission_not_granted =
+      'install_permission_not_granted';
   static const minimize = 'minimize';
   static const minimize_desc = 'minimize_desc';
   static const player_list_card = 'player_list_card';
   static const player_list_card_desc = 'player_list_card_desc';
+  static const enable_discover_page = 'enable_discover_page';
+  static const enable_discover_page_desc = 'enable_discover_page_desc';
+  static const enable_banner_carousel = 'enable_banner_carousel';
+  static const enable_banner_carousel_desc = 'enable_banner_carousel_desc';
   static const update_settings = 'update_settings';
   static const join_beta = 'join_beta';
   static const join_beta_desc = 'join_beta_desc';
@@ -170,5 +178,4 @@ abstract class  LocaleKeys {
   static const feedback_content = 'feedback_content';
   static const feedback_content_hint = 'feedback_content_hint';
   static const submit = 'submit';
-
 }

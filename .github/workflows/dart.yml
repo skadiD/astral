@@ -49,6 +49,15 @@ jobs:
           if_no_artifact_found: warn
       - run: mv ./downloaded/armeabi-v7a/* ./downloaded/armeabi-v7a/astral-armeabi-v7a.apk
 
+      - name: 📦 下载 Universal APK 构件
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: "android-build-universal.yaml"
+          name: astral-universal-apk
+          path: ./downloaded/universal
+          search_artifacts: true
+          if_no_artifact_found: warn
+
       - name: 📦 下载 WindowsSetup 构件
         uses: dawidd6/action-download-artifact@v6
         with:
@@ -84,6 +93,8 @@ jobs:
           ls -la ./downloaded/armeabi-v7a || echo "目录不存在"
           echo "arm64-v8a 文件:"
           ls -la ./downloaded/arm64-v8a || echo "目录不存在"
+          echo "universal APK 文件:"
+          ls -la ./downloaded/universal || echo "目录不存在"
           echo "Windows 文件:"
           ls -la ./downloaded/windows || echo "目录不存在"
           echo "WindowsSetup 文件:"
@@ -211,6 +222,7 @@ jobs:
           files: |
             ./downloaded/arm64-v8a/*.apk
             ./downloaded/armeabi-v7a/*.apk
+            ./downloaded/universal/*.apk
             ./downloaded/WindowsSetup/*.exe
             ./downloaded/windows/*.zip
             ./downloaded/linux/astral-linux-x64.tar.gz

@@ -48,51 +48,61 @@ const AllSettingsSchema = CollectionSchema(
       name: r'downloadAccelerate',
       type: IsarType.string,
     ),
-    r'latestVersion': PropertySchema(
+    r'enableBannerCarousel': PropertySchema(
       id: 7,
+      name: r'enableBannerCarousel',
+      type: IsarType.bool,
+    ),
+    r'hasShownBannerTip': PropertySchema(
+      id: 8,
+      name: r'hasShownBannerTip',
+      type: IsarType.bool,
+    ),
+    r'latestVersion': PropertySchema(
+      id: 9,
       name: r'latestVersion',
       type: IsarType.string,
     ),
     r'listenList': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'listenList',
       type: IsarType.stringList,
     ),
     r'playerName': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'playerName',
       type: IsarType.string,
     ),
-    r'room': PropertySchema(id: 10, name: r'room', type: IsarType.long),
+    r'room': PropertySchema(id: 12, name: r'room', type: IsarType.long),
     r'serverSortField': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'serverSortField',
       type: IsarType.string,
     ),
     r'sortOption': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'sortOption',
       type: IsarType.long,
     ),
     r'sortOrder': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'sortOrder',
       type: IsarType.long,
     ),
-    r'startup': PropertySchema(id: 14, name: r'startup', type: IsarType.bool),
+    r'startup': PropertySchema(id: 16, name: r'startup', type: IsarType.bool),
     r'startupAutoConnect': PropertySchema(
-      id: 15,
+      id: 17,
       name: r'startupAutoConnect',
       type: IsarType.bool,
     ),
     r'startupMinimize': PropertySchema(
-      id: 16,
+      id: 18,
       name: r'startupMinimize',
       type: IsarType.bool,
     ),
-    r'userId': PropertySchema(id: 17, name: r'userId', type: IsarType.string),
+    r'userId': PropertySchema(id: 19, name: r'userId', type: IsarType.string),
     r'userListSimple': PropertySchema(
-      id: 18,
+      id: 20,
       name: r'userListSimple',
       type: IsarType.bool,
     ),
@@ -174,18 +184,20 @@ void _allSettingsSerialize(
   writer.writeStringList(offsets[4], object.customVpn);
   writer.writeLong(offsets[5], object.displayMode);
   writer.writeString(offsets[6], object.downloadAccelerate);
-  writer.writeString(offsets[7], object.latestVersion);
-  writer.writeStringList(offsets[8], object.listenList);
-  writer.writeString(offsets[9], object.playerName);
-  writer.writeLong(offsets[10], object.room);
-  writer.writeString(offsets[11], object.serverSortField);
-  writer.writeLong(offsets[12], object.sortOption);
-  writer.writeLong(offsets[13], object.sortOrder);
-  writer.writeBool(offsets[14], object.startup);
-  writer.writeBool(offsets[15], object.startupAutoConnect);
-  writer.writeBool(offsets[16], object.startupMinimize);
-  writer.writeString(offsets[17], object.userId);
-  writer.writeBool(offsets[18], object.userListSimple);
+  writer.writeBool(offsets[7], object.enableBannerCarousel);
+  writer.writeBool(offsets[8], object.hasShownBannerTip);
+  writer.writeString(offsets[9], object.latestVersion);
+  writer.writeStringList(offsets[10], object.listenList);
+  writer.writeString(offsets[11], object.playerName);
+  writer.writeLong(offsets[12], object.room);
+  writer.writeString(offsets[13], object.serverSortField);
+  writer.writeLong(offsets[14], object.sortOption);
+  writer.writeLong(offsets[15], object.sortOrder);
+  writer.writeBool(offsets[16], object.startup);
+  writer.writeBool(offsets[17], object.startupAutoConnect);
+  writer.writeBool(offsets[18], object.startupMinimize);
+  writer.writeString(offsets[19], object.userId);
+  writer.writeBool(offsets[20], object.userListSimple);
 }
 
 AllSettings _allSettingsDeserialize(
@@ -202,19 +214,21 @@ AllSettings _allSettingsDeserialize(
   object.customVpn = reader.readStringList(offsets[4]) ?? [];
   object.displayMode = reader.readLong(offsets[5]);
   object.downloadAccelerate = reader.readString(offsets[6]);
+  object.enableBannerCarousel = reader.readBool(offsets[7]);
+  object.hasShownBannerTip = reader.readBool(offsets[8]);
   object.id = id;
-  object.latestVersion = reader.readStringOrNull(offsets[7]);
-  object.listenList = reader.readStringList(offsets[8]);
-  object.playerName = reader.readStringOrNull(offsets[9]);
-  object.room = reader.readLongOrNull(offsets[10]);
-  object.serverSortField = reader.readString(offsets[11]);
-  object.sortOption = reader.readLong(offsets[12]);
-  object.sortOrder = reader.readLong(offsets[13]);
-  object.startup = reader.readBool(offsets[14]);
-  object.startupAutoConnect = reader.readBool(offsets[15]);
-  object.startupMinimize = reader.readBool(offsets[16]);
-  object.userId = reader.readStringOrNull(offsets[17]);
-  object.userListSimple = reader.readBool(offsets[18]);
+  object.latestVersion = reader.readStringOrNull(offsets[9]);
+  object.listenList = reader.readStringList(offsets[10]);
+  object.playerName = reader.readStringOrNull(offsets[11]);
+  object.room = reader.readLongOrNull(offsets[12]);
+  object.serverSortField = reader.readString(offsets[13]);
+  object.sortOption = reader.readLong(offsets[14]);
+  object.sortOrder = reader.readLong(offsets[15]);
+  object.startup = reader.readBool(offsets[16]);
+  object.startupAutoConnect = reader.readBool(offsets[17]);
+  object.startupMinimize = reader.readBool(offsets[18]);
+  object.userId = reader.readStringOrNull(offsets[19]);
+  object.userListSimple = reader.readBool(offsets[20]);
   return object;
 }
 
@@ -240,28 +254,32 @@ P _allSettingsDeserializeProp<P>(
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 11:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 12:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 13:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 14:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 15:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 16:
       return (reader.readBool(offset)) as P;
     case 17:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 18:
+      return (reader.readBool(offset)) as P;
+    case 19:
+      return (reader.readStringOrNull(offset)) as P;
+    case 20:
       return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -791,6 +809,27 @@ extension AllSettingsQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.greaterThan(property: r'downloadAccelerate', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+  enableBannerCarouselEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'enableBannerCarousel',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterFilterCondition>
+  hasShownBannerTipEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'hasShownBannerTip', value: value),
       );
     });
   }
@@ -1997,6 +2036,34 @@ extension AllSettingsQuerySortBy
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  sortByEnableBannerCarousel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'enableBannerCarousel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  sortByEnableBannerCarouselDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'enableBannerCarousel', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  sortByHasShownBannerTip() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasShownBannerTip', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  sortByHasShownBannerTipDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasShownBannerTip', Sort.desc);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterSortBy> sortByLatestVersion() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'latestVersion', Sort.asc);
@@ -2214,6 +2281,34 @@ extension AllSettingsQuerySortThenBy
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  thenByEnableBannerCarousel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'enableBannerCarousel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  thenByEnableBannerCarouselDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'enableBannerCarousel', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  thenByHasShownBannerTip() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasShownBannerTip', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QAfterSortBy>
+  thenByHasShownBannerTipDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasShownBannerTip', Sort.desc);
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -2414,6 +2509,20 @@ extension AllSettingsQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AllSettings, AllSettings, QDistinct>
+  distinctByEnableBannerCarousel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'enableBannerCarousel');
+    });
+  }
+
+  QueryBuilder<AllSettings, AllSettings, QDistinct>
+  distinctByHasShownBannerTip() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hasShownBannerTip');
+    });
+  }
+
   QueryBuilder<AllSettings, AllSettings, QDistinct> distinctByLatestVersion({
     bool caseSensitive = true,
   }) {
@@ -2552,6 +2661,20 @@ extension AllSettingsQueryProperty
   downloadAccelerateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'downloadAccelerate');
+    });
+  }
+
+  QueryBuilder<AllSettings, bool, QQueryOperations>
+  enableBannerCarouselProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'enableBannerCarousel');
+    });
+  }
+
+  QueryBuilder<AllSettings, bool, QQueryOperations>
+  hasShownBannerTipProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasShownBannerTip');
     });
   }
 

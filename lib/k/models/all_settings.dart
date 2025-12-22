@@ -62,4 +62,10 @@ class AllSettings {
 
   /// 最新版本号
   String? latestVersion;
+
+  /// 启用轮播图
+  bool enableBannerCarousel = true;
+
+  /// 是否已显示轮播图首次提示
+  bool hasShownBannerTip = false;
 }

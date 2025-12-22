@@ -127,6 +127,8 @@ class Aps {
         await AppDatabase().AllSettings.getAutoCheckUpdate();
     downloadAccelerate.value =
         await AppDatabase().AllSettings.getDownloadAccelerate();
+    enableBannerCarousel.value =
+        await AppDatabase().AllSettings.getEnableBannerCarousel();
     // window平台
     if (Platform.isWindows) {
       updateFirewallStatus();
@@ -198,6 +200,30 @@ class Aps {
 
   /// 添加排序选项状态
   final Signal<int> sortOption = signal(0); // 0: 不排序, 1: 按延迟排序, 2: 按用户名长度排序
+
+  /// 启用轮播图
+  final Signal<bool> enableBannerCarousel = signal(true);
+
+  /// 更新轮播图开关
+  Future<void> updateEnableBannerCarousel(bool enable) async {
+    enableBannerCarousel.value = enable;
+    await AppDatabase().AllSettings.setEnableBannerCarousel(enable);
+  }
+
+  /// 是否已显示轮播图提示
+  final Signal<bool> hasShownBannerTip = signal(false);
+
+  /// 更新轮播图提示标记
+  Future<void> updateHasShownBannerTip(bool hasShown) async {
+    hasShownBannerTip.value = hasShown;
+    await AppDatabase().AllSettings.setHasShownBannerTip(hasShown);
+  }
+
+  /// 加载轮播图提示标记
+  Future<void> loadHasShownBannerTip() async {
+    hasShownBannerTip.value =
+        await AppDatabase().AllSettings.getHasShownBannerTip();
+  }
 
   /// 设置sortOption
   Future<void> setSortOption(int option) async {

@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/widgets/home/about_home.dart';
+import 'package:astral/widgets/home/banner_carousel.dart';
 import 'package:astral/widgets/home/contributors.dart'; // 添加这行
 import 'package:astral/widgets/home/servers_home.dart';
 import 'package:astral/widgets/home/traffic_stats.dart';
@@ -34,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final columnCount = _getColumnCount(width);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -48,6 +51,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
                       children: [
+                        if (Aps().enableBannerCarousel.watch(context))
+                          StaggeredGridTile.fit(
+                            crossAxisCellCount: columnCount,
+                            child: BannerCarousel(),
+                          ),
                         if (!Platform.isAndroid) VirtualIpBox(),
                         UserIpBox(),
                         // TrafficStats(),
