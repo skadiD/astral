@@ -156,6 +156,15 @@ class _SoftwareSettingsPageState extends State<SoftwareSettingsPage> {
                     Aps().setUserListSimple(value);
                   },
                 ),
+
+                SwitchListTile(
+                  title: Text(LocaleKeys.enable_banner_carousel.tr()),
+                  subtitle: Text(LocaleKeys.enable_banner_carousel_desc.tr()),
+                  value: Aps().enableBannerCarousel.watch(context),
+                  onChanged: (value) {
+                    Aps().updateEnableBannerCarousel(value);
+                  },
+                ),
               ],
             ),
           ),

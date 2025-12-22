@@ -39,6 +39,40 @@ class AllSettingsCz {
     }
   }
 
+  /// 设置轮播图开关
+  Future<void> setEnableBannerCarousel(bool enable) async {
+    AllSettings? settings = await _isar.allSettings.get(1);
+    if (settings != null) {
+      settings.enableBannerCarousel = enable;
+      await _isar.writeTxn(() async {
+        await _isar.allSettings.put(settings);
+      });
+    }
+  }
+
+  /// 获取轮播图开关
+  Future<bool> getEnableBannerCarousel() async {
+    AllSettings? settings = await _isar.allSettings.get(1);
+    return settings?.enableBannerCarousel ?? true;
+  }
+
+  /// 设置是否已显示轮播图提示
+  Future<void> setHasShownBannerTip(bool hasShown) async {
+    AllSettings? settings = await _isar.allSettings.get(1);
+    if (settings != null) {
+      settings.hasShownBannerTip = hasShown;
+      await _isar.writeTxn(() async {
+        await _isar.allSettings.put(settings);
+      });
+    }
+  }
+
+  /// 获取是否已显示轮播图提示
+  Future<bool> getHasShownBannerTip() async {
+    AllSettings? settings = await _isar.allSettings.get(1);
+    return settings?.hasShownBannerTip ?? false;
+  }
+
   /// 设置用户简约模式
   /// @param isMinimal 是否启用简约模式
   /// 将新的简约模式设置保存到数据库中

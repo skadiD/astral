@@ -1,6 +1,4 @@
 // 导入所需的包
-import 'dart:io';
-
 import 'package:astral/utils/up.dart';
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/mod/small_window_adapter.dart'; // 导入小窗口适配器
@@ -8,7 +6,6 @@ import 'package:astral/screens/home_page.dart';
 import 'package:astral/screens/room_page.dart';
 import 'package:astral/screens/server_page.dart';
 import 'package:astral/screens/settings_page.dart';
-import 'package:astral/screens/wfp_page.dart';
 import 'package:astral/widgets/bottom_nav.dart';
 import 'package:astral/widgets/left_nav.dart';
 import 'package:astral/widgets/status_bar.dart';
@@ -100,12 +97,14 @@ class _MainScreenState extends State<MainScreen>
       label: LocaleKeys.nav_home.tr(), // 导航项标签
       page: const HomePage(), // 对应的页面
     ),
+
     NavigationItem(
       icon: Icons.room_preferences_outlined, // 未选中时的图标
       activeIcon: Icons.room_preferences, // 选中时的图标Icon(Icons.room_preferences)
       label: LocaleKeys.nav_room.tr(), // 导航项标签
       page: const RoomPage(), // 对应的页面
     ),
+
     // 临时移除魔法墙功能
     // if (Platform.isWindows)
     //   NavigationItem(
@@ -137,6 +136,23 @@ class _MainScreenState extends State<MainScreen>
     final colorScheme = Theme.of(context).colorScheme;
     final isSmallWindow = SmallWindowAdapter.shouldApplyAdapter(context);
 
+    // 确保selectedIndex在有效范围内
+    final currentIndex = Aps().selectedIndex.watch(context);
+    final itemCount = navigationItems.length;
+
+    // 如果当前索引超出范围（比如禁用了发现页面），自动回到主页
+    if (currentIndex >= itemCount && itemCount > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (Aps().selectedIndex.value >= itemCount) {
+          Aps().selectedIndex.value = 0;
+        }
+      });
+    }
+
+    // 使用安全的索引值，确保不会越界
+    final safeIndex =
+        (currentIndex >= 0 && currentIndex < itemCount) ? currentIndex : 0;
+
     // 构建Scaffold组件
     return Scaffold(
       // 自定义应用栏
@@ -159,7 +175,9 @@ class _MainScreenState extends State<MainScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      navigationItems[Aps().selectedIndex.watch(context)].label,
+                      safeIndex < navigationItems.length
+                          ? navigationItems[safeIndex].label
+                          : '',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -170,7 +188,7 @@ class _MainScreenState extends State<MainScreen>
                 // 主内容区域
                 Expanded(
                   child: IndexedStack(
-                    index: Aps().selectedIndex.watch(context), // 当前选中的页面索引
+                    index: safeIndex, // 使用安全的索引
                     children: _pages, // 页面列表
                   ),
                 ),
