@@ -73,6 +73,12 @@ class _BannerCarouselState extends State<BannerCarousel> {
   @override
   void initState() {
     super.initState();
+    // 如果开关关闭，直接标记为不加载
+    if (!Aps().enableBannerCarousel.value) {
+      _isLoading = false;
+      _hasError = true;
+      return;
+    }
     _loadBanners();
   }
 

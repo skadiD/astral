@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final columnCount = _getColumnCount(width);
+
     return Scaffold(
       body: Stack(
         children: [
