@@ -110,7 +110,7 @@ class _SoftwareSettingsPageState extends State<SoftwareSettingsPage> {
               children: [
                 ListTile(
                   title: Text(LocaleKeys.software_settings.tr()),
-                  subtitle: Text('Application behavior and permissions'),
+                  subtitle: Text(LocaleKeys.software_behavior_desc.tr()),
                   leading: const Icon(Icons.settings),
                 ),
 
@@ -176,16 +176,16 @@ class _SoftwareSettingsPageState extends State<SoftwareSettingsPage> {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text('Android 设置'),
-                    subtitle: Text('Android 特定的设置选项'),
+                    title: Text(LocaleKeys.android_settings.tr()),
+                    subtitle: Text(LocaleKeys.android_settings_desc.tr()),
                     leading: const Icon(Icons.android),
                   ),
 
                   const Divider(),
 
                   ListTile(
-                    title: Text('权限说明'),
-                    subtitle: Text('安装权限用于自动更新应用程序'),
+                    title: Text(LocaleKeys.permission_description.tr()),
+                    subtitle: Text(LocaleKeys.permission_description_desc.tr()),
                     leading: const Icon(Icons.info_outline),
                   ),
                 ],

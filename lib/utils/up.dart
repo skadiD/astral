@@ -35,6 +35,7 @@ class UpdateChecker {
         includePrereleases: Aps().beta.value,
       );
       if (releaseInfo == null) {
+        if (!context.mounted) return;
         _showUpdateDialog(
           context,
           '检查更新失败',
@@ -51,6 +52,8 @@ class UpdateChecker {
 
       // 保存最新版本号到数据库
       await Aps().updateLatestVersion(releaseInfo['tag_name']);
+
+      if (!context.mounted) return;
 
       // 比较版本号，如果有新版本则显示更新弹窗
       // 在 checkForUpdates 方法中修改 _showUpdateDialog 调用
@@ -71,6 +74,7 @@ class UpdateChecker {
         );
       }
     } catch (e) {
+      if (!context.mounted) return;
       _showUpdateDialog(
         context,
         '更新检查失败',

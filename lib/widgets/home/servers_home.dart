@@ -1,4 +1,5 @@
 import 'package:astral/k/app_s/aps.dart';
+import 'package:astral/utils/blocked_servers.dart';
 import 'package:astral/widgets/home_box.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
@@ -109,7 +110,9 @@ class ServersHome extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    '${server.name} - ${server.url}',
+                                    BlockedServers.isBlocked(server.url)
+                                        ? server.name
+                                        : '${server.name} - ${server.url}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),

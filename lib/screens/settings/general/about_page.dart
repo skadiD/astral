@@ -33,7 +33,7 @@ class AboutPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Version ${Aps().latestVersion.watch(context)}',
+                  'Version ${AppInfoUtil.getVersion()}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -60,7 +60,7 @@ class AboutPage extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.update),
                   title: Text(LocaleKeys.check_update.tr()),
-                  subtitle: const Text('检查是否有新版本'),
+                  subtitle: Text(LocaleKeys.check_update_available.tr()),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _checkForUpdates(context),
                 ),

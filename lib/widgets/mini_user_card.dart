@@ -1,5 +1,6 @@
 import 'package:astral/src/rust/api/simple.dart';
 import 'package:astral/utils/platform_version_parser.dart';
+import 'package:astral/utils/blocked_servers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:astral/k/app_s/aps.dart';
@@ -140,7 +141,7 @@ class _MiniUserCardState extends State<MiniUserCard> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                // 第二行：IP地址 ET版本 NAT类型
+                // 第二行：IP地址 ET版本 打洞难易
                 Row(
                   children: [
                     if (player.ipv4 != '' && player.ipv4 != "0.0.0.0")
@@ -192,7 +193,7 @@ class _MiniUserCardState extends State<MiniUserCard> {
                       const SizedBox(width: 10),
                       Icon(Icons.router, size: 16, color: colorScheme.primary),
                       Text(
-                        player.tunnelProto,
+                        _formatTunnelProto(player.tunnelProto),
                         style: TextStyle(
                           color: colorScheme.secondary,
                           fontSize: 13,
@@ -210,29 +211,29 @@ class _MiniUserCardState extends State<MiniUserCard> {
   }
 }
 
-// 将NAT类型转换为中文评级显示
+// 将NAT类型转换为等级显示
 String _mapNatType(String natType) {
   switch (natType) {
     case 'Unknown':
       return '未知';
     case 'OpenInternet':
-      return '极好';
+      return '传奇';
     case 'NoPat':
-      return '极好';
+      return '传奇';
     case 'FullCone':
-      return '优秀';
+      return '史诗';
     case 'Restricted':
-      return '良好';
+      return '优质';
     case 'PortRestricted':
-      return '良好';
+      return '优质';
     case 'Symmetric':
-      return '极差';
+      return '困难';
     case 'SymUdpFirewall':
-      return '差';
+      return '普通';
     case 'SymmetricEasyInc':
-      return '差';
+      return '普通';
     case 'SymmetricEasyDec':
-      return '差';
+      return '普通';
     default:
       return '未知';
   }
@@ -241,16 +242,16 @@ String _mapNatType(String natType) {
 // 根据NAT类型获取图标
 IconData _getNatTypeIcon(String natType) {
   switch (natType) {
-    case '极好':
-      return Icons.star;
-    case '优秀':
-      return Icons.public;
-    case '良好':
-      return Icons.shield;
-    case '差':
-      return Icons.warning;
-    case '极差':
-      return Icons.sync_alt;
+    case '传奇':
+      return Icons.workspace_premium;
+    case '史诗':
+      return Icons.military_tech;
+    case '优质':
+      return Icons.verified;
+    case '普通':
+      return Icons.circle;
+    case '困难':
+      return Icons.block;
     default:
       return Icons.help_outline;
   }
@@ -259,19 +260,34 @@ IconData _getNatTypeIcon(String natType) {
 // 根据NAT类型获取颜色
 Color _getNatTypeColor(String natType) {
   switch (natType) {
-    case '极好':
-      return Colors.purple;
-    case '优秀':
-      return Colors.green;
-    case '良好':
-      return Colors.lightGreen;
-    case '差':
-      return Colors.orange;
-    case '极差':
-      return Colors.red;
+    case '传奇':
+      return const Color(0xFFFF6B00); // 金色
+    case '史诗':
+      return const Color(0xFFA335EE); // 紫色
+    case '优质':
+      return const Color(0xFF0070DD); // 蓝色
+    case '普通':
+      return const Color(0xFF1EFF00); // 绿色
+    case '困难':
+      return const Color(0xFF9D9D9D); // 灰色
     default:
       return Colors.grey;
   }
+}
+
+// 格式化隧道协议显示
+String _formatTunnelProto(String proto) {
+  // 分割多个协议（逗号分隔）
+  return proto
+      .split(',')
+      .map((p) {
+        final trimmed = p.trim();
+        // 使用正则匹配：如果是纯tcp或udp（后面不跟数字），添加4
+        if (RegExp(r'^tcp$').hasMatch(trimmed)) return 'tcp4';
+        if (RegExp(r'^udp$').hasMatch(trimmed)) return 'udp4';
+        return trimmed; // tcp6, udp6等保持原样
+      })
+      .join(',');
 }
 
 // 根据连接类型获取颜色

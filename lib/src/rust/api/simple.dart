@@ -101,6 +101,7 @@ class FlagsC {
   final bool privateMode;
   final bool enableQuicProxy;
   final bool disableQuicInput;
+  final bool disableSymHolePunching;
 
   const FlagsC({
     required this.defaultProtocol,
@@ -127,6 +128,7 @@ class FlagsC {
     required this.privateMode,
     required this.enableQuicProxy,
     required this.disableQuicInput,
+    required this.disableSymHolePunching,
   });
 
   @override
@@ -154,7 +156,8 @@ class FlagsC {
       acceptDns.hashCode ^
       privateMode.hashCode ^
       enableQuicProxy.hashCode ^
-      disableQuicInput.hashCode;
+      disableQuicInput.hashCode ^
+      disableSymHolePunching.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -184,7 +187,8 @@ class FlagsC {
           acceptDns == other.acceptDns &&
           privateMode == other.privateMode &&
           enableQuicProxy == other.enableQuicProxy &&
-          disableQuicInput == other.disableQuicInput;
+          disableQuicInput == other.disableQuicInput &&
+          disableSymHolePunching == other.disableSymHolePunching;
 }
 
 class Forward {

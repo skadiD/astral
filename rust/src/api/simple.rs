@@ -517,6 +517,7 @@ pub struct FlagsC {
     pub private_mode: bool,
     pub enable_quic_proxy: bool,
     pub disable_quic_input: bool,
+    pub disable_sym_hole_punching: bool,
 }
 
 pub struct Forward {
@@ -606,6 +607,7 @@ pub fn create_server(
         flags.private_mode = flag.private_mode;
         flags.enable_quic_proxy = flag.enable_quic_proxy;
         flags.disable_quic_input = flag.disable_quic_input;
+        flags.disable_sym_hole_punching = flag.disable_sym_hole_punching;
         cfg.set_flags(flags);
         // Configure peer connections with proper error handling
         let mut peer_configs = Vec::new();

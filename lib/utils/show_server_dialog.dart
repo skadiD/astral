@@ -1,5 +1,6 @@
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/models/server_mod.dart';
+import 'package:astral/utils/blocked_servers.dart';
 import 'package:flutter/material.dart';
 import 'package:isar_community/isar.dart';
 
@@ -147,9 +148,17 @@ class _ServerDialogState extends State<ServerDialog> {
               // 服务器地址
               TextFormField(
                 controller: _urlController,
-                decoration: const InputDecoration(
+                enabled:
+                    widget.server == null ||
+                    !BlockedServers.isBlocked(widget.server!.url),
+                decoration: InputDecoration(
                   labelText: '服务器地址',
                   hintText: '输入服务器地址',
+                  helperText:
+                      widget.server != null &&
+                              BlockedServers.isBlocked(widget.server!.url)
+                          ? '此服务器地址不可修改'
+                          : null,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {

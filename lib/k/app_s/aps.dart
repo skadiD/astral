@@ -430,6 +430,7 @@ class Aps {
   final Signal<bool> disableQuicInput = signal(false); // 禁用QUIC输入设置
   final Signal<bool> relayAllPeerRpc = signal(false); // 中继所有对等RPC设置
   final Signal<bool> disableUdpHolePunching = signal(false); // UDP打洞禁用设置
+  final Signal<bool> disableSymHolePunching = signal(false); // 对称NAT打洞禁用设置
   final Signal<bool> multiThread = signal(true); // 多线程设置
   final Signal<int> dataCompressAlgo = signal(1);
   final Signal<List<String>> cidrproxy = signal([]);
@@ -506,6 +507,8 @@ class Aps {
         await database.netConfigSetting.getRelayAllPeerRpc(); // 中继所有对等RPC
     disableUdpHolePunching.value =
         await database.netConfigSetting.getDisableUdpHolePunching(); // UDP打洞禁用
+    disableSymHolePunching.value =
+        await database.netConfigSetting.getDisableSymHolePunching(); // 对称NAT打洞禁用
     multiThread.value =
         await database.netConfigSetting.getMultiThread(); // 多线程设置
     enableKcpProxy.value =
@@ -679,6 +682,12 @@ class Aps {
   Future<void> updateDisableUdpHolePunching(bool value) async {
     disableUdpHolePunching.value = value;
     await AppDatabase().netConfigSetting.updateDisableUdpHolePunching(value);
+  }
+
+  // 更新对称NAT打洞禁用设置
+  Future<void> updateDisableSymHolePunching(bool value) async {
+    disableSymHolePunching.value = value;
+    await AppDatabase().netConfigSetting.updateDisableSymHolePunching(value);
   }
 
   // 更新多线程设置

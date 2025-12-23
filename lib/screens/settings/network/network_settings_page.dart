@@ -111,8 +111,10 @@ class NetworkSettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  title: Text('高级网络设置'),
-                  subtitle: Text('专业用户配置选项'),
+                  title: Text(LocaleKeys.advanced_network_settings.tr()),
+                  subtitle: Text(
+                    LocaleKeys.advanced_network_settings_desc.tr(),
+                  ),
                   leading: const Icon(Icons.settings_ethernet),
                 ),
 
@@ -128,15 +130,6 @@ class NetworkSettingsPage extends StatelessWidget {
                 ),
 
                 SwitchListTile(
-                  title: Text(LocaleKeys.relay_peer_rpc.tr()),
-                  subtitle: Text(LocaleKeys.relay_peer_rpc_desc.tr()),
-                  value: Aps().relayAllPeerRpc.watch(context),
-                  onChanged: (value) {
-                    Aps().updateRelayAllPeerRpc(value);
-                  },
-                ),
-
-                SwitchListTile(
                   title: Text(LocaleKeys.disable_udp_hole_punching.tr()),
                   subtitle: Text(
                     LocaleKeys.disable_udp_hole_punching_desc.tr(),
@@ -144,6 +137,17 @@ class NetworkSettingsPage extends StatelessWidget {
                   value: Aps().disableUdpHolePunching.watch(context),
                   onChanged: (value) {
                     Aps().updateDisableUdpHolePunching(value);
+                  },
+                ),
+
+                SwitchListTile(
+                  title: Text(LocaleKeys.disable_sym_hole_punching.tr()),
+                  subtitle: Text(
+                    LocaleKeys.disable_sym_hole_punching_desc.tr(),
+                  ),
+                  value: Aps().disableSymHolePunching.watch(context),
+                  onChanged: (value) {
+                    Aps().updateDisableSymHolePunching(value);
                   },
                 ),
 
@@ -202,15 +206,6 @@ class NetworkSettingsPage extends StatelessWidget {
                   value: Aps().enableKcpProxy.watch(context),
                   onChanged: (value) {
                     Aps().updateEnableKcpProxy(value);
-                  },
-                ),
-
-                SwitchListTile(
-                  title: Text(LocaleKeys.disable_relay_kcp.tr()),
-                  subtitle: Text(LocaleKeys.disable_relay_kcp_desc.tr()),
-                  value: Aps().disableRelayKcp.watch(context),
-                  onChanged: (value) {
-                    Aps().updateDisableRelayKcp(value);
                   },
                 ),
 

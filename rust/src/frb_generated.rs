@@ -3011,6 +3011,7 @@ impl SseDecode for crate::api::simple::FlagsC {
         let mut var_privateMode = <bool>::sse_decode(deserializer);
         let mut var_enableQuicProxy = <bool>::sse_decode(deserializer);
         let mut var_disableQuicInput = <bool>::sse_decode(deserializer);
+        let mut var_disableSymHolePunching = <bool>::sse_decode(deserializer);
         return crate::api::simple::FlagsC {
             default_protocol: var_defaultProtocol,
             dev_name: var_devName,
@@ -3036,6 +3037,7 @@ impl SseDecode for crate::api::simple::FlagsC {
             private_mode: var_privateMode,
             enable_quic_proxy: var_enableQuicProxy,
             disable_quic_input: var_disableQuicInput,
+            disable_sym_hole_punching: var_disableSymHolePunching,
         };
     }
 }
@@ -3870,6 +3872,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::FlagsC {
             self.private_mode.into_into_dart().into_dart(),
             self.enable_quic_proxy.into_into_dart().into_dart(),
             self.disable_quic_input.into_into_dart().into_dart(),
+            self.disable_sym_hole_punching.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -4274,6 +4277,7 @@ impl SseEncode for crate::api::simple::FlagsC {
         <bool>::sse_encode(self.private_mode, serializer);
         <bool>::sse_encode(self.enable_quic_proxy, serializer);
         <bool>::sse_encode(self.disable_quic_input, serializer);
+        <bool>::sse_encode(self.disable_sym_hole_punching, serializer);
     }
 }
 
