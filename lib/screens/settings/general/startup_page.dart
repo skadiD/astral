@@ -21,7 +21,7 @@ class StartupPage extends StatelessWidget {
               children: [
                 ListTile(
                   title: Text(LocaleKeys.startup_related.tr()),
-                  subtitle: Text('Configure application startup behavior'),
+                  subtitle: Text(LocaleKeys.startup_behavior_desc.tr()),
                   leading: const Icon(Icons.launch),
                 ),
 
@@ -64,28 +64,28 @@ class StartupPage extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  title: Text('启动说明'),
-                  subtitle: Text('了解各项启动设置的作用'),
+                  title: Text(LocaleKeys.startup_description.tr()),
+                  subtitle: Text(LocaleKeys.startup_description_desc.tr()),
                   leading: const Icon(Icons.info_outline),
                 ),
 
                 const Divider(),
 
                 ListTile(
-                  title: Text('开机启动'),
-                  subtitle: Text('应用程序将在系统启动时自动运行'),
+                  title: Text(LocaleKeys.startup_on_boot_title.tr()),
+                  subtitle: Text(LocaleKeys.startup_on_boot_info.tr()),
                   leading: const Icon(Icons.power_settings_new),
                 ),
 
                 ListTile(
-                  title: Text('启动最小化'),
-                  subtitle: Text('启动时直接最小化到系统托盘'),
+                  title: Text(LocaleKeys.startup_minimize_title.tr()),
+                  subtitle: Text(LocaleKeys.startup_minimize_info.tr()),
                   leading: const Icon(Icons.minimize),
                 ),
 
                 ListTile(
-                  title: Text('启动自动连接'),
-                  subtitle: Text('启动后自动连接到最后使用的服务器'),
+                  title: Text(LocaleKeys.startup_auto_connect_title.tr()),
+                  subtitle: Text(LocaleKeys.startup_auto_connect_info.tr()),
                   leading: const Icon(Icons.play_arrow),
                 ),
               ],

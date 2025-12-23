@@ -1,5 +1,6 @@
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/k/models/server_mod.dart';
+import 'package:astral/utils/blocked_servers.dart';
 import 'package:flutter/material.dart';
 
 class ServerCard extends StatefulWidget {
@@ -40,8 +41,7 @@ class _ServerCardState extends State<ServerCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
-            color:
-                isHovered ? colorScheme.primary : Colors.transparent,
+            color: isHovered ? colorScheme.primary : Colors.transparent,
             width: 1,
           ),
         ),
@@ -79,9 +79,28 @@ class _ServerCardState extends State<ServerCard> {
                           activeColor: colorScheme.primary,
                         ),
                         IconButton(
-                          icon: Icon(Icons.edit, color: colorScheme.primary),
-                          onPressed: widget.onEdit,
-                          tooltip: '编辑服务器',
+                          icon: Icon(
+                            Icons.edit,
+                            color:
+                                BlockedServers.isBlocked(server.url)
+                                    ? colorScheme.outline
+                                    : colorScheme.primary,
+                          ),
+                          onPressed:
+                              BlockedServers.isBlocked(server.url)
+                                  ? () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('此服务器不可编辑'),
+                                        duration: Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                  : widget.onEdit,
+                          tooltip:
+                              BlockedServers.isBlocked(server.url)
+                                  ? '此服务器不可编辑'
+                                  : '编辑服务器',
                         ),
                         IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
@@ -152,7 +171,7 @@ class _ServerCardState extends State<ServerCard> {
                     Icon(Icons.link, size: 16, color: colorScheme.primary),
                     const SizedBox(width: 8),
                     Text(
-                      server.url,
+                      BlockedServers.isBlocked(server.url) ? '***' : server.url,
                       style: TextStyle(
                         fontSize: 14,
                         color: colorScheme.onSurfaceVariant,

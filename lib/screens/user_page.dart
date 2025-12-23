@@ -2,6 +2,7 @@ import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
 import 'package:astral/widgets/all_user_card.dart';
 import 'package:astral/widgets/mini_user_card.dart';
+import 'package:astral/widgets/network_topology.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -15,15 +16,34 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  bool _showTopology = false; // 是否显示拓扑图
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     // 使用 Riverpod 监听节点数据
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => RoomSettingsSheet.show(context),
-        child: const Icon(Icons.bar_chart),
-        tooltip: '房间设置',
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'topology_toggle',
+            onPressed: () {
+              setState(() {
+                _showTopology = !_showTopology;
+              });
+            },
+            child: Icon(_showTopology ? Icons.list : Icons.hub),
+            tooltip: _showTopology ? '列表视图' : '拓扑图',
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton(
+            heroTag: 'room_settings',
+            onPressed: () => RoomSettingsSheet.show(context),
+            child: const Icon(Icons.bar_chart),
+            tooltip: '房间设置',
+          ),
+        ],
       ),
       body: Builder(
         builder: (context) {
@@ -79,6 +99,11 @@ class _UserPageState extends State<UserPage> {
               ),
             );
           } else {
+            // 如果显示拓扑图，直接返回拓扑图视图
+            if (_showTopology) {
+              return const NetworkTopologyView();
+            }
+
             // 获取排序选项
             final sortOption = Aps().sortOption.watch(context);
             // 获取排序顺序
@@ -87,7 +112,7 @@ class _UserPageState extends State<UserPage> {
             final displayMode = Aps().displayMode.watch(context);
             // 获取原始节点列表
             var nodes = Aps().netStatus.watch(context)!.nodes;
-            
+
             // 根据排序选项对节点进行排序
             if (sortOption == 1) {
               // 按延迟排序
@@ -108,12 +133,20 @@ class _UserPageState extends State<UserPage> {
             List<KVNodeInfo> filteredNodes = nodes;
             if (displayMode == 1) {
               // 仅显示用户（排除服务器）
-              filteredNodes = nodes.where((node) => 
-                  !node.hostname.startsWith('PublicServer_')).toList();
+              filteredNodes =
+                  nodes
+                      .where(
+                        (node) => !node.hostname.startsWith('PublicServer_'),
+                      )
+                      .toList();
             } else if (displayMode == 2) {
               // 仅显示服务器
-              filteredNodes = nodes.where((node) => 
-                  node.hostname.startsWith('PublicServer_')).toList();
+              filteredNodes =
+                  nodes
+                      .where(
+                        (node) => node.hostname.startsWith('PublicServer_'),
+                      )
+                      .toList();
             }
 
             // 返回一个可滚动的视图
@@ -145,15 +178,15 @@ class _UserPageState extends State<UserPage> {
                         // 根据简单列表模式选项返回不同的卡片组件
                         return Aps().userListSimple.watch(context)
                             ? MiniUserCard(
-                                player: player,
-                                colorScheme: colorScheme,
-                                localIPv4: Aps().ipv4.watch(context),
-                              )
+                              player: player,
+                              colorScheme: colorScheme,
+                              localIPv4: Aps().ipv4.watch(context),
+                            )
                             : AllUserCard(
-                                player: player,
-                                colorScheme: colorScheme,
-                                localIPv4: Aps().ipv4.watch(context),
-                              );
+                              player: player,
+                              colorScheme: colorScheme,
+                              localIPv4: Aps().ipv4.watch(context),
+                            );
                       },
                       // 设置子项数量为过滤后的节点数量
                       childCount: filteredNodes.length,

@@ -13,7 +13,7 @@ class AllSettings {
   String? playerName;
 
   /// 监听列表
-  List<String>? listenList = ["tcp://0.0.0.0:11010", "udp://0.0.0.0:11010"];
+  List<String>? listenList = ["tcp://0.0.0.0:0", "udp://0.0.0.0:0"];
 
   /// 自定义vpn网段
   List<String> customVpn = [];

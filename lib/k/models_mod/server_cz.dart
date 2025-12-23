@@ -35,8 +35,8 @@ class ServerCz {
           wg: false,
         ),
         ServerMod(
-          name: "[小探赞助][湖北]",
-          url: "turn.hb.629957.xyz:11010",
+          name: "[小探赞助][内蒙古]",
+          url: "turn.nmg.629957.xyz:11010",
           enable: true,
           tcp: true,
           udp: false,

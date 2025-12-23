@@ -1,6 +1,7 @@
 import 'package:astral/k/app_s/aps.dart';
 import 'package:astral/src/rust/api/simple.dart';
 import 'package:astral/utils/platform_version_parser.dart';
+import 'package:astral/utils/blocked_servers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -250,7 +251,12 @@ class _AllUserCardState extends State<AllUserCard> {
         ),
         if (player.tunnelProto != '') ...[
           const SizedBox(height: 8),
-          _buildInfoRow(Icons.router, '隧道类型', player.tunnelProto, colorScheme),
+          _buildInfoRow(
+            Icons.router,
+            '隧道类型',
+            _formatTunnelProto(player.tunnelProto),
+            colorScheme,
+          ),
         ],
 
         // Connection Path / Hops
@@ -450,6 +456,21 @@ class _AllUserCardState extends State<AllUserCard> {
     } else {
       return Colors.grey;
     }
+  }
+
+  // 格式化隧道协议显示
+  String _formatTunnelProto(String proto) {
+    // 分割多个协议（逗号分隔）
+    return proto
+        .split(',')
+        .map((p) {
+          final trimmed = p.trim();
+          // 使用正则匹配：如果是纯tcp或udp（后面不跟数字），添加4
+          if (RegExp(r'^tcp$').hasMatch(trimmed)) return 'tcp4';
+          if (RegExp(r'^udp$').hasMatch(trimmed)) return 'udp4';
+          return trimmed; // tcp6, udp6等保持原样
+        })
+        .join(',');
   }
 
   // 将NAT类型转换为中文

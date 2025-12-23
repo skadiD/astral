@@ -92,6 +92,9 @@ class NetConfig {
   /// 是否禁用UDP打洞
   bool disable_udp_hole_punching = false; //x
 
+  /// 是否禁用对称NAT打洞
+  bool disable_sym_hole_punching = false; //x
+
   /// 是否启用多线程
   bool multi_thread = true; //x
 

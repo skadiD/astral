@@ -51,7 +51,6 @@ Astral 是一个基于 EasyTier 的跨平台网络应用，提供简单易用的
 | 语言 | 语言代码 | 文件 |
 |------|---------|------|
 | 🇨🇳 简体中文 | zh | [zh.json](assets/translations/zh.json) |
-| 🇹🇼 繁体中文 | zh-TW | [zh-TW.json](assets/translations/zh-TW.json) |
 | 🇺🇸 英语 | en | [en.json](assets/translations/en.json) |
 | 🇩🇪 德语 | de | [de.json](assets/translations/de.json) |
 | 🇪🇸 西班牙语 | es | [es.json](assets/translations/es.json) |

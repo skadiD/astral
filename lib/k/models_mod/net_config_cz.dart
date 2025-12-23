@@ -470,6 +470,23 @@ class NetConfigRepository {
     return config?.disable_udp_hole_punching ?? false;
   }
 
+  // 更新对称NAT打洞禁用设置
+  Future<void> updateDisableSymHolePunching(bool disableSymHolePunching) async {
+    NetConfig? config = await _isar.netConfigs.get(1);
+    if (config != null) {
+      config.disable_sym_hole_punching = disableSymHolePunching;
+      await _isar.writeTxn(() async {
+        await _isar.netConfigs.put(config);
+      });
+    }
+  }
+
+  // 获取对称NAT打洞禁用设置
+  Future<bool> getDisableSymHolePunching() async {
+    NetConfig? config = await _isar.netConfigs.get(1);
+    return config?.disable_sym_hole_punching ?? false;
+  }
+
   // 更新多线程设置
   Future<void> updateMultiThread(bool multiThread) async {
     NetConfig? config = await _isar.netConfigs.get(1);

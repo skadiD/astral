@@ -2815,8 +2815,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   FlagsC dco_decode_flags_c(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 24)
-      throw Exception('unexpected arr length: expect 24 but see ${arr.length}');
+    if (arr.length != 25)
+      throw Exception('unexpected arr length: expect 25 but see ${arr.length}');
     return FlagsC(
       defaultProtocol: dco_decode_String(arr[0]),
       devName: dco_decode_String(arr[1]),
@@ -2842,6 +2842,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       privateMode: dco_decode_bool(arr[21]),
       enableQuicProxy: dco_decode_bool(arr[22]),
       disableQuicInput: dco_decode_bool(arr[23]),
+      disableSymHolePunching: dco_decode_bool(arr[24]),
     );
   }
 
@@ -3497,6 +3498,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_privateMode = sse_decode_bool(deserializer);
     var var_enableQuicProxy = sse_decode_bool(deserializer);
     var var_disableQuicInput = sse_decode_bool(deserializer);
+    var var_disableSymHolePunching = sse_decode_bool(deserializer);
     return FlagsC(
       defaultProtocol: var_defaultProtocol,
       devName: var_devName,
@@ -3522,6 +3524,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       privateMode: var_privateMode,
       enableQuicProxy: var_enableQuicProxy,
       disableQuicInput: var_disableQuicInput,
+      disableSymHolePunching: var_disableSymHolePunching,
     );
   }
 
@@ -4293,6 +4296,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self.privateMode, serializer);
     sse_encode_bool(self.enableQuicProxy, serializer);
     sse_encode_bool(self.disableQuicInput, serializer);
+    sse_encode_bool(self.disableSymHolePunching, serializer);
   }
 
   @protected

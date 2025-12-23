@@ -29,7 +29,7 @@ class UpdateSettingsPage extends StatelessWidget {
               children: [
                 ListTile(
                   title: Text(LocaleKeys.update_settings.tr()),
-                  subtitle: Text('Configure update behavior and channels'),
+                  subtitle: Text(LocaleKeys.update_behavior_desc.tr()),
                   leading: const Icon(Icons.system_update),
                 ),
 
@@ -64,7 +64,7 @@ class UpdateSettingsPage extends StatelessWidget {
               children: [
                 ListTile(
                   title: Text(LocaleKeys.download_acceleration.tr()),
-                  subtitle: Text('Configure download acceleration'),
+                  subtitle: Text(LocaleKeys.download_acceleration_desc.tr()),
                   leading: const Icon(Icons.speed),
                 ),
 
@@ -95,8 +95,8 @@ class UpdateSettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  title: Text('更新操作'),
-                  subtitle: Text('手动检查更新和版本信息'),
+                  title: Text(LocaleKeys.update_operations.tr()),
+                  subtitle: Text(LocaleKeys.update_operations_desc.tr()),
                   leading: const Icon(Icons.update),
                 ),
 
@@ -105,15 +105,15 @@ class UpdateSettingsPage extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.refresh),
                   title: Text(LocaleKeys.check_update.tr()),
-                  subtitle: Text('检查是否有新版本可用'),
+                  subtitle: Text(LocaleKeys.check_update_available.tr()),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _checkForUpdates(context),
                 ),
 
                 ListTile(
                   leading: const Icon(Icons.info_outline),
-                  title: Text('版本信息'),
-                  subtitle: Text('查看当前版本和更新日志'),
+                  title: Text(LocaleKeys.version_info.tr()),
+                  subtitle: Text(LocaleKeys.version_info_desc.tr()),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _showVersionInfo(context),
                 ),
@@ -127,28 +127,30 @@ class UpdateSettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  title: Text('更新说明'),
-                  subtitle: Text('了解不同更新设置的作用'),
+                  title: Text(LocaleKeys.update_description.tr()),
+                  subtitle: Text(LocaleKeys.update_description_desc.tr()),
                   leading: const Icon(Icons.help_outline),
                 ),
 
                 const Divider(),
 
                 ListTile(
-                  title: Text('Beta 版本'),
-                  subtitle: Text('抢先体验新功能，但可能存在稳定性问题'),
+                  title: Text(LocaleKeys.beta_version.tr()),
+                  subtitle: Text(LocaleKeys.beta_version_desc.tr()),
                   leading: const Icon(Icons.science),
                 ),
 
                 ListTile(
-                  title: Text('自动更新'),
-                  subtitle: Text('在后台自动检查并提醒更新'),
+                  title: Text(LocaleKeys.auto_update_title.tr()),
+                  subtitle: Text(LocaleKeys.auto_update_info_desc.tr()),
                   leading: const Icon(Icons.auto_awesome),
                 ),
 
                 ListTile(
-                  title: Text('下载加速'),
-                  subtitle: Text('使用镜像地址加速下载速度'),
+                  title: Text(LocaleKeys.download_acceleration_title.tr()),
+                  subtitle: Text(
+                    LocaleKeys.download_acceleration_info_desc.tr(),
+                  ),
                   leading: const Icon(Icons.speed),
                 ),
               ],
@@ -171,16 +173,18 @@ class UpdateSettingsPage extends StatelessWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text('版本信息'),
+            title: Text(LocaleKeys.version_info.tr()),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('当前版本: 1.0.0'),
+                Text(
+                  '${LocaleKeys.current_version.tr()}: ${AppInfoUtil.getVersion()}',
+                ),
                 const SizedBox(height: 8),
-                Text('构建时间: 2024-01-01'),
-                const SizedBox(height: 8),
-                Text('更新通道: ${Aps().beta.value ? "Beta" : "Stable"}'),
+                Text(
+                  '${LocaleKeys.update_channel.tr()}: ${Aps().beta.value ? "Beta" : "Stable"}',
+                ),
               ],
             ),
             actions: [
