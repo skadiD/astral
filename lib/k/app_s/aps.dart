@@ -508,7 +508,8 @@ class Aps {
     disableUdpHolePunching.value =
         await database.netConfigSetting.getDisableUdpHolePunching(); // UDP打洞禁用
     disableSymHolePunching.value =
-        await database.netConfigSetting.getDisableSymHolePunching(); // 对称NAT打洞禁用
+        await database.netConfigSetting
+            .getDisableSymHolePunching(); // 对称NAT打洞禁用
     multiThread.value =
         await database.netConfigSetting.getMultiThread(); // 多线程设置
     enableKcpProxy.value =
