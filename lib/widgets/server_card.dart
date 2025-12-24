@@ -37,164 +37,174 @@ class _ServerCardState extends State<ServerCard> {
       onEnter: (_) => _hoveredSignal.value = true,
       onExit: (_) => _hoveredSignal.value = false,
       child: Card(
-        // elevation: isHovered ? 2 : 1,
+        elevation: isHovered ? 2 : 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: isHovered ? colorScheme.primary : Colors.transparent,
+            color:
+                isHovered
+                    ? colorScheme.primary.withOpacity(0.5)
+                    : colorScheme.outlineVariant.withOpacity(0.3),
             width: 1,
           ),
         ),
         child: InkWell(
-          // 去掉 onTap
-          onTap: () => {},
+          onTap: () {},
+          borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
               children: [
-                // 服务器名称和操作按钮
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        server.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        // 新增 Switch 控件
-                        Switch(
-                          value: server.enable,
-                          onChanged: (value) {
-                            Aps().setServerEnable(server, value);
-                            setState(() {}); // 强制刷新
-                          },
-                          activeColor: colorScheme.primary,
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            color:
-                                BlockedServers.isBlocked(server.url)
-                                    ? colorScheme.outline
-                                    : colorScheme.primary,
+                // 左侧状态指示器
+                _buildStatusIndicator(),
+                const SizedBox(width: 14),
+                // 中间信息区域
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 服务器名称和延迟
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              server.name,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                height: 1.2,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          onPressed:
-                              BlockedServers.isBlocked(server.url)
-                                  ? () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('此服务器不可编辑'),
-                                        duration: Duration(seconds: 2),
-                                      ),
-                                    );
-                                  }
-                                  : widget.onEdit,
-                          tooltip:
-                              BlockedServers.isBlocked(server.url)
-                                  ? '此服务器不可编辑'
-                                  : '编辑服务器',
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: widget.onDelete,
-                          tooltip: '删除服务器',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // 服务器地址行
-                Row(
-                  children: [
-                    // Ping结果显示逻辑
-                    if (_pingSignal.value == null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          '超时',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      )
-                    else if (_pingSignal.value == -1)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          '超时',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      )
-                    else
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        margin: EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: _getPingColor(_pingSignal.value),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${_pingSignal.value}ms',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                          const SizedBox(width: 8),
+                          _buildCompactPing(),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      // 服务器地址
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.language,
+                            size: 14,
+                            color: colorScheme.onSurfaceVariant.withOpacity(
+                              0.7,
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              BlockedServers.isBlocked(server.url)
+                                  ? '***'
+                                  : server.url,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                height: 1.2,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                    // 链接图标和服务器地址文本
-                    Icon(Icons.link, size: 16, color: colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text(
-                      BlockedServers.isBlocked(server.url) ? '***' : server.url,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: colorScheme.onSurfaceVariant,
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // 右侧操作区域
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 开关
+                    Transform.scale(
+                      scale: 0.85,
+                      child: Switch(
+                        value: server.enable,
+                        onChanged: (value) {
+                          Aps().setServerEnable(server, value);
+                          setState(() {});
+                        },
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // 协议支持
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    _buildProtocolChip('TCP', server.tcp, colorScheme),
-                    _buildProtocolChip('UDP', server.udp, colorScheme),
-                    _buildProtocolChip('WS', server.ws, colorScheme),
-                    _buildProtocolChip('WSS', server.wss, colorScheme),
-                    _buildProtocolChip('QUIC', server.quic, colorScheme),
-                    _buildProtocolChip('WG', server.wg, colorScheme),
-                    _buildProtocolChip('TXT', server.txt, colorScheme),
-                    _buildProtocolChip('SRV', server.srv, colorScheme),
-                    _buildProtocolChip('HTTP', server.http, colorScheme),
-                    _buildProtocolChip('HTTPS', server.https, colorScheme),
+                    const SizedBox(width: 4),
+                    // 更多操作菜单
+                    PopupMenuButton<String>(
+                      icon: Icon(Icons.more_vert, size: 20),
+                      iconSize: 20,
+                      padding: const EdgeInsets.all(8),
+                      constraints: const BoxConstraints(
+                        minWidth: 36,
+                        minHeight: 36,
+                      ),
+                      tooltip: '更多操作',
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          if (BlockedServers.isBlocked(server.url)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('此服务器不可编辑'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          } else {
+                            widget.onEdit?.call();
+                          }
+                        } else if (value == 'delete') {
+                          widget.onDelete?.call();
+                        }
+                      },
+                      itemBuilder:
+                          (context) => [
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit_outlined,
+                                    size: 18,
+                                    color:
+                                        BlockedServers.isBlocked(server.url)
+                                            ? colorScheme.outline
+                                            : colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    '编辑',
+                                    style: TextStyle(
+                                      color:
+                                          BlockedServers.isBlocked(server.url)
+                                              ? colorScheme.outline
+                                              : null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete_outline,
+                                    size: 18,
+                                    color: colorScheme.error,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    '删除',
+                                    style: TextStyle(color: colorScheme.error),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                    ),
                   ],
                 ),
               ],
@@ -205,32 +215,85 @@ class _ServerCardState extends State<ServerCard> {
     );
   }
 
-  Widget _buildProtocolChip(
-    String label,
-    bool isEnabled,
-    ColorScheme colorScheme,
-  ) {
-    return Chip(
-      label: Text(
-        label,
-        style: TextStyle(
-          color:
-              isEnabled ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
-          fontSize: 12,
-        ),
+  // 状态指示器
+  Widget _buildStatusIndicator() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final pingValue = _pingSignal.value;
+
+    Color statusColor;
+    if (pingValue == null || pingValue == -1) {
+      statusColor = colorScheme.error;
+    } else if (pingValue < 100) {
+      statusColor = Colors.green;
+    } else if (pingValue < 300) {
+      statusColor = Colors.orange;
+    } else {
+      statusColor = colorScheme.error;
+    }
+
+    return Container(
+      width: 4,
+      height: 48,
+      decoration: BoxDecoration(
+        color: statusColor,
+        borderRadius: BorderRadius.circular(2),
       ),
-      backgroundColor:
-          isEnabled ? colorScheme.primary : colorScheme.surfaceVariant,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 
-  // 修改_getPingColor方法，处理可空int类型
-  Color _getPingColor(int? ping) {
-    if (ping == null || ping == -1) return Colors.red;
-    return ping < 100
-        ? Colors.green
-        : (ping < 300 ? Colors.orange : Colors.red);
+  // 紧凑的延迟显示
+  Widget _buildCompactPing() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final pingValue = _pingSignal.value;
+
+    if (pingValue == null || pingValue == -1) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: colorScheme.error.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: colorScheme.error.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Text(
+          '超时',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.error,
+            height: 1.2,
+          ),
+        ),
+      );
+    }
+
+    Color pingColor;
+    if (pingValue < 100) {
+      pingColor = Colors.green;
+    } else if (pingValue < 300) {
+      pingColor = Colors.orange;
+    } else {
+      pingColor = colorScheme.error;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: pingColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: pingColor.withOpacity(0.3), width: 1),
+      ),
+      child: Text(
+        '${pingValue}ms',
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          color: pingColor,
+          height: 1.2,
+        ),
+      ),
+    );
   }
 }
