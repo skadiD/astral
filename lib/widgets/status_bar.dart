@@ -29,6 +29,12 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(36);
 
+  // 检查是否是圣诞期间
+  bool get _isChristmasSeason {
+    final now = DateTime.now();
+    return now.month == 12 && now.day >= 22 && now.day <= 28;
+  }
+
   @override
   Widget build(BuildContext context) {
     // 获取当前主题的配色方案
@@ -208,6 +214,37 @@ class StatusBar extends StatelessWidget implements PreferredSizeWidget {
           toolbarHeight: 36,
           // 在桌面平台显示窗口控制按钮
           actions: [
+            // 圣诞祝福
+            if (_isChristmasSeason)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '爱你们的Kevin',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                    const Text('🎄', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 6),
+                    Text(
+                      '圣诞快乐',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text('🎅', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ),
+            if (_isChristmasSeason) const SizedBox(width: 8),
             IconButton(
               icon: Icon(
                 // 根据当前主题模式选择对应图标
