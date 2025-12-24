@@ -280,7 +280,7 @@ class _ServerPageState extends State<ServerPage>
                   key: ValueKey(
                     'list_layout_${columnCount}_${servers.hashCode}',
                   ),
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(12),
                   sliver: SliverList.separated(
                     itemCount: displayServers.length,
                     itemBuilder: (context, index) {
@@ -297,7 +297,7 @@ class _ServerPageState extends State<ServerPage>
                       );
                     },
                     separatorBuilder:
-                        (context, index) => const SizedBox(height: 12),
+                        (context, index) => const SizedBox(height: 8),
                   ),
                 )
               else
@@ -305,11 +305,11 @@ class _ServerPageState extends State<ServerPage>
                   key: ValueKey(
                     'grid_layout_${columnCount}_${servers.hashCode}',
                   ),
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(12),
                   sliver: SliverMasonryGrid.count(
                     crossAxisCount: columnCount,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
                     childCount: displayServers.length,
                     itemBuilder: (context, index) {
                       final server = displayServers[index];
