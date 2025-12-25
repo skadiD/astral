@@ -8,7 +8,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar_community/isar.dart';
 import 'package:astral/widgets/server_reorder_sheet.dart';
-import 'package:astral/widgets/public_servers_dialog.dart'; // 新增公共服务器对话框导入
 import 'dart:async'; // 添加Timer导入
 
 class ServerPage extends StatefulWidget {
@@ -253,17 +252,7 @@ class _ServerPageState extends State<ServerPage>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          '点击右下角星球按钮添加公共服务器',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '或点击加号按钮手动添加服务器',
+                          '点击右下角加号按钮手动添加服务器',
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(
@@ -359,12 +348,6 @@ class _ServerPageState extends State<ServerPage>
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'public_servers_dialog',
-            onPressed: () => _showPublicServersDialog(),
-            child: const Icon(Icons.public),
-          ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
             heroTag: '添加服务器',
             onPressed: () => showAddServerDialog(context),
             child: const Icon(Icons.add),
@@ -372,38 +355,6 @@ class _ServerPageState extends State<ServerPage>
         ],
       ),
     );
-  }
-
-  // 显示公共服务器列表对话框
-  void _showPublicServersDialog() {
-    PublicServersDialog.show(context, _addPublicServer);
-  }
-
-  // 添加公共服务器
-  void _addPublicServer(String name, String url) {
-    final server = ServerMod(
-      id: Isar.autoIncrement,
-      enable: false,
-      name: name,
-      url: url,
-      tcp: true,
-      udp: false,
-      ws: false,
-      wss: false,
-      quic: false,
-      wg: false,
-      txt: false,
-      srv: false,
-      http: false,
-      https: false,
-    );
-
-    _aps.addServer(server);
-    // 强制触发服务器列表更新
-    _aps.servers.value = [..._aps.servers.value];
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('已添加服务器: $name')));
   }
 
   // 显示删除确认对话框

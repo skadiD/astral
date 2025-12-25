@@ -80,13 +80,13 @@ class ServersHome extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            // 状态指示点
+                            // 状态指示竖条
                             Container(
-                              width: 8,
-                              height: 8,
+                              width: 4,
+                              height: 48,
                               decoration: BoxDecoration(
                                 color: _getStatusColor(pingValue),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(2),
                               ),
                             ),
                             const SizedBox(width: 10),
