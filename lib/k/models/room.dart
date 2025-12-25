@@ -18,6 +18,10 @@ class Room {
   List<String> tags = [];
   // 排序字段
   int sortOrder = 0;
+  // 携带的服务器列表（JSON格式存储）
+  List<String> servers = [];
+  // 自定义参数（用于标识房间是否有自定义服务器，如为空则表示无自定义参数）
+  String customParam = "";
 
   //构造
   Room({
@@ -29,5 +33,7 @@ class Room {
     this.password = "",
     this.tags = const [],
     this.sortOrder = 0,
+    this.servers = const [],
+    this.customParam = "",
   });
 }

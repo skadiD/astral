@@ -196,69 +196,134 @@ $roomSummary
   }
 
   /// 显示房间分享对话框
-  /// 简化为单一分享链接选项，直接复制深链接
+  /// 支持选择是否携带服务器列表
   ///
   /// [context] 上下文
   /// [room] 要分享的房间对象
   static Future<void> showShareDialog(BuildContext context, Room room) async {
+    bool includeServers = false;
+
+    // 预先加载所有启用的服务器列表
+    final allServers = await Aps().getAllServers();
+    final enabledServerUrls =
+        allServers.where((s) => s.enable).expand((s) {
+          // 为每个服务器生成带协议前缀的URL列表
+          final urls = <String>[];
+          if (s.tcp) urls.add('tcp://${s.url}');
+          if (s.udp) urls.add('udp://${s.url}');
+          if (s.ws) urls.add('ws://${s.url}');
+          if (s.wss) urls.add('wss://${s.url}');
+          if (s.quic) urls.add('quic://${s.url}');
+          if (s.wg) urls.add('wg://${s.url}');
+          if (s.txt) urls.add('txt://${s.url}');
+          if (s.srv) urls.add('srv://${s.url}');
+          if (s.http) urls.add('http://${s.url}');
+          if (s.https) urls.add('https://${s.url}');
+          return urls;
+        }).toList();
+
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        final shareLink = generateShareLink(room);
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.share),
-              const SizedBox(width: 8),
-              Expanded(child: Text('分享房间 - ${room.name}')),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 8),
-              Text(
-                '分享链接已生成，点击下方按钮复制',
-                style: Theme.of(context).textTheme.bodyMedium,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            // 动态生成分享链接，考虑是否包含服务器
+            // 自定义参数自动生成（用于内部标记），不展示给用户
+            final customParam =
+                includeServers
+                    ? DateTime.now().millisecondsSinceEpoch.toString()
+                    : '';
+
+            final roomToShare =
+                includeServers
+                    ? Room(
+                      id: room.id,
+                      name: room.name,
+                      encrypted: room.encrypted,
+                      roomName: room.roomName,
+                      messageKey: room.messageKey,
+                      password: room.password,
+                      tags: room.tags,
+                      sortOrder: room.sortOrder,
+                      servers: enabledServerUrls,
+                      customParam: customParam,
+                    )
+                    : room;
+
+            final shareLink = generateShareLink(roomToShare);
+
+            return AlertDialog(
+              title: Row(
+                children: [
+                  const Icon(Icons.share),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text('分享房间 - ${room.name}')),
+                ],
               ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  shareLink,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 8),
+                    Text(
+                      '分享链接已生成，点击下方按钮复制',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 12),
+                    // 携带服务器选项
+                    CheckboxListTile(
+                      title: const Text('携带服务器列表'),
+                      subtitle: Text(
+                        '将包含 ${allServers.where((s) => s.enable).length} 个服务器',
+                      ),
+                      value: includeServers,
+                      onChanged: (value) {
+                        setState(() {
+                          includeServers = value ?? false;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        shareLink,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontFamily: 'monospace',
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '有效期：30天',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                '有效期：30天',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('关闭'),
                 ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('关闭'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                copyShareLink(context, room, linkOnly: true);
-              },
-              child: const Text('复制链接'),
-            ),
-          ],
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    copyShareLink(context, roomToShare, linkOnly: true);
+                  },
+                  child: const Text('复制链接'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -355,6 +420,10 @@ $roomSummary
         return false;
       }
 
+      // 如果房间携带服务器列表，只保存房间自己的服务器列表
+      // 合并操作延迟到连接时进行（这样能获取最新的全局启用服务器）
+      // cleanedRoom.servers 已经包含分享时的服务器列表，不需要在此修改
+
       // 添加房间
       await Aps().addRoom(cleanedRoom);
 
@@ -362,6 +431,12 @@ $roomSummary
       await navigateToRoomPage(cleanedRoom, context: context);
 
       if (context.mounted) {
+        // 构建导入成功提示
+        String serverInfo = '';
+        if (cleanedRoom.servers.isNotEmpty) {
+          serverInfo = ' (已内置 ${cleanedRoom.servers.length} 个服务器)';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -378,7 +453,7 @@ $roomSummary
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '已成功添加并选中房间"${cleanedRoom.name}"',
+                        '已成功添加并选中房间"${cleanedRoom.name}"$serverInfo',
                         style: const TextStyle(fontSize: 12),
                       ),
                     ],

@@ -17,33 +17,43 @@ const RoomSchema = CollectionSchema(
   name: r'Room',
   id: -1093513927825131211,
   properties: {
-    r'encrypted': PropertySchema(
+    r'customParam': PropertySchema(
       id: 0,
+      name: r'customParam',
+      type: IsarType.string,
+    ),
+    r'encrypted': PropertySchema(
+      id: 1,
       name: r'encrypted',
       type: IsarType.bool,
     ),
     r'messageKey': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'messageKey',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(id: 2, name: r'name', type: IsarType.string),
+    r'name': PropertySchema(id: 3, name: r'name', type: IsarType.string),
     r'password': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'password',
       type: IsarType.string,
     ),
     r'roomName': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'roomName',
       type: IsarType.string,
     ),
+    r'servers': PropertySchema(
+      id: 6,
+      name: r'servers',
+      type: IsarType.stringList,
+    ),
     r'sortOrder': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'sortOrder',
       type: IsarType.long,
     ),
-    r'tags': PropertySchema(id: 6, name: r'tags', type: IsarType.stringList),
+    r'tags': PropertySchema(id: 8, name: r'tags', type: IsarType.stringList),
   },
 
   estimateSize: _roomEstimateSize,
@@ -67,10 +77,18 @@ int _roomEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.customParam.length * 3;
   bytesCount += 3 + object.messageKey.length * 3;
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.password.length * 3;
   bytesCount += 3 + object.roomName.length * 3;
+  bytesCount += 3 + object.servers.length * 3;
+  {
+    for (var i = 0; i < object.servers.length; i++) {
+      final value = object.servers[i];
+      bytesCount += value.length * 3;
+    }
+  }
   bytesCount += 3 + object.tags.length * 3;
   {
     for (var i = 0; i < object.tags.length; i++) {
@@ -87,13 +105,15 @@ void _roomSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.encrypted);
-  writer.writeString(offsets[1], object.messageKey);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.password);
-  writer.writeString(offsets[4], object.roomName);
-  writer.writeLong(offsets[5], object.sortOrder);
-  writer.writeStringList(offsets[6], object.tags);
+  writer.writeString(offsets[0], object.customParam);
+  writer.writeBool(offsets[1], object.encrypted);
+  writer.writeString(offsets[2], object.messageKey);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.password);
+  writer.writeString(offsets[5], object.roomName);
+  writer.writeStringList(offsets[6], object.servers);
+  writer.writeLong(offsets[7], object.sortOrder);
+  writer.writeStringList(offsets[8], object.tags);
 }
 
 Room _roomDeserialize(
@@ -103,14 +123,16 @@ Room _roomDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Room(
-    encrypted: reader.readBoolOrNull(offsets[0]) ?? false,
+    customParam: reader.readStringOrNull(offsets[0]) ?? "",
+    encrypted: reader.readBoolOrNull(offsets[1]) ?? false,
     id: id,
-    messageKey: reader.readStringOrNull(offsets[1]) ?? "",
-    name: reader.readStringOrNull(offsets[2]) ?? "",
-    password: reader.readStringOrNull(offsets[3]) ?? "",
-    roomName: reader.readStringOrNull(offsets[4]) ?? "",
-    sortOrder: reader.readLongOrNull(offsets[5]) ?? 0,
-    tags: reader.readStringList(offsets[6]) ?? const [],
+    messageKey: reader.readStringOrNull(offsets[2]) ?? "",
+    name: reader.readStringOrNull(offsets[3]) ?? "",
+    password: reader.readStringOrNull(offsets[4]) ?? "",
+    roomName: reader.readStringOrNull(offsets[5]) ?? "",
+    servers: reader.readStringList(offsets[6]) ?? const [],
+    sortOrder: reader.readLongOrNull(offsets[7]) ?? 0,
+    tags: reader.readStringList(offsets[8]) ?? const [],
   );
   return object;
 }
@@ -123,9 +145,9 @@ P _roomDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 1:
       return (reader.readStringOrNull(offset) ?? "") as P;
+    case 1:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 2:
       return (reader.readStringOrNull(offset) ?? "") as P;
     case 3:
@@ -133,8 +155,12 @@ P _roomDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset) ?? "") as P;
     case 5:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 6:
+      return (reader.readStringList(offset) ?? const []) as P;
+    case 7:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 8:
       return (reader.readStringList(offset) ?? const []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -232,6 +258,152 @@ extension RoomQueryWhere on QueryBuilder<Room, Room, QWhereClause> {
 }
 
 extension RoomQueryFilter on QueryBuilder<Room, Room, QFilterCondition> {
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'customParam',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'customParam',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'customParam',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'customParam',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'customParam',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'customParam',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'customParam',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'customParam',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'customParam', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> customParamIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'customParam', value: ''),
+      );
+    });
+  }
+
   QueryBuilder<Room, Room, QAfterFilterCondition> encryptedEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -881,6 +1053,207 @@ extension RoomQueryFilter on QueryBuilder<Room, Room, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'servers',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'servers',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'servers',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'servers',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'servers',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'servers',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'servers',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'servers',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'servers', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'servers', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversLengthEqualTo(
+    int length,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'servers', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'servers', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'servers', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'servers', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'servers', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterFilterCondition> serversLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'servers',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Room, Room, QAfterFilterCondition> sortOrderEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1145,6 +1518,18 @@ extension RoomQueryObject on QueryBuilder<Room, Room, QFilterCondition> {}
 extension RoomQueryLinks on QueryBuilder<Room, Room, QFilterCondition> {}
 
 extension RoomQuerySortBy on QueryBuilder<Room, Room, QSortBy> {
+  QueryBuilder<Room, Room, QAfterSortBy> sortByCustomParam() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customParam', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterSortBy> sortByCustomParamDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customParam', Sort.desc);
+    });
+  }
+
   QueryBuilder<Room, Room, QAfterSortBy> sortByEncrypted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encrypted', Sort.asc);
@@ -1219,6 +1604,18 @@ extension RoomQuerySortBy on QueryBuilder<Room, Room, QSortBy> {
 }
 
 extension RoomQuerySortThenBy on QueryBuilder<Room, Room, QSortThenBy> {
+  QueryBuilder<Room, Room, QAfterSortBy> thenByCustomParam() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customParam', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Room, Room, QAfterSortBy> thenByCustomParamDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customParam', Sort.desc);
+    });
+  }
+
   QueryBuilder<Room, Room, QAfterSortBy> thenByEncrypted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encrypted', Sort.asc);
@@ -1305,6 +1702,14 @@ extension RoomQuerySortThenBy on QueryBuilder<Room, Room, QSortThenBy> {
 }
 
 extension RoomQueryWhereDistinct on QueryBuilder<Room, Room, QDistinct> {
+  QueryBuilder<Room, Room, QDistinct> distinctByCustomParam({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'customParam', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Room, Room, QDistinct> distinctByEncrypted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'encrypted');
@@ -1343,6 +1748,12 @@ extension RoomQueryWhereDistinct on QueryBuilder<Room, Room, QDistinct> {
     });
   }
 
+  QueryBuilder<Room, Room, QDistinct> distinctByServers() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'servers');
+    });
+  }
+
   QueryBuilder<Room, Room, QDistinct> distinctBySortOrder() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'sortOrder');
@@ -1360,6 +1771,12 @@ extension RoomQueryProperty on QueryBuilder<Room, Room, QQueryProperty> {
   QueryBuilder<Room, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Room, String, QQueryOperations> customParamProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'customParam');
     });
   }
 
@@ -1390,6 +1807,12 @@ extension RoomQueryProperty on QueryBuilder<Room, Room, QQueryProperty> {
   QueryBuilder<Room, String, QQueryOperations> roomNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'roomName');
+    });
+  }
+
+  QueryBuilder<Room, List<String>, QQueryOperations> serversProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'servers');
     });
   }
 

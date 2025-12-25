@@ -169,6 +169,18 @@ class _ServerSettingsPageState extends State<ServerSettingsPage> {
                             ),
                           ),
                         const SizedBox(width: 8),
+                        // 启用/关闭开关
+                        Transform.scale(
+                          scale: 0.8,
+                          child: Switch(
+                            value: server.enable,
+                            onChanged: (value) {
+                              Aps().setServerEnable(server, value);
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 4),
                         PopupMenuButton<String>(
                           onSelected: (value) {
                             if (value == 'edit') {

@@ -6,6 +6,45 @@ Future<void> showEditRoomDialog(
   BuildContext context, {
   required Room room,
 }) async {
+  // 检查是否有自定义参数，如果有则禁止编辑
+  if (room.customParam.isNotEmpty) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('无法编辑房间'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.lock,
+                size: 48,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                '此房间包含自定义服务器配置',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '含有自定义参数的房间不可编辑，只能删除。如需修改，请删除此房间并重新创建或导入。',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('我知道了'),
+            ),
+          ],
+        );
+      },
+    );
+    return;
+  }
+
   String? name = room.name;
 
   await showDialog(

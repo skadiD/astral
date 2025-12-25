@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:astral/k/models/room.dart';
 import 'dart:io' show gzip;
+import 'package:flutter/foundation.dart';
 
 const String encryptionSecret = '这就是密钥';
 
@@ -12,16 +13,26 @@ String encryptRoomWithJWT(Room room) {
       throw ArgumentError('房间名称不能为空');
     }
 
-    // 创建精简的 JSON 对象
+    // 创建精简的 JSON 对象，包含服务器列表和自定义参数
     final Map<String, dynamic> roomData = {
       'n': room.name,
       'r': room.roomName,
       'p': room.password,
       'm': room.messageKey,
       'e': room.encrypted ? 1 : 0,
+      // 添加服务器列表和自定义参数
+      if (room.servers.isNotEmpty) 's': room.servers,
+      if (room.customParam.isNotEmpty) 'c': room.customParam,
     };
 
     final String jsonString = jsonEncode(roomData);
+
+    // Debug 打印 JSON 数据
+    debugPrint('【房间分享】原始房间数据 JSON:');
+    debugPrint(jsonEncode(roomData));
+    debugPrint('【房间分享】服务器列表: ${room.servers}');
+    debugPrint('【房间分享】自定义参数: ${room.customParam}');
+
     final List<int> compressed = gzip.encode(utf8.encode(jsonString));
     String encoded = base64Url.encode(compressed);
     encoded = encoded.replaceAll('=', '');
@@ -57,6 +68,9 @@ Room? decryptRoomFromJWT(String token) {
       messageKey: roomData['m'] ?? '',
       encrypted: (roomData['e'] ?? 0) == 1,
       tags: [],
+      // 解析服务器列表和自定义参数
+      servers: roomData['s'] != null ? List<String>.from(roomData['s']) : [],
+      customParam: roomData['c'] ?? '',
     );
   } catch (e) {
     print('解密房间信息失败: $e');
@@ -173,6 +187,8 @@ Room cleanRoom(Room room) {
             .where((tag) => tag.isNotEmpty)
             .toList(),
     sortOrder: room.sortOrder,
+    servers: room.servers,
+    customParam: room.customParam.trim(),
   );
 }
 

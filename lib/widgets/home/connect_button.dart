@@ -196,10 +196,12 @@ class _ConnectButtonState extends State<ConnectButton>
     final rom = Aps().selectroom.value;
     if (rom == null) return;
 
-    // 检查服务器列表是否为空
+    // 检查服务器列表是否为空，以及当前房间是否携带服务器
     final enabledServers =
         Aps().servers.value.where((server) => server.enable).toList();
-    if (enabledServers.isEmpty) {
+    final hasRoomServers = rom.servers.isNotEmpty;
+
+    if (enabledServers.isEmpty && !hasRoomServers) {
       // 显示提示信息
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -292,21 +294,28 @@ class _ConnectButtonState extends State<ConnectButton>
       roomPassword: rom.password,
       cidrs: aps.cidrproxy.value,
       forwards: forwards,
-      severurl:
-          aps.servers.value.where((server) => server.enable).expand((server) {
-            final urls = <String>[];
-            if (server.tcp) urls.add('tcp://${server.url}');
-            if (server.udp) urls.add('udp://${server.url}');
-            if (server.ws) urls.add('ws://${server.url}');
-            if (server.wss) urls.add('wss://${server.url}');
-            if (server.quic) urls.add('quic://${server.url}');
-            if (server.wg) urls.add('wg://${server.url}');
-            if (server.txt) urls.add('txt://${server.url}');
-            if (server.srv) urls.add('srv://${server.url}');
-            if (server.http) urls.add('http://${server.url}');
-            if (server.https) urls.add('https://${server.url}');
-            return urls;
-          }).toList(),
+      severurl: () {
+        // 获取全局启用的服务器生成的URL列表
+        final globalUrls = <String>[];
+        for (var server in aps.servers.value.where((server) => server.enable)) {
+          if (server.tcp) globalUrls.add('tcp://${server.url}');
+          if (server.udp) globalUrls.add('udp://${server.url}');
+          if (server.ws) globalUrls.add('ws://${server.url}');
+          if (server.wss) globalUrls.add('wss://${server.url}');
+          if (server.quic) globalUrls.add('quic://${server.url}');
+          if (server.wg) globalUrls.add('wg://${server.url}');
+          if (server.txt) globalUrls.add('txt://${server.url}');
+          if (server.srv) globalUrls.add('srv://${server.url}');
+          if (server.http) globalUrls.add('http://${server.url}');
+          if (server.https) globalUrls.add('https://${server.url}');
+        }
+
+        // 合并房间服务器和全局服务器，然后去重
+        final mergedUrls = <String>[...rom.servers, ...globalUrls];
+        final deduplicatedUrls = mergedUrls.toSet().toList();
+
+        return deduplicatedUrls;
+      }(),
       onurl:
           Aps().listenList.value.where((url) => !url.contains('[::]')).toList(),
       flag: _buildFlags(aps),

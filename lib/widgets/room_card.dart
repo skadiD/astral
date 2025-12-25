@@ -107,40 +107,53 @@ class _RoomCardState extends State<RoomCard> {
                         if (widget.onShare != null &&
                             (widget.onDelete != null || widget.onEdit != null))
                           const SizedBox(width: 8),
-                        if (widget.onDelete != null && !widget.isSelected)
-                          IconButton(
-                            icon: const Icon(Icons.delete, size: 20),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder:
-                                    (context) => AlertDialog(
-                                      title: const Text('确认删除'),
-                                      content: const Text('确定要删除这个房间吗？'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed:
-                                              () => Navigator.pop(context),
-                                          child: const Text('取消'),
+                        if (widget.onDelete != null)
+                          widget.isSelected
+                              ? Tooltip(
+                                message: '不能删除正在连接的房间',
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete, size: 20),
+                                  onPressed: null,
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  disabledColor: colorScheme.outline,
+                                ),
+                              )
+                              : IconButton(
+                                icon: const Icon(Icons.delete, size: 20),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) => AlertDialog(
+                                          title: const Text('确认删除'),
+                                          content: const Text('确定要删除这个房间吗？'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed:
+                                                  () => Navigator.pop(context),
+                                              child: const Text('取消'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                widget.onDelete?.call();
+                                              },
+                                              child: const Text(
+                                                '删除',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            widget.onDelete?.call();
-                                          },
-                                          child: const Text(
-                                            '删除',
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                              );
-                            },
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            tooltip: '删除房间',
-                          ),
+                                  );
+                                },
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                tooltip: '删除房间',
+                              ),
                         if (widget.onDelete != null && widget.onEdit != null)
                           const SizedBox(width: 8),
                         if (widget.onEdit != null)
@@ -162,9 +175,32 @@ class _RoomCardState extends State<RoomCard> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '类型: ${room.encrypted ? "保护" : "不保护"}',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '类型: ${room.encrypted ? "保护" : "不保护"}',
+                      style: TextStyle(color: colorScheme.onSurfaceVariant),
+                    ),
+                    if (room.servers.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '携带服务器',
+                          style: TextStyle(
+                            color: colorScheme.primary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ],
             ),
